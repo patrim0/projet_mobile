@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 
@@ -7,8 +7,9 @@ const date = new Date().getDate();
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 
+
 const monthNames = [
-    "Janvier",
+    'Janvier',
     "Fevrier",
     "Mars",
     "Avril",
@@ -16,7 +17,7 @@ const monthNames = [
     "Juin",
     "Juillet",
     "Août",
-    "Septembre",
+    'Septembre',
     "Octobre",
     "Novembre",
     "Décembre"

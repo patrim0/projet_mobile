@@ -5,24 +5,21 @@ import { useTranslation } from 'react-i18next';
 
 export default function SettingsScreen() {
     
+    const { t, i18n } = useTranslation();
     const { theme, toggleTheme } = useContext(ThemeContext);
-    const themeText = (theme === 'dark' ? "Mode sombre" : "Mode clair");
-
-    const { i18n } = useTranslation();
-
-    const onSelectLanguage = (langCode) => {
-        i18n.changeLanguage(langCode);
-    };
-
+    const themeText = (theme === 'dark' ? t('ModeSombre') : t('ModeClair'));
+    
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>Paramètres</Text>
+            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('Parametres')}</Text>
             <View style={styles.row}>
                 <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
                 <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
             </View>
             <View>
-                <Button title="Changer de langue" onPress={onSelectLanguage('en')}/>
+                <Button title={t('Francais')} onPress={() => i18n.changeLanguage('fr')}/>
+
+                <Button title={t('Anglais')} onPress={() => i18n.changeLanguage('en')}/>
             </View>
         </View>
     );

@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 export default function HomeScreen({ navigation }) {
     const { theme } = useContext(ThemeContext);
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('accueil')}</Text>
+            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('Accueil')}</Text>
 
             <Button title={t('AllerDetails')} onPress={() => navigation.navigate('Details')} />
 

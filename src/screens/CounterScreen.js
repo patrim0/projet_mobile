@@ -2,15 +2,17 @@ import { useContext } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { useCounter } from '../hooks/useCounter';
+import { useTranslation } from 'react-i18next';
 
 
 export default function CounterScreen() {
     const { count, increment, decrement, reset } = useCounter(0);
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
 
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.value, theme === 'dark' ? styles.dark : styles.light]}>Compteur : {count}</Text>
+            <Text style={[styles.value, theme === 'dark' ? styles.dark : styles.light]}>{t('Compteur')} : {count}</Text>
             <View style={styles.row}>
                 <Button title="+1" onPress={increment} />
 
@@ -20,7 +22,7 @@ export default function CounterScreen() {
 
                 <View style={{ width: 12 }} />
 
-                <Button title="Reset" onPress={reset} />
+                <Button title={t('Reset')} onPress={reset} />
             </View>
         </View>
     );

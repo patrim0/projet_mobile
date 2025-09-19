@@ -1,5 +1,25 @@
 {
-    "accueil": "Accueil",
+    "Accueil": "Accueil",
     "AllerDetails": "Aller aux Détails",
-    "VoirCompteur": "Voir le Compteur"
+    "VoirCompteur": "Voir le Compteur",
+    "Parametres": "Paramètres",
+    "ModeClair": "Mode clair",
+    "ModeSombre": "Mode sombre",
+    "Francais": "Français",
+    "Anglais": "Anglais",
+    "Aujourdhui": "Aujourd'hui",
+    "Compteur": "Compteur",
+    "Reset": "Réinitialiser",
+    "Janvier": "Janvier",
+    "Fevrier": "Février",
+    "Mars": "Mars",
+    "Avril": "Avril",
+    "Mai": "Mai",
+    "Juin": "Juin",
+    "Juillet": "Juillet",
+    "Aout": "Août",
+    "Septembre": "Septembre",
+    "Octobre": "Octobre",
+    "Novembre": "Novembre",
+    "Decembre": "Décembre"
 }

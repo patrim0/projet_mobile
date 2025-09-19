@@ -1,5 +1,25 @@
 {
-    "accueil": "Home",
+    "Accueil": "Home",
     "AllerDetails": "Go to Details",
-    "VoirCompteur": "See Counter"
+    "VoirCompteur": "See Counter",
+    "Parametres": "Settings",
+    "ModeClair": "Light Mode",
+    "ModeSombre": "Dark Mode",
+    "Francais": "French",
+    "Anglais": "English",
+    "Aujourdhui": "Today",
+    "Compteur": "Counter",
+    "Reset": "Reset",
+    "Janvier": "January",
+    "Fevrier": "February",
+    "Mars": "March",
+    "Avril": "April",
+    "Mai": "May",
+    "Juin": "June",
+    "Juillet": "Jully",
+    "Aout": "August",
+    "Septembre": "September",
+    "Octobre": "October",
+    "Novembre": "November",
+    "Decembre": "December"
 }
