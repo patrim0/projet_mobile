@@ -1,11 +1,18 @@
 import React, { useContext } from 'react';
-import { View, Text, Switch, StyleSheet } from 'react-native';
+import { View, Text, Switch, StyleSheet, Button } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export default function SettingsScreen() {
+    
     const { theme, toggleTheme } = useContext(ThemeContext);
-
     const themeText = (theme === 'dark' ? "Mode sombre" : "Mode clair");
+
+    const { i18n } = useTranslation();
+
+    const onSelectLanguage = (langCode) => {
+        i18n.changeLanguage(langCode);
+    };
 
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
@@ -13,6 +20,9 @@ export default function SettingsScreen() {
             <View style={styles.row}>
                 <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
                 <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
+            </View>
+            <View>
+                <Button title="Changer de langue" onPress={onSelectLanguage('en')}/>
             </View>
         </View>
     );

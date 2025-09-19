@@ -1,19 +1,22 @@
 import React, { useContext } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export default function HomeScreen({ navigation }) {
     const { theme } = useContext(ThemeContext);
 
+    const { t, i18n } = useTranslation();
+
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>Accueil</Text>
+            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('accueil')}</Text>
 
-            <Button title="Aller aux Détails" onPress={() => navigation.navigate('Details')} />
+            <Button title={t('AllerDetails')} onPress={() => navigation.navigate('Details')} />
 
             <View style={{ height: 20 }} />
             
-            <Button title="Voir le Compteur" onPress={() => navigation.navigate('Counter')} />
+            <Button title={t('VoirCompteur')} onPress={() => navigation.navigate('Counter')} />
         </View>
     );
 }
