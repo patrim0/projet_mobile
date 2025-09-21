@@ -1,39 +1,55 @@
-import React, { useContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { ThemeContext } from '../context/ThemeContext';
+import { useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useTextColor } from '../context/ColorContext';
 import { FontSizeContext } from '../context/FontSizeContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function HomeScreen({ navigation }) {
-    const { theme } = useContext(ThemeContext);
-    const { fontSize } = useContext(FontSizeContext);
+  const { theme } = useContext(ThemeContext);
+  const { fontSize } = useContext(FontSizeContext);
+  const { textColor } = useTextColor();
+  const isDark = theme === 'dark';
 
-    return (
-        <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.title, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
-                Accueil
-            </Text>
-           
-            <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Today')}>
-                Aller à la date d'aujourd'hui
-            </Text>
+  return (
+    <View style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
+      <Text style={[styles.title, { fontSize, color: textColor }]}>
+        Accueil
+      </Text>
 
-            <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Details')}>
-                Aller aux Détails
-            </Text>
-            <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Counter')}>
-                Voir le Compteur
-            </Text>
+      <Text
+        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        onPress={() => navigation.navigate('Today')}
+      >
+        Aller à la date d'aujourd'hui
+      </Text>
 
-            <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Settings')}>
-                Aller aux Paramètres
-            </Text>
-        </View>
-    );
+      <Text
+        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        onPress={() => navigation.navigate('Details')}
+      >
+        Aller aux Détails
+      </Text>
+
+      <Text
+        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        onPress={() => navigation.navigate('Counter')}
+      >
+        Voir le Compteur
+      </Text>
+
+      <Text
+        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        onPress={() => navigation.navigate('Settings')}
+      >
+        Aller aux Paramètres
+      </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    title: { fontWeight: '600', padding: 20 },
-    light: { backgroundColor: '#fff', color: '#111' },
-    dark: { backgroundColor: '#111', color: '#fff' },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  title: { fontWeight: '600', padding: 20 },
+  lightBg: { backgroundColor: '#fff' },
+  darkBg: { backgroundColor: '#111' },
 });

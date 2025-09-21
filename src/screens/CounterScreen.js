@@ -3,15 +3,16 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { useCounter } from '../hooks/useCounter';
 import { FontSizeContext } from '../context/FontSizeContext';
+import { useTextColor } from '../context/ColorContext';
 
 export default function CounterScreen() {
   const { count, increment, decrement, reset } = useCounter(0);
   const { theme } = useContext(ThemeContext);
   const { fontSize } = useContext(FontSizeContext);
-
+  const { textColor } = useTextColor();
   return (
       <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-          <Text style={[styles.value, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
+          <Text style={[styles.value, { fontSize, color: textColor }]}>
             Compteur : {count}
           </Text>
           <View style={styles.row}>

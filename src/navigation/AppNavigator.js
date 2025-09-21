@@ -1,25 +1,29 @@
-import React, { useContext } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useContext } from 'react';
 
-import HomeScreen from '../screens/HomeScreen';
-import DetailsScreen from '../screens/DetailsScreen';
+import { useTextColor } from '../context/ColorContext';
+import { FontSizeContext } from '../context/FontSizeContext';
 import CounterScreen from '../screens/CounterScreen';
+import DetailsScreen from '../screens/DetailsScreen';
+import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodayScreen from '../screens/TodayScreen';
-import { FontSizeContext } from '../context/FontSizeContext';  // Import du contexte
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Tabs() {
-    const { fontSize } = useContext(FontSizeContext);  // Récupération du fontSize
+    const { fontSize } = useContext(FontSizeContext);  
+    const { textColor } = useTextColor();
 
     return (
         <Tab.Navigator
           screenOptions={{
-            tabBarLabelStyle: { fontSize: fontSize }  
+            tabBarLabelStyle: { fontSize: fontSize },
+            tabBarActiveTintColor: textColor,
+            headerTintColor: textColor,  
           }}
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Accueil' }} />

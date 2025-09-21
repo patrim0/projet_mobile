@@ -2,10 +2,12 @@ import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { FontSizeContext } from '../context/FontSizeContext';   
+import { useTextColor } from '../context/ColorContext';
 
 const date = new Date().getDate();
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
+
 
 const monthNames = [
   "Janvier","Fevrier","Mars","Avril","Mai","Juin",
@@ -14,7 +16,8 @@ const monthNames = [
 
 export default function TodayScreen() {
   const { theme } = useContext(ThemeContext);
-  const { fontSize } = useContext(FontSizeContext);  
+  const { fontSize } = useContext(FontSizeContext);
+  const { textColor } = useTextColor();
 
   const [hour, setHour] = useState(new Date().getHours());
   const [minute, setMinute] = useState(new Date().getMinutes());
@@ -31,13 +34,18 @@ export default function TodayScreen() {
 
   return(
     <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-      <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize }]}>La date d'aujourd'hui est le</Text>
-      <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize + 2 }]}>
+      <Text style={{ fontSize, color: textColor }}>
+        La date d'aujourd'hui est le
+      </Text>
+
+      <Text style={[styles.date, { fontSize: fontSize + 2, color: textColor }]}>
         {date} {monthNames[month]} {year}
       </Text>
-      <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize - 3 }]}>
-        Il est présentement {hour}h{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}
+
+      <Text style={[styles.time, { fontSize: fontSize - 3, color: textColor }]}>
+        Il est présentement {hour}h{minute < 10 ? '0' + minute : minute}:{second < 10 ? '0' + second : second}
       </Text>
+
     </View>
   );
 }

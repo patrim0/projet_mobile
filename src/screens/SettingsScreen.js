@@ -3,22 +3,32 @@ import { View, Text, Switch, StyleSheet } from 'react-native';
 import { FontSizeContext } from '../context/FontSizeContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { Slider } from 'react-native-elements';
+import { useTextColor } from '../context/ColorContext';
+import { TouchableOpacity } from 'react-native';
+
 
 export default function SettingsScreen() {
     const { theme, toggleTheme } = useContext(ThemeContext);
     const { fontSize, setFontSize } = useContext(FontSizeContext);
-  
+    const { textColor, setTextColor } = useTextColor();
     const themeText = theme === 'dark' ? "Mode sombre" : "Mode clair"; 
-  
+
+
+    const COLORS = [
+    { name: 'Noir', value: '#111111' },
+    { name: 'Bleu', value: '#1e40af' },
+    { name: 'Rouge', value: '#b91c1c' },
+  ];
+
     return (
       <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-        <Text style={[ styles.title, { color: theme === 'dark' ? '#fff' : '#111' }]}> Paramètres </Text>
+        <Text style={[ styles.title, { color: textColor }]}> Paramètres </Text>
         <View style={styles.row}>
           <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
           <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
         </View>
       <View style={styles.sliderContainer}>
-      <Text style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: 12 }}>A</Text>
+      <Text style={{ color: textColor, fontSize: 12 }}>A</Text>
 
 
         <Slider
@@ -33,12 +43,42 @@ export default function SettingsScreen() {
           minimumTrackTintColor="#347af7"
           maximumTrackTintColor="#bbb"
         />
-        <Text style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: 24 }}>A</Text>
+        <Text style={{ color: textColor, fontSize: 24 }}>A</Text>
       </View>
 
       <Text
-  style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: fontSize, marginTop: 16 }}>Aperçu de la taille du texte</Text>
+  style={{ color: textColor, fontSize: fontSize, marginTop: 16 }}>Aperçu de la taille du texte</Text>
+    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+        {COLORS.map((c) => {
+          const selected = (textColor || '').toLowerCase() === c.value.toLowerCase();
+          return (
+            <TouchableOpacity
+              key={c.value}
+              onPress={() => setTextColor(c.value)}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 14,
+                backgroundColor: c.value,
+                borderWidth: selected ? 3 : 1,
+                borderColor: selected ? '#444' : '#ccc',
+                marginRight: 12,
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`Choisir ${c.name}`}
+            />
+          );
+        })}
+        
+      </View>
+
+      <Text style={{ color: textColor, fontSize, marginTop: 12 }}>
+        Aperçu avec la couleur sélectionnée
+      </Text>
     </View>
+    
+
+
   );
 }
 
