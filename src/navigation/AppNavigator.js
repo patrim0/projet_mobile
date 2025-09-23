@@ -13,18 +13,16 @@ import TodayScreen from '../screens/TodayScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-
-
 function Tabs() {
 
     const { t } = useTranslation();
     
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Home" component={HomeScreen} options={{title: t('Accueil')}} />
-            <Tab.Screen name="Today" component={TodayScreen} options={{title: t('Aujourdhui')}} />
-            <Tab.Screen name="Counter" component={CounterScreen} options={{title: t('Compteur')}} />
-            <Tab.Screen name="Settings" component={SettingsScreen} options={{title: t('Parametres')}} />
+            <Tab.Screen name="Home" component={HomeScreen} options={{title: t('Accueil'), headerShown: false}} />
+            <Tab.Screen name="Today" component={TodayScreen} options={{title: t('Aujourdhui'), headerShown: false}} />
+            <Tab.Screen name="Counter" component={CounterScreen} options={{title: t('Compteur'), headerShown: false}} />
+            <Tab.Screen name="Settings" component={SettingsScreen} options={{title: t('Parametres'), headerShown: false}} />
         </Tab.Navigator>
     );
 }
@@ -35,9 +33,8 @@ export default function AppNavigator() {
         <NavigationContainer >
             <Stack.Navigator>
                 <Stack.Screen name="Tabs" component={Tabs} options={{headerShown: false}} />
-                <Stack.Screen name="Details" component={DetailsScreen} />
+                <Stack.Screen name="Details" component={DetailsScreen}  />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
-

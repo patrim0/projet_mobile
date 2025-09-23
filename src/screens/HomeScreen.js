@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, StatusBar } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,9 @@ export default function HomeScreen({ navigation }) {
     const { t } = useTranslation();
 
     return (
+        
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
+            <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}/>
             <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('Accueil')}</Text>
 
             <Button title={t('AllerDetails')} onPress={() => navigation.navigate('Details')} />

@@ -12,15 +12,19 @@ export default function SettingsScreen() {
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
             <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('Parametres')}</Text>
+
             <View style={styles.row}>
                 <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
                 <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
             </View>
-            <View>
-                <Button title={t('Francais')} onPress={() => i18n.changeLanguage('fr')}/>
+            
+            <View style={{ height: 20 }} />
 
-                <Button title={t('Anglais')} onPress={() => i18n.changeLanguage('en')}/>
-            </View>
+            <Button title={t('Francais')} onPress={() => i18n.changeLanguage('fr')}/>
+
+            <View style={{ height: 20 }} />
+
+            <Button title={t('Anglais')} onPress={() => i18n.changeLanguage('en')}/>
         </View>
     );
 }
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
     title: { 
         fontSize: 22, 
         fontWeight: '600', 
-        marginBottom: 12 
+        marginVertical: 20
     },
     row: { 
         flexDirection: 'row', 
