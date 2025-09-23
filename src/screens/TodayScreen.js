@@ -1,29 +1,31 @@
 import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
-
+import { useTranslation } from 'react-i18next';
 
 const date = new Date().getDate();
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 
-
-const monthNames = [
-    'Janvier',
-    "Fevrier",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    'Septembre',
-    "Octobre",
-    "Novembre",
-    "Décembre"
-];
-
 export default function TodayScreen() {
+
+    const { t } = useTranslation();
+
+    const monthNames = [
+        t('Janvier'),
+        t('Fevrier'),
+        t('Mars'),
+        t('Avril'),
+        t('Mai'),
+        t('Juin'),
+        t('Juillet'),
+        t('Aout'),
+        t('Septembre'),
+        t('Octobre'),
+        t('Novembre'),
+        t('Decembre')
+    ];
+
     const { theme } = useContext(ThemeContext);
     
     const [hour, setHour] = useState(new Date().getHours());
@@ -40,9 +42,9 @@ export default function TodayScreen() {
 
     return(
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={theme === 'dark' ? styles.dark : styles.light}>La date d'aujourd'hui est le</Text>
+            <Text style={theme === 'dark' ? styles.dark : styles.light}>{t('DateAuj')}</Text>
             <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light]}>{date} {monthNames[month]} {year}</Text>
-            <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light]}>Il est présentement {hour}h{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}</Text>
+            <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light]}>{t('Heure')} {hour}:{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}</Text>
         </View>
     );
 }

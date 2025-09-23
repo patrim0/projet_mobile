@@ -21,5 +21,9 @@
     "Septembre": "Septembre",
     "Octobre": "Octobre",
     "Novembre": "Novembre",
-    "Decembre": "Décembre"
+    "Decembre": "Décembre",
+    "DateAuj": "La date d'aujourd'hui est le",
+    "Heure": "Il est présentement",
+    "EcranDetails": "Écran Détails",
+    "DescDetails": "Voici un écran poussé via la navigation de type Stack."
 }
