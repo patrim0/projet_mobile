@@ -1,14 +1,20 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
+import { FontSizeContext } from '../context/FontSizeContext';   
 
 export default function DetailsScreen() {
     const { theme } = useContext(ThemeContext);
+    const { fontSize } = useContext(FontSizeContext);  
 
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>Écran Détails</Text>
-            <Text style={[theme === 'dark' ? styles.dark : styles.light]}>Voici un écran poussé via la navigation de type Stack.</Text>
+            <Text style={[styles.title, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
+                Écran Détails
+            </Text>
+            <Text style={[{ fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
+                Voici un écran poussé via la navigation de type Stack.
+            </Text>
         </View>
     );
 }
@@ -21,7 +27,6 @@ const styles = StyleSheet.create({
         padding: 16
     },
     title: { 
-        fontSize: 22, 
         fontWeight: '600', 
         marginBottom: 8 
     },
