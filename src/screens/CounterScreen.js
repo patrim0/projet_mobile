@@ -1,27 +1,37 @@
 import { useContext } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, ImageBackground } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { useCounter } from '../hooks/useCounter';
 import { FontSizeContext } from '../context/FontSizeContext';
+import { useBackground } from '../context/BackgroundContext';
 
 export default function CounterScreen() {
   const { count, increment, decrement, reset } = useCounter(0);
   const { theme } = useContext(ThemeContext);
   const { fontSize } = useContext(FontSizeContext);
+  const { background } = useBackground();
+
+  const images = {
+        bg1: require('../../assets/images/bg1.jpg'),
+        bg2: require('../../assets/images/bg2.jpg'),
+        bg3: require('../../assets/images/bg3.jpg'),
+    };
 
   return (
-      <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-          <Text style={[styles.value, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
-            Compteur : {count}
-          </Text>
-          <View style={styles.row}>
-              <Button title="+1" onPress={increment} />
-              <View style={{ width: 12 }} />
-              <Button title="-1" onPress={decrement} />
-              <View style={{ width: 12 }} />
-              <Button title="Reset" onPress={reset} />
-          </View>
-      </View>
+        <ImageBackground source={images[background]} style={styles.background}>
+            <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
+                <Text style={[styles.value, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
+                    Compteur : {count}
+                </Text>
+                <View style={styles.row}>
+                    <Button title="+1" onPress={increment} />
+                <View style={{ width: 12 }} />
+                    <Button title="-1" onPress={decrement} />
+                <View style={{ width: 12 }} />
+                    <Button title="Reset" onPress={reset} />
+                </View>
+            </View>
+        </ImageBackground>
   );
 }
 
@@ -40,11 +50,12 @@ const styles = StyleSheet.create({
       alignItems: 'center' 
   },
   light: { 
-      backgroundColor: '#ffffff', 
       color: '#111111' 
   },
-  dark: { 
-      backgroundColor: '#111111', 
+  dark: {  
       color: '#ffffff' 
-  }
+  },
+  background: { 
+        flex: 1, resizeMode: 'cover' 
+    }
 });
