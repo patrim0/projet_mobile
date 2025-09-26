@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
-import { FontSizeContext } from '../context/FontSizeContext';   
+import { FontSizeContext } from '../context/FontSizeContext';  
+import { useBackground } from '../context/BackgroundContext'; 
 
 const date = new Date().getDate();
 const month = new Date().getMonth();
@@ -12,9 +13,16 @@ const monthNames = [
   "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
 ];
 
+const images = {
+  bg1: require('../../assets/images/bg1.jpg'),
+  bg2: require('../../assets/images/bg2.jpg'),
+  bg3: require('../../assets/images/bg3.jpg'),
+};
+
 export default function TodayScreen() {
   const { theme } = useContext(ThemeContext);
-  const { fontSize } = useContext(FontSizeContext);  
+  const { fontSize } = useContext(FontSizeContext);
+  const { background } = useBackground();
 
   const [hour, setHour] = useState(new Date().getHours());
   const [minute, setMinute] = useState(new Date().getMinutes());
@@ -30,15 +38,17 @@ export default function TodayScreen() {
   }, [hour, minute, second]);   
 
   return(
-    <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-      <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize }]}>La date d'aujourd'hui est le</Text>
-      <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize + 2 }]}>
-        {date} {monthNames[month]} {year}
-      </Text>
-      <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize - 3 }]}>
-        Il est présentement {hour}h{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}
-      </Text>
-    </View>
+    <ImageBackground source={images[background]} style={styles.background}>
+      <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
+        <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize }]}>La date d'aujourd'hui est le</Text>
+        <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize + 2 }]}>
+          {date} {monthNames[month]} {year}
+        </Text>
+        <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize - 3 }]}>
+          Il est présentement {hour}h{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}
+        </Text>
+      </View>
+    </ImageBackground>  
   );
 }
 
@@ -53,9 +63,12 @@ const styles = StyleSheet.create({
     fontWeight: '600', marginTop: 50
   },
   light: {
-    backgroundColor: '#ffffff', color: '#111111'
+   color: '#111111'
   },
   dark: {
-    backgroundColor: '#111111', color: '#ffffff'
+   color: '#ffffff'
+  },
+  background: { 
+    flex: 1, resizeMode: 'cover' 
   }
 });
