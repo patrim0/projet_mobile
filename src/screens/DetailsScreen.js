@@ -7,7 +7,7 @@ import { useTextColor } from '../context/ColorContext';
 export default function DetailsScreen() {
     const { theme } = useContext(ThemeContext);
     const { fontSize } = useContext(FontSizeContext);  
-    const { textColor } = useTextColor();
+    const { textColor, applyEverywhere } = useTextColor();
 
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>

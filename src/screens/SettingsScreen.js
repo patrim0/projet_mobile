@@ -1,18 +1,18 @@
-import React, { useContext } from 'react';
-import { View, Text, Switch, StyleSheet } from 'react-native';
-import { FontSizeContext } from '../context/FontSizeContext';
-import { ThemeContext } from '../context/ThemeContext';
+import { useContext, useState } from 'react';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { Slider } from 'react-native-elements';
 import { useTextColor } from '../context/ColorContext';
-import { TouchableOpacity } from 'react-native';
+import { FontSizeContext } from '../context/FontSizeContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 
 export default function SettingsScreen() {
     const { theme, toggleTheme } = useContext(ThemeContext);
+    const isDark = theme === 'dark';
     const { fontSize, setFontSize } = useContext(FontSizeContext);
-    const { textColor, setTextColor } = useTextColor();
+    const { textColor, setTextColor, applyEverywhere, setApplyEverywhere } = useTextColor();
     const themeText = theme === 'dark' ? "Mode sombre" : "Mode clair"; 
-
+    const [previewColor, setPreviewColor] = useState(textColor);
 
     const COLORS = [
     { name: 'Noir', value: '#111111' },
@@ -21,12 +21,12 @@ export default function SettingsScreen() {
   ];
 
     return (
-      <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-        <Text style={[ styles.title, { color: textColor }]}> Paramètres </Text>
+      <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+      <Text style={[styles.title, { color: textColor }]}>Paramètres</Text>
         <View style={styles.row}>
-          <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
-          <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
-        </View>
+          <Text style={{ color: textColor }}>{themeText}</Text>
+          <Switch value={isDark} onValueChange={toggleTheme} />
+      </View>
       <View style={styles.sliderContainer}>
       <Text style={{ color: textColor, fontSize: 12 }}>A</Text>
 
@@ -50,31 +50,41 @@ export default function SettingsScreen() {
   style={{ color: textColor, fontSize: fontSize, marginTop: 16 }}>Aperçu de la taille du texte</Text>
     <View style={{ flexDirection: 'row', marginTop: 10 }}>
         {COLORS.map((c) => {
-          const selected = (textColor || '').toLowerCase() === c.value.toLowerCase();
+          const selected = previewColor.toLowerCase() === c.value.toLowerCase();
           return (
             <TouchableOpacity
               key={c.value}
-              onPress={() => setTextColor(c.value)}
+              onPress={() => setPreviewColor(c.value)}  
               style={{
-                width: 28,
-                height: 28,
-                borderRadius: 14,
+                width: 28, height: 28, borderRadius: 14,
                 backgroundColor: c.value,
                 borderWidth: selected ? 3 : 1,
                 borderColor: selected ? '#444' : '#ccc',
                 marginRight: 12,
               }}
-              accessibilityRole="button"
-              accessibilityLabel={`Choisir ${c.name}`}
+              
             />
           );
         })}
         
       </View>
 
-      <Text style={{ color: textColor, fontSize, marginTop: 12 }}>
-        Aperçu avec la couleur sélectionnée
+
+      <Text style={{ color: previewColor, fontSize, marginTop: 12 }}>
+        Exemple avec la couleur sélectionnée
       </Text>
+
+
+     <View style={[styles.row, { marginTop: 12 }]}>
+        <Text style={{ color: textColor }}>Appliquer partout</Text>
+        <Switch
+          value={applyEverywhere}
+          onValueChange={(val) => {
+            setApplyEverywhere(val);
+            if (val) setTextColor(previewColor);
+          }}
+        />
+    </View>
     </View>
     
 

@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ThemeContext } from '../context/ThemeContext';
-import { FontSizeContext } from '../context/FontSizeContext';   
 import { useTextColor } from '../context/ColorContext';
+import { FontSizeContext } from '../context/FontSizeContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 const date = new Date().getDate();
 const month = new Date().getMonth();
@@ -16,13 +16,16 @@ const monthNames = [
 
 export default function TodayScreen() {
   const { theme } = useContext(ThemeContext);
+  const isDark = theme === 'dark';
   const { fontSize } = useContext(FontSizeContext);
-  const { textColor } = useTextColor();
+  const { textColor, applyEverywhere } = useTextColor();
 
   const [hour, setHour] = useState(new Date().getHours());
   const [minute, setMinute] = useState(new Date().getMinutes());
   const [second, setSecond] = useState(new Date().getSeconds());
 
+
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setHour(new Date().getHours());
@@ -31,21 +34,22 @@ export default function TodayScreen() {
     }, 1000);
     return () => clearTimeout(timer);   
   }, [hour, minute, second]);   
+  
+ const themeTextColor = isDark ? '#ffffff' : '#111111';
 
   return(
-    <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-      <Text style={{ fontSize, color: textColor }}>
+    <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+      <Text style={{ fontSize, color: applyEverywhere ? textColor : themeTextColor }}>
         La date d'aujourd'hui est le
       </Text>
 
-      <Text style={[styles.date, { fontSize: fontSize + 2, color: textColor }]}>
+      <Text style={[styles.date, { fontSize: fontSize + 2, color: applyEverywhere ? textColor : themeTextColor }]}>
         {date} {monthNames[month]} {year}
       </Text>
 
-      <Text style={[styles.time, { fontSize: fontSize - 3, color: textColor }]}>
+      <Text style={[styles.time, { fontSize: fontSize - 3, color: applyEverywhere ? textColor : themeTextColor }]}>
         Il est présentement {hour}h{minute < 10 ? '0' + minute : minute}:{second < 10 ? '0' + second : second}
       </Text>
-
     </View>
   );
 }

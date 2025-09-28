@@ -8,13 +8,20 @@ import { useTextColor } from '../context/ColorContext';
 export default function CounterScreen() {
   const { count, increment, decrement, reset } = useCounter(0);
   const { theme } = useContext(ThemeContext);
+  const isDark = theme === 'dark';
   const { fontSize } = useContext(FontSizeContext);
-  const { textColor } = useTextColor();
+  const { textColor, applyEverywhere } = useTextColor();
+  
+
+  const fallbackColor = isDark ? '#ffffff' : '#111111';
   return (
-      <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-          <Text style={[styles.value, { fontSize, color: textColor }]}>
-            Compteur : {count}
-          </Text>
+      <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+      <Text style={[
+        styles.value,
+        { fontSize, color: applyEverywhere ? textColor : fallbackColor }
+        ]}>
+        Compteur : {count}
+      </Text>
           <View style={styles.row}>
               <Button title="+1" onPress={increment} />
               <View style={{ width: 12 }} />

@@ -6,39 +6,39 @@ import { ThemeContext } from '../context/ThemeContext';
 
 export default function HomeScreen({ navigation }) {
   const { theme } = useContext(ThemeContext);
-  const { fontSize } = useContext(FontSizeContext);
-  const { textColor } = useTextColor();
   const isDark = theme === 'dark';
+  const { fontSize } = useContext(FontSizeContext);
+  const { textColor, applyEverywhere } = useTextColor();
+
+  const baseText = applyEverywhere ? { color: textColor } : (isDark ? styles.darkText : styles.lightText);
 
   return (
     <View style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
-      <Text style={[styles.title, { fontSize, color: textColor }]}>
-        Accueil
-      </Text>
+      <Text style={[styles.title, { fontSize }, baseText]}>Accueil</Text>
 
       <Text
-        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        style={[{ fontSize, marginBottom: 12 }, baseText]}
         onPress={() => navigation.navigate('Today')}
       >
         Aller à la date d'aujourd'hui
       </Text>
 
       <Text
-        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        style={[{ fontSize, marginBottom: 12 }, baseText]}
         onPress={() => navigation.navigate('Details')}
       >
         Aller aux Détails
       </Text>
 
       <Text
-        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        style={[{ fontSize, marginBottom: 12 }, baseText]}
         onPress={() => navigation.navigate('Counter')}
       >
         Voir le Compteur
       </Text>
 
       <Text
-        style={{ fontSize, color: textColor, marginBottom: 12 }}
+        style={[{ fontSize, marginBottom: 12 }, baseText]}
         onPress={() => navigation.navigate('Settings')}
       >
         Aller aux Paramètres

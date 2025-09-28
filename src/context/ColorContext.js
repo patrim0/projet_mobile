@@ -1,15 +1,16 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
-const ColorContext = createContext({
-  textColor: '#111111',
-  setTextColor: () => {},
-});
+const ColorContext = createContext();
 
 export const TextColorProvider = ({ children }) => {
-  const [textColor, setTextColor] = useState('#111111'); // Noir par défaut
-  const value = useMemo(() => ({ textColor, setTextColor }), [textColor]);
-  return <ColorContext.Provider value={value}>{children}</ColorContext.Provider>;
+  const [textColor, setTextColor] = useState('#111111');
+  const [applyEverywhere, setApplyEverywhere] = useState(false);
+
+  return (
+    <ColorContext.Provider value={{ textColor, setTextColor, applyEverywhere, setApplyEverywhere }}>
+      {children}
+    </ColorContext.Provider>
+  );
 };
 
 export const useTextColor = () => useContext(ColorContext);
-
