@@ -1,3 +1,8 @@
+import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { ThemeContext } from '../context/ThemeContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,21 +20,18 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Tabs() {
+
+    const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
     const { fontSize } = useContext(FontSizeContext);  
     const { textColor } = useTextColor();
-
+    
     return (
-        <Tab.Navigator
-          screenOptions={{
-            tabBarLabelStyle: { fontSize: fontSize },
-            tabBarActiveTintColor: textColor,
-            headerTintColor: textColor,  
-          }}
-        >
-            <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Accueil' }} />
-            <Tab.Screen name="Today" component={TodayScreen} options={{ title: "Aujourd'hui" }} />
-            <Tab.Screen name="Counter" component={CounterScreen} options={{ title: 'Compteur' }} />
-            <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: 'Paramètres' }} />
+        <Tab.Navigator screenOptions={{tabBarStyle: theme === 'dark' ? styles.dark : styles.light, tabBarActiveTintColor: textColor, headerTintColor: textColor}}>
+            <Tab.Screen name="Home" component={HomeScreen} options={{title: t('Accueil'), headerShown: false}} />
+            <Tab.Screen name="Today" component={TodayScreen} options={{title: t('Aujourdhui'), headerShown: false}} />
+            <Tab.Screen name="Counter" component={CounterScreen} options={{title: t('Compteur'), headerShown: false}} />
+            <Tab.Screen name="Settings" component={SettingsScreen} options={{title: t('Parametres'), headerShown: false}} />
         </Tab.Navigator>
     );
 }
@@ -47,3 +49,27 @@ export default function AppNavigator() {
         </NavigationContainer>
     );
 }
+
+const styles = StyleSheet.create({
+    container: { 
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+    },
+    value: { 
+        fontSize: 22, 
+        marginBottom: 16 
+    },
+    row: { 
+        flexDirection: 'row', 
+        alignItems: 'center' 
+    },
+    light: { 
+        backgroundColor: '#ffffff', 
+        color: '#111111' 
+    },
+    dark: { 
+        backgroundColor: '#111111', 
+        color: '#ffffff' 
+    }
+});

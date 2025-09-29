@@ -1,15 +1,40 @@
-import { useContext, useState } from 'react';
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, Switch, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { ThemeContext } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { Slider } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { FontSizeContext } from '../context/FontSizeContext';
-import { ThemeContext } from '../context/ThemeContext';
 import { useBackground } from '../context/BackgroundContext';
 /*import { backgroundColorContext } from '../context/backgroundColorContext';*/
 import { useTextColor } from '../context/ColorContext';
 
 export default function SettingsScreen() {
+    
+    const { t, i18n } = useTranslation();
     const { theme, toggleTheme } = useContext(ThemeContext);
+
+    /* const themeText = (theme === 'dark' ? t('ModeSombre') : t('ModeClair'));
+    
+    return (
+        <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
+            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light]}>{t('Parametres')}</Text>
+
+            <View style={styles.row}>
+                <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
+                <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
+            </View>
+            
+            <View style={{ height: 20 }} />
+
+            <Button title={t('Francais')} onPress={() => i18n.changeLanguage('fr')}/>
+
+            <View style={{ height: 20 }} />
+
+            <Button title={t('Anglais')} onPress={() => i18n.changeLanguage('en')}/>
+        </View>
+    ); */
+
     const isDark = theme === 'dark';
     const { fontSize, setFontSize } = useContext(FontSizeContext);
     const { background, setBackground } = useBackground();
@@ -115,18 +140,32 @@ export default function SettingsScreen() {
     </View>
 
     </View>
-    
-
-
   );
 }
 
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16 },
-    title: { fontSize: 24, fontWeight: '600', marginBottom: 12 },
-    row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-    sliderContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 32 },
-    light: { backgroundColor: '#ffffff', color: '#111111' },
-    dark: { backgroundColor: '#111111', color: '#ffffff' },
+
+    container: { 
+        flex: 1, 
+        padding: 16 
+    },
+    title: { 
+        fontSize: 22, 
+        fontWeight: '600', 
+        marginVertical: 20
+    },
+    row: { 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-between' 
+    },
+    light: { 
+        backgroundColor: '#ffffff', 
+        color: '#111111' 
+    },
+    dark: { 
+        backgroundColor: '#111111', 
+        color: '#ffffff' 
+    }
 });

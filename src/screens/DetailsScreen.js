@@ -1,22 +1,20 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { FontSizeContext } from '../context/FontSizeContext';   
 import { useTextColor } from '../context/ColorContext';
 
 export default function DetailsScreen() {
     const { theme } = useContext(ThemeContext);
+    const { t } = useTranslation();
     const { fontSize } = useContext(FontSizeContext);  
     const { textColor, applyEverywhere } = useTextColor();
 
     return (
         <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-            <Text style={[styles.title, { fontSize, color: textColor }]}>
-                Écran Détails
-            </Text>
-            <Text style={[{ fontSize, color: textColor }, theme === 'dark' ? styles.dark : styles.light]}>
-                Voici un écran poussé via la navigation de type Stack.
-            </Text>
+            <Text style={[styles.title, theme === 'dark' ? styles.dark : styles.light, { fontSize, color: textColor }]}>{t('EcranDetails')}</Text>
+            <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize, color: textColor }]}>{t('DescDetails')}</Text>
         </View>
     );
 }

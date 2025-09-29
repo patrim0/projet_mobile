@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { StyleSheet, Text, View,ImageBackground } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { FontSizeContext } from '../context/FontSizeContext';  
 import { useBackground } from '../context/BackgroundContext';
 import { useTextColor } from '../context/ColorContext';
@@ -9,12 +10,6 @@ const date = new Date().getDate();
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 
-
-const monthNames = [
-  "Janvier","Fevrier","Mars","Avril","Mai","Juin",
-  "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
-];
-
 const images = {
   bg1: require('../../assets/images/bg1.jpg'),
   bg2: require('../../assets/images/bg2.jpg'),
@@ -22,16 +17,34 @@ const images = {
 };
 
 export default function TodayScreen() {
-  const { theme } = useContext(ThemeContext);
-  const { fontSize } = useContext(FontSizeContext);
-  const { background } = useBackground();
-  const isDark = theme === 'dark';
-  const { textColor, applyEverywhere } = useTextColor();
 
-  const [hour, setHour] = useState(new Date().getHours());
-  const [minute, setMinute] = useState(new Date().getMinutes());
-  const [second, setSecond] = useState(new Date().getSeconds());
+    const { t } = useTranslation();
 
+    const monthNames = [
+        t('Janvier'),
+        t('Fevrier'),
+        t('Mars'),
+        t('Avril'),
+        t('Mai'),
+        t('Juin'),
+        t('Juillet'),
+        t('Aout'),
+        t('Septembre'),
+        t('Octobre'),
+        t('Novembre'),
+        t('Decembre')
+    ];
+
+    const { theme } = useContext(ThemeContext);
+    const { fontSize } = useContext(FontSizeContext);
+    const { background } = useBackground();
+    const isDark = theme === 'dark';
+    const { textColor, applyEverywhere } = useTextColor();
+
+    
+    const [hour, setHour] = useState(new Date().getHours());
+    const [minute, setMinute] = useState(new Date().getMinutes());
+    const [second, setSecond] = useState(new Date().getSeconds());
 
   
   useEffect(() => {
@@ -48,12 +61,12 @@ export default function TodayScreen() {
   return(
     <ImageBackground source={images[background]} style={styles.background}>
       <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-        <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize, color: applyEverywhere ? textColor : themeTextColor }]}>La date d'aujourd'hui est le</Text>
+        <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize, color: applyEverywhere ? textColor : themeTextColor }]}>{t('DateAuj')}</Text>
         <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize + 2, color: applyEverywhere ? textColor : themeTextColor }]}>
           {date} {monthNames[month]} {year}
         </Text>
         <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize - 3, color: applyEverywhere ? textColor : themeTextColor }]}>
-          Il est présentement {hour}h{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}
+          {t('Heure')} {hour}:{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}
         </Text>
       </View>
     </ImageBackground>  

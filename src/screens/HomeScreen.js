@@ -1,7 +1,8 @@
 
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Button, StyleSheet, StatusBar, ImageBackground } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { FontSizeContext } from '../context/FontSizeContext';
 import { useBackground } from '../context/BackgroundContext';
 import { useTextColor } from '../context/ColorContext';
@@ -20,6 +21,8 @@ export default function HomeScreen({ navigation }) {
         bg2: require('../../assets/images/bg2.jpg'),
         bg3: require('../../assets/images/bg3.jpg'),
     };
+
+    const { t } = useTranslation();
 
     return (
         <ImageBackground source={images[background]} style={styles.background}>
