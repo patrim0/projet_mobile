@@ -3,12 +3,16 @@ import { Button, StyleSheet, Text, View, ImageBackground } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { useCounter } from '../hooks/useCounter';
 import { FontSizeContext } from '../context/FontSizeContext';
+import { useTextColor } from '../context/ColorContext';
 import { useBackground } from '../context/BackgroundContext';
 
 export default function CounterScreen() {
   const { count, increment, decrement, reset } = useCounter(0);
   const { theme } = useContext(ThemeContext);
+  const isDark = theme === 'dark';
   const { fontSize } = useContext(FontSizeContext);
+  const { textColor, applyEverywhere } = useTextColor();
+  
   const { background } = useBackground();
 
   const images = {
@@ -17,7 +21,24 @@ export default function CounterScreen() {
         bg3: require('../../assets/images/bg3.jpg'),
     };
 
+  const fallbackColor = isDark ? '#ffffff' : '#111111';
+  
   return (
+      <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+      <Text style={[
+        styles.value,
+        { fontSize, color: applyEverywhere ? textColor : fallbackColor }
+        ]}>
+        Compteur : {count}
+      </Text>
+          <View style={styles.row}>
+              <Button title="+1" onPress={increment} />
+              <View style={{ width: 12 }} />
+              <Button title="-1" onPress={decrement} />
+              <View style={{ width: 12 }} />
+              <Button title="Reset" onPress={reset} />
+          </View>
+      </View>
         <ImageBackground source={images[background]} style={styles.background}>
             <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
                 <Text style={[styles.value, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>

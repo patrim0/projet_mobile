@@ -1,13 +1,19 @@
+
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { FontSizeContext } from '../context/FontSizeContext';
 import { useBackground } from '../context/BackgroundContext';
+import { useTextColor } from '../context/ColorContext';
 
 export default function HomeScreen({ navigation }) {
     const { theme } = useContext(ThemeContext);
+    const isDark = theme === 'dark';
     const { fontSize } = useContext(FontSizeContext);
     const { background } = useBackground();
+    const { textColor, applyEverywhere } = useTextColor();
+  
+    const baseText = applyEverywhere ? { color: textColor } : (isDark ? styles.darkText : styles.lightText);
 
     const images = {
         bg1: require('../../assets/images/bg1.jpg'),

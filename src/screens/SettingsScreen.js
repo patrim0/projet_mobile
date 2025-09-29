@@ -1,17 +1,21 @@
-import { useContext } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { useContext, useState } from 'react';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { Slider } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { FontSizeContext } from '../context/FontSizeContext';
 import { ThemeContext } from '../context/ThemeContext';
 import { useBackground } from '../context/BackgroundContext';
 /*import { backgroundColorContext } from '../context/backgroundColorContext';*/
+import { useTextColor } from '../context/ColorContext';
 
 export default function SettingsScreen() {
     const { theme, toggleTheme } = useContext(ThemeContext);
+    const isDark = theme === 'dark';
     const { fontSize, setFontSize } = useContext(FontSizeContext);
     const { background, setBackground } = useBackground();
     /*const {backgroundColor, setBackgroundColor} = useContext(backgroundColorContext);*/
+    const { textColor, setTextColor, applyEverywhere, setApplyEverywhere } = useTextColor();
+    const [previewColor, setPreviewColor] = useState(textColor);
   
     const themeText = theme === 'dark' ? "Mode sombre" : "Mode clair"; 
 
@@ -20,17 +24,22 @@ export default function SettingsScreen() {
         bg2: require('../../assets/images/bg2.jpg'),
         bg3: require('../../assets/images/bg3.jpg'),
       };
-
   
+      const COLORS = [
+        { name: 'Noir', value: '#111111' },
+        { name: 'Bleu', value: '#1e40af' },
+        { name: 'Rouge', value: '#b91c1c' },
+      ];
+
     return (
-      <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-        <Text style={[ styles.title, { color: theme === 'dark' ? '#fff' : '#111' }]}> Paramètres </Text>
+      <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+      <Text style={[styles.title, { color: textColor }]}>Paramètres</Text>
         <View style={styles.row}>
-          <Text style={theme === 'dark' ? styles.dark : styles.light}>{themeText}</Text>
-          <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
-        </View>
+          <Text style={{ color: textColor }}>{themeText}</Text>
+          <Switch value={isDark} onValueChange={toggleTheme} />
+      </View>
       <View style={styles.sliderContainer}>
-      <Text style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: 12 }}>A</Text>
+      <Text style={{ color: textColor, fontSize: 12 }}>A</Text>
 
 
         <Slider
@@ -45,10 +54,49 @@ export default function SettingsScreen() {
           minimumTrackTintColor="#347af7"
           maximumTrackTintColor="#bbb"
         />
-        <Text style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: 24 }}>A</Text>
+        <Text style={{ color: textColor, fontSize: 24 }}>A</Text>
       </View>
 
       <Text
+
+  style={{ color: textColor, fontSize: fontSize, marginTop: 16 }}>Aperçu de la taille du texte</Text>
+    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+        {COLORS.map((c) => {
+          const selected = previewColor.toLowerCase() === c.value.toLowerCase();
+          return (
+            <TouchableOpacity
+              key={c.value}
+              onPress={() => setPreviewColor(c.value)}  
+              style={{
+                width: 28, height: 28, borderRadius: 14,
+                backgroundColor: c.value,
+                borderWidth: selected ? 3 : 1,
+                borderColor: selected ? '#444' : '#ccc',
+                marginRight: 12,
+              }}
+              
+            />
+          );
+        })}
+        
+      </View>
+
+
+      <Text style={{ color: previewColor, fontSize, marginTop: 12 }}>
+        Exemple avec la couleur sélectionnée
+      </Text>
+
+
+     <View style={[styles.row, { marginTop: 12 }]}>
+        <Text style={{ color: textColor }}>Appliquer partout</Text>
+        <Switch
+          value={applyEverywhere}
+          onValueChange={(val) => {
+            setApplyEverywhere(val);
+            if (val) setTextColor(previewColor);
+          }}
+        />
+
         style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: fontSize, marginTop: 16 }}>Aperçu de la taille du texte
       </Text>
 
@@ -66,6 +114,10 @@ export default function SettingsScreen() {
     </View>
 
     </View>
+    </View>
+    
+
+
   );
 }
 
