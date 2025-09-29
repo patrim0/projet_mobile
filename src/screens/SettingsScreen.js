@@ -96,9 +96,10 @@ export default function SettingsScreen() {
             if (val) setTextColor(previewColor);
           }}
         />
-
+      <Text
         style={{ color: theme === 'dark' ? '#fff' : '#111', fontSize: fontSize, marginTop: 16 }}>Aperçu de la taille du texte
       </Text>
+      </View>
 
       <View style={styles.container}>
       <Text style={{color: theme === 'dark' ? '#fff' : '#111', fontSize: fontSize, marginTop: 16}}>Choose Background</Text>
@@ -113,7 +114,6 @@ export default function SettingsScreen() {
       </Picker>
     </View>
 
-    </View>
     </View>
     
 

@@ -11,6 +11,7 @@ export default function App() {
         <ThemeProvider>
             <FontSizeProvider>
                 <TextColorProvider>
+                <BackgroundProvider>
                 <AppNavigator />
                 </BackgroundProvider>
                 </TextColorProvider>

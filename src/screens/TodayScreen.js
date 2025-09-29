@@ -46,7 +46,7 @@ export default function TodayScreen() {
  const themeTextColor = isDark ? '#ffffff' : '#111111';
 
   return(
-    <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+/*     <View style={[styles.container, isDark ? styles.dark : styles.light]}>
       <Text style={{ fontSize, color: applyEverywhere ? textColor : themeTextColor }}>
         La date d'aujourd'hui est le
       </Text>
@@ -58,7 +58,7 @@ export default function TodayScreen() {
       <Text style={[styles.time, { fontSize: fontSize - 3, color: applyEverywhere ? textColor : themeTextColor }]}>
         Il est présentement {hour}h{minute < 10 ? '0' + minute : minute}:{second < 10 ? '0' + second : second}
       </Text>
-    </View>
+    </View> */
 
     <ImageBackground source={images[background]} style={styles.background}>
       <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>

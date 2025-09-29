@@ -24,7 +24,7 @@ export default function CounterScreen() {
   const fallbackColor = isDark ? '#ffffff' : '#111111';
   
   return (
-      <View style={[styles.container, isDark ? styles.dark : styles.light]}>
+/*       <View style={[styles.container, isDark ? styles.dark : styles.light]}>
       <Text style={[
         styles.value,
         { fontSize, color: applyEverywhere ? textColor : fallbackColor }
@@ -38,7 +38,7 @@ export default function CounterScreen() {
               <View style={{ width: 12 }} />
               <Button title="Reset" onPress={reset} />
           </View>
-      </View>
+      </View> */
         <ImageBackground source={images[background]} style={styles.background}>
             <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
                 <Text style={[styles.value, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
