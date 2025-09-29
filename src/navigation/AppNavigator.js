@@ -4,9 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { ThemeContext } from '../context/ThemeContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useContext } from 'react';
 
 import { useTextColor } from '../context/ColorContext';
 import { FontSizeContext } from '../context/FontSizeContext';

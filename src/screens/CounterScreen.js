@@ -15,6 +15,7 @@ export default function CounterScreen() {
     const isDark = theme === 'dark';
     const { fontSize } = useContext(FontSizeContext);
     const { textColor, applyEverywhere } = useTextColor();
+    const { background } = useBackground();
   
     const images = {
         bg1: require('../../assets/images/bg1.jpg'),
@@ -30,7 +31,7 @@ export default function CounterScreen() {
                 <Text style={[styles.value, { fontSize, color: applyEverywhere ? textColor : fallbackColor }, theme === 'dark' ? styles.dark : styles.light]}>
                     {t('Compteur')} : {count}
                 </Text>
-                <View style={styles.row}>
+                <View style={styles.row} />
                   
                 <Button title="+1" onPress={increment} />
                   
