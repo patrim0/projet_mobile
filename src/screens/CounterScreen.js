@@ -24,24 +24,9 @@ export default function CounterScreen() {
   const fallbackColor = isDark ? '#ffffff' : '#111111';
   
   return (
-/*       <View style={[styles.container, isDark ? styles.dark : styles.light]}>
-      <Text style={[
-        styles.value,
-        { fontSize, color: applyEverywhere ? textColor : fallbackColor }
-        ]}>
-        Compteur : {count}
-      </Text>
-          <View style={styles.row}>
-              <Button title="+1" onPress={increment} />
-              <View style={{ width: 12 }} />
-              <Button title="-1" onPress={decrement} />
-              <View style={{ width: 12 }} />
-              <Button title="Reset" onPress={reset} />
-          </View>
-      </View> */
         <ImageBackground source={images[background]} style={styles.background}>
             <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-                <Text style={[styles.value, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
+                <Text style={[styles.value, { fontSize, color: applyEverywhere ? textColor : fallbackColor }, theme === 'dark' ? styles.dark : styles.light]}>
                     Compteur : {count}
                 </Text>
                 <View style={styles.row}>

@@ -46,27 +46,13 @@ export default function TodayScreen() {
  const themeTextColor = isDark ? '#ffffff' : '#111111';
 
   return(
-/*     <View style={[styles.container, isDark ? styles.dark : styles.light]}>
-      <Text style={{ fontSize, color: applyEverywhere ? textColor : themeTextColor }}>
-        La date d'aujourd'hui est le
-      </Text>
-
-      <Text style={[styles.date, { fontSize: fontSize + 2, color: applyEverywhere ? textColor : themeTextColor }]}>
-        {date} {monthNames[month]} {year}
-      </Text>
-
-      <Text style={[styles.time, { fontSize: fontSize - 3, color: applyEverywhere ? textColor : themeTextColor }]}>
-        Il est présentement {hour}h{minute < 10 ? '0' + minute : minute}:{second < 10 ? '0' + second : second}
-      </Text>
-    </View> */
-
     <ImageBackground source={images[background]} style={styles.background}>
       <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-        <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize }]}>La date d'aujourd'hui est le</Text>
-        <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize + 2 }]}>
+        <Text style={[theme === 'dark' ? styles.dark : styles.light, { fontSize, color: applyEverywhere ? textColor : themeTextColor }]}>La date d'aujourd'hui est le</Text>
+        <Text style={[styles.date, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize + 2, color: applyEverywhere ? textColor : themeTextColor }]}>
           {date} {monthNames[month]} {year}
         </Text>
-        <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize - 3 }]}>
+        <Text style={[styles.time, theme === 'dark' ? styles.dark : styles.light, { fontSize: fontSize - 3, color: applyEverywhere ? textColor : themeTextColor }]}>
           Il est présentement {hour}h{minute < 10 ? "0" + minute : minute}:{second < 10 ? "0" + second : second}
         </Text>
       </View>
