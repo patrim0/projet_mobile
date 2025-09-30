@@ -7,12 +7,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useTextColor } from '../context/ColorContext';
-import { FontSizeContext } from '../context/FontSizeContext';
 import CounterScreen from '../screens/CounterScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodayScreen from '../screens/TodayScreen';
+import Feather from '@expo/vector-icons/Feather';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,7 +21,6 @@ function Tabs() {
 
     const { theme } = useContext(ThemeContext);
     const { t } = useTranslation();
-    const { fontSize } = useContext(FontSizeContext);  
     const { textColor } = useTextColor();
     
     return (

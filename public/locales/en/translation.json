@@ -25,5 +25,14 @@
     "DateAuj": "Today is",
     "Heure": "The current time is",
     "EcranDetails": "Details Screen",
-    "DescDetails": "Here is a screen pushed via Stack type navigation."
+    "DescDetails": "Here is a screen pushed via Stack type navigation.",
+    "AllerDate": "Go to today's date",
+    "AllerParam": "Go to Settings",
+    "ApercuTaille": "Text size preview",
+    "ExempleCouleur": "Selected color preview",
+    "AppliquerPartout": "Apply everywhere",
+    "ChoisirBG": "Choose a background",
+    "BG1": "1. Beach",
+    "BG2": "2. Dune",
+    "BG3": "3. Sunset"
 }

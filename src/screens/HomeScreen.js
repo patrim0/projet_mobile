@@ -12,7 +12,7 @@ export default function HomeScreen({ navigation }) {
     const { fontSize } = useContext(FontSizeContext);
     const { background } = useBackground();
     const { textColor, applyEverywhere } = useTextColor();
-  
+
     const baseText = applyEverywhere ? { color: textColor } : (isDark ? styles.darkText : styles.lightText);
 
     const images = {
@@ -25,25 +25,26 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <ImageBackground source={images[background]} style={styles.background}>
+            <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}/>
             <View style={[styles.container, theme === 'dark' ? styles.dark : styles.light]}>
-                <Text style={[styles.title, { fontSize }, theme === 'dark' ? styles.dark : styles.light]}>
-                    Accueil
+                <Text style={[styles.title, { fontSize, color: applyEverywhere ? textColor : baseText }]}>
+                    {t('Accueil')}
                 </Text>
 
                 <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Today')}>
-                    Aller à la date d'aujourd'hui
+                    {t('AllerDate')}
                 </Text>
 
                 <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Details')}>
-                    Aller aux Détails
+                    {t('AllerDetails')}
                 </Text>
 
                 <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Counter')}>
-                    Voir le Compteur
+                    {t('VoirCompteur')}
                 </Text>
 
                 <Text style={{ fontSize, color: 'blue', marginBottom: 12 }} onPress={() => navigation.navigate('Settings')}>
-                    Aller aux Paramètres
+                    {t('AllerParam')}
                 </Text>
             </View>
         </ImageBackground>
