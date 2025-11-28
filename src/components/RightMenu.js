@@ -1,11 +1,13 @@
 import { useRef, useState, useEffect } from 'react';
 import { Animated, StyleSheet, View, TouchableWithoutFeedback, Text, TouchableOpacity, TextInput } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const [view, setView] = useState('guest');
 
     const translateX = useRef(new Animated.Value(width)).current;
+    const viewTransition = useRef(new Animated.Value(0)).current
 
     useEffect(() => {
         Animated.parallel([
@@ -17,6 +19,21 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
         ]).start();
     }, [visible]);
 
+    function switchView(next) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        Animated.timing(viewTransition, { toValue:
+            next === 'guest' ? 0 :
+            next === 'login' ? 1 :
+            2,
+        duration: 250,
+        useNativeDriver: true }).start(() => setView(next))};
+
+    useEffect(() => {
+        if (!visible) setView('guest');
+        viewTransition.setValue(0);
+    }, [visible]);
+    
+
     return (
         <View style={[styles.overlay, { display: visible ? 'flex' : 'none' }]}>
 
@@ -27,24 +44,47 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
             <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
 
                 {view === 'guest' && (
-                    <>
+                    <Animated.View style={{
+                        opacity: viewTransition.interpolate({
+                            inputRange: [0,1],
+                            outputRange: [1,0]
+                        }),
+                        transform:[{
+                            translateY: viewTransition.interpolate({
+                                inputRange: [0,1],
+                                outputRange: [0,15]
+                            })
+                        }]
+                    }}>
                         <Text style={styles.header}>Launch yourself towards your next destination</Text>
                         <Text style={styles.subHeader}>Save and customize your preferences.</Text>
 
                         <View style={styles.separator} />
 
-                        <TouchableOpacity onPress={() => setView('login')}>
+                        <TouchableOpacity onPress={() => switchView('login')}>
                             <Text style={styles.menuItem}>Login</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => setView('register')}>
+                        <TouchableOpacity onPress={() => switchView('register')}>
                             <Text style={styles.menuItem}>Sign Up</Text>
                         </TouchableOpacity>
-                    </>
+                    </Animated.View>
                 )}
 
                 {view === 'login' && (
-                    <>
+                    <Animated.View style={{
+                        flex: 1,
+                        opacity: viewTransition.interpolate({
+                            inputRange: [0,1],
+                            outputRange: [0,1]
+                        }),
+                        transform:[{
+                            translateY: viewTransition.interpolate({
+                                inputRange: [0,1],
+                                outputRange: [0,15]
+                            })
+                        }]
+                    }}>
                         <Text style={styles.header}>Welcome Back</Text>
 
                         <View style={styles.separator} />
@@ -56,18 +96,29 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                             <Text style={styles.loginButtonText}>Log In</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => setView('guest')}>
+                        <TouchableOpacity onPress={() => switchView('guest')}>
                             <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
                         </TouchableOpacity>
 
                         <View style={{ flex: 1 }} />
 
                         <Text style={[styles.lostPassword]}>Lost Password?</Text>
-                    </>
+                    </Animated.View>
                 )}
 
                 {view === 'register' && (
-                    <>
+                    <Animated.View style={{
+                        opacity: viewTransition.interpolate({
+                            inputRange: [1,2],
+                            outputRange: [0,1]
+                        }),
+                        transform:[{
+                            translateY: viewTransition.interpolate({
+                                inputRange: [1,2],
+                                outputRange: [0,15]
+                            })
+                        }]
+                    }}>
                         <Text style={styles.header}>Create Account</Text>
 
                         <View style={styles.separator} />
@@ -80,12 +131,11 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                             <Text style={styles.loginButtonText}>Register</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => setView('guest')}>
+                        <TouchableOpacity onPress={() => switchView('guest')}>
                             <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
                         </TouchableOpacity>
-                    </>
+                    </Animated.View>
                 )}
-
             </Animated.View>
         </View>
     );
@@ -142,7 +192,7 @@ const styles = StyleSheet.create({
     lostPassword: {
         fontSize: 15,
         opacity: 0.4,
-        paddingVertical: 25,
+        paddingVertical: 75,
         textAlign: 'right',
     },
     input: {
