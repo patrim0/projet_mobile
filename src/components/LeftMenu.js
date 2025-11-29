@@ -1,25 +1,33 @@
 import { useRef, useEffect } from 'react';
 import { Animated, StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 
-export default function RightMenu({ visible, onClose, width = 260 }) {
+export default function LeftMenu({ visible, onClose, width = 260 }) {
 
     const translateX = useRef(new Animated.Value(-width)).current;
+    const backdropOpacity = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         Animated.parallel([
-            Animated.timing(translateX, {
+            Animated.spring(translateX, {
                 toValue: visible ? 0 : -width,
-                duration: 250,
+                speed: 14,
+                bounciness: 4,
                 useNativeDriver: true,
             })
         ]).start();
+
+        Animated.timing(backdropOpacity, {
+            toValue: visible ? 1 : 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
     }, [visible]);
 
     return (
-        <View style={[styles.overlay, { display: visible ? 'flex' : 'none' }]}>
+        <View style={[styles.overlay, { pointerEvents: visible ? 'auto' : 'none' }]}>
 
             <TouchableWithoutFeedback onPress={onClose}>
-                <View style={styles.backdrop} />
+                <Animated.View style={[styles.backdrop, {opacity: backdropOpacity}]} />
             </TouchableWithoutFeedback>
 
             <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
@@ -48,7 +56,7 @@ const styles = StyleSheet.create({
     },
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.3)'
     },
     sidebar: {
         position: 'absolute',
@@ -57,8 +65,8 @@ const styles = StyleSheet.create({
         height: '100%',
         paddingTop: 50,
         paddingHorizontal: 20,
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
+        borderTopLeftRadius: 8,
+        borderBottomLeftRadius: 8,
         elevation: 10,
         shadowColor: '#000',
         shadowOpacity: 0.2,

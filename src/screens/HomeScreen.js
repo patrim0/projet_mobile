@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, Button, TextInput, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, TextInput, TouchableOpacity, Animated } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Feather from '@expo/vector-icons/Feather';
@@ -8,7 +8,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import RightMenu from '../components/RightMenu';
 import LeftMenu from '../components/LeftMenu';
 
-export default function HomeScreen({ homeScreenParallax }) {
+export default function HomeScreen({ parallax }) {
 
     const { t } = useTranslation();
 
@@ -19,11 +19,9 @@ export default function HomeScreen({ homeScreenParallax }) {
 
     const sideBarParallax = {
         transform: [
-            { translateX: homeScreenParallax.interpolate({ inputRange:[0,1], outputRange:[0,-30] })},
-            { rotateY:    homeScreenParallax.interpolate({ inputRange:[0,1], outputRange:['0deg','-25deg'] })},
-            { scale:      homeScreenParallax.interpolate({ inputRange:[0,1], outputRange:[1,0.96] })},
-        ]
-    };
+            { rotateY: parallax.interpolate({ inputRange:[-1,0,1], outputRange:['25deg','0deg','-25deg'] })},
+            { scale: parallax.interpolate({ inputRange:[-1,0,1], outputRange:[0.96, 1,0.96] })},
+        ]};
 
     return (
         <SafeAreaProvider>
@@ -33,13 +31,13 @@ export default function HomeScreen({ homeScreenParallax }) {
                     <StatusBar barStyle={'dark-content'}/>
 
                     <View style={styles.topBar}>
-                        <TouchableOpacity onPress={() => setOpenLeft(true)}>
+                        <TouchableOpacity onPress={() => { setOpenLeft(true); Animated.spring(parallax, {toValue: -1, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }}>
                             <Feather name="menu" size={24} />
                         </TouchableOpacity>
 
                         <Text style={styles.title}>WorldInfo</Text>
 
-                        <TouchableOpacity onPress={() => setOpenRight(true)}>
+                        <TouchableOpacity onPress={() => {setOpenRight(true); Animated.spring(parallax, {toValue: 1, speed: 12, bounciness: 6, useNativeDriver: true }).start();}}>
                             <Feather name="user" size={24} />
                         </TouchableOpacity>
                     </View>
@@ -67,8 +65,8 @@ export default function HomeScreen({ homeScreenParallax }) {
 
             </Animated.View>
 
-            <RightMenu visible={openRight} onClose={() => setOpenRight(false)} homeScreenParallax={homeScreenParallax} />
-            <LeftMenu visible={openLeft} onClose={() => setOpenLeft(false)} />
+            <RightMenu visible={openRight} onClose={() => { setOpenRight(false); Animated.spring(parallax, { toValue: 0, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }} parallax={parallax} />
+            <LeftMenu visible={openLeft} onClose={() => { setOpenLeft(false); Animated.spring(parallax, { toValue: 0, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }} parallax={parallax} />
             
         </SafeAreaProvider>
     );

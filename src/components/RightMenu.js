@@ -2,13 +2,13 @@ import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
-export default function RightMenu({ visible, onClose, width = 260, homeScreenParallax }) {
+export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const [view, setView] = useState('guest');
 
     const translateX = useRef(new Animated.Value(width)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
-    const viewTransition = useRef(new Animated.Value(0)).current;
+    const fadeOut = useRef(new Animated.Value(0)).current;
     const fadeIn = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
@@ -25,13 +25,6 @@ export default function RightMenu({ visible, onClose, width = 260, homeScreenPar
             toValue: visible ? 1 : 0,
             duration: 250,
             useNativeDriver: true
-        }).start();
-
-        Animated.spring(homeScreenParallax, {
-            toValue: visible ? 1 : 0,
-            speed: 12,
-            bounciness: 10,
-            useNativeDriver: true,
         }).start();
     }, [visible]);
 
@@ -57,13 +50,13 @@ export default function RightMenu({ visible, onClose, width = 260, homeScreenPar
 
         Animated.timing(fadeIn, {
             toValue: 0,
-            duration: 180,
+            duration: 200,
             useNativeDriver: true,
         }).start(() => {
             setView(next);
             Animated.timing(fadeIn, {
                 toValue: 1,
-                duration: 200,
+                duration: 260,
                 useNativeDriver: true,
             }).start();
         });
@@ -71,7 +64,7 @@ export default function RightMenu({ visible, onClose, width = 260, homeScreenPar
 
     useEffect(() => {
         if (!visible) setView('guest');
-        viewTransition.setValue(0);
+        fadeOut.setValue(0);
     }, [visible]);
     
 
@@ -86,12 +79,12 @@ export default function RightMenu({ visible, onClose, width = 260, homeScreenPar
 
                 {view === 'guest' && (
                     <Animated.View style={{
-                        opacity: viewTransition.interpolate({
+                        opacity: fadeOut.interpolate({
                             inputRange: [0,1],
                             outputRange: [1,0]
                         }),
                         transform:[{
-                            translateY: viewTransition.interpolate({
+                            translateY: fadeOut.interpolate({
                                 inputRange: [0,1],
                                 outputRange: [0,15]
                             })
@@ -117,7 +110,7 @@ export default function RightMenu({ visible, onClose, width = 260, homeScreenPar
                         flex: 1,
                         opacity: fadeIn,
                         transform:[{
-                            translateY: viewTransition.interpolate({
+                            translateY: fadeOut.interpolate({
                                 inputRange: [0,1],
                                 outputRange: [0,15]
                             })
@@ -148,7 +141,7 @@ export default function RightMenu({ visible, onClose, width = 260, homeScreenPar
                     <Animated.View style={{
                         opacity: fadeIn,
                         transform:[{
-                            translateY: viewTransition.interpolate({
+                            translateY: fadeOut.interpolate({
                                 inputRange: [1,2],
                                 outputRange: [0,15]
                             })
