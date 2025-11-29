@@ -12,7 +12,6 @@ export default function App() {
         init();
   }, []);
 
-  
     return (
         <AppNavigator />
     );

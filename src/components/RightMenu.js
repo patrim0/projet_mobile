@@ -1,32 +1,73 @@
-import { useRef, useState, useEffect } from 'react';
-import { Animated, StyleSheet, View, TouchableWithoutFeedback, Text, TouchableOpacity, TextInput } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
-export default function RightMenu({ visible, onClose, width = 260 }) {
+export default function RightMenu({ visible, onClose, width = 260, homeScreenParallax }) {
 
     const [view, setView] = useState('guest');
 
     const translateX = useRef(new Animated.Value(width)).current;
-    const viewTransition = useRef(new Animated.Value(0)).current
+    const backdropOpacity = useRef(new Animated.Value(0)).current;
+    const viewTransition = useRef(new Animated.Value(0)).current;
+    const fadeIn = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
         Animated.parallel([
-            Animated.timing(translateX, {
+            Animated.spring(translateX, {
                 toValue: visible ? 0 : width,
-                duration: 250,
+                speed: 14,
+                bounciness: 4,
                 useNativeDriver: true,
             })
         ]).start();
+
+        Animated.timing(backdropOpacity, {
+            toValue: visible ? 1 : 0,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+
+        Animated.spring(homeScreenParallax, {
+            toValue: visible ? 1 : 0,
+            speed: 12,
+            bounciness: 10,
+            useNativeDriver: true,
+        }).start();
     }, [visible]);
 
     function switchView(next) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        Animated.timing(viewTransition, { toValue:
-            next === 'guest' ? 0 :
-            next === 'login' ? 1 :
-            2,
-        duration: 250,
-        useNativeDriver: true }).start(() => setView(next))};
+
+        if (next === 'guest') {
+            Animated.timing(fadeIn, {
+                toValue: 0,        
+                duration: 200,
+                useNativeDriver: true,
+            }).start(() => {
+                setView('guest');   
+
+                Animated.timing(fadeIn, {
+                    toValue: 1,     
+                    duration: 260,
+                    useNativeDriver: true,
+                }).start();
+            });
+            return;
+        }
+
+        Animated.timing(fadeIn, {
+            toValue: 0,
+            duration: 180,
+            useNativeDriver: true,
+        }).start(() => {
+            setView(next);
+            Animated.timing(fadeIn, {
+                toValue: 1,
+                duration: 200,
+                useNativeDriver: true,
+            }).start();
+        });
+    }
 
     useEffect(() => {
         if (!visible) setView('guest');
@@ -35,10 +76,10 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     
 
     return (
-        <View style={[styles.overlay, { display: visible ? 'flex' : 'none' }]}>
+        <View style={[styles.overlay, { pointerEvents: visible ? 'auto' : 'none' }]}>
 
             <TouchableWithoutFeedback onPress={onClose}>
-                <View style={styles.backdrop} />
+                <Animated.View style={[styles.backdrop, {opacity: backdropOpacity}]} />
             </TouchableWithoutFeedback>
 
             <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
@@ -74,10 +115,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                 {view === 'login' && (
                     <Animated.View style={{
                         flex: 1,
-                        opacity: viewTransition.interpolate({
-                            inputRange: [0,1],
-                            outputRange: [0,1]
-                        }),
+                        opacity: fadeIn,
                         transform:[{
                             translateY: viewTransition.interpolate({
                                 inputRange: [0,1],
@@ -108,10 +146,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                 {view === 'register' && (
                     <Animated.View style={{
-                        opacity: viewTransition.interpolate({
-                            inputRange: [1,2],
-                            outputRange: [0,1]
-                        }),
+                        opacity: fadeIn,
                         transform:[{
                             translateY: viewTransition.interpolate({
                                 inputRange: [1,2],
@@ -152,7 +187,7 @@ const styles = StyleSheet.create({
     },
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.3)'
     },
     sidebar: {
         position: 'absolute',
