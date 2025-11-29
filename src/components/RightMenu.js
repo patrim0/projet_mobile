@@ -1,10 +1,12 @@
 import * as Haptics from 'expo-haptics';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
 
 export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const [view, setView] = useState('guest');
+    const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
 
     const translateX = useRef(new Animated.Value(width)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
@@ -63,7 +65,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     }
 
     useEffect(() => {
-        if (!visible) setView('guest');
+        if (!visible && !isLoggedIn) setView('guest');
         fadeOut.setValue(0);
     }, [visible]);
     
@@ -94,6 +96,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <TouchableOpacity onPress={() => switchView('register')}>
                             <Text style={styles.menuItem}>Sign Up</Text>
                         </TouchableOpacity>
+
                     </Animated.View>
                 )}
 
@@ -106,7 +109,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <TextInput style={styles.input} placeholder="Email" />
                         <TextInput style={styles.input} placeholder="Password" secureTextEntry />
 
-                        <TouchableOpacity onPress={() => switchView('loggedin')} style={styles.loginButton} >
+                        <TouchableOpacity onPress={() => {setLoggedIn(true); switchView('loggedin'); }} style={styles.loginButton} >
                             <Text style={styles.loginButtonText}>Log In</Text>
                         </TouchableOpacity>
 
@@ -140,8 +143,9 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                     </Animated.View>
                 )}
 
-                {view === 'loggedin' && (
+                {view === 'loggedin' && isLoggedIn && (
                     <Animated.View style={{
+                        flex: 1,
                         opacity: fadeOut.interpolate({inputRange: [0,1], outputRange: [1,0]}),
                         transform:[{translateY: fadeOut.interpolate({inputRange: [0,1], outputRange: [15,0]})}]
                     }}>
@@ -153,8 +157,10 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <Text style={styles.loggedInItem}>Profile</Text>
                         <Text style={styles.loggedInItem}>Preferences</Text>
 
-                        <TouchableOpacity onPress={() => switchView('guest')}>
-                            <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
+                        <View style={{ flex: 1 }} />
+
+                        <TouchableOpacity onPress={() => {setLoggedIn(false); setView('guest');} }>
+                            <Text style={[styles.signOut, { marginTop: 20 }]}>Sign Out</Text>
                         </TouchableOpacity>
                     </Animated.View>
                 )}
@@ -252,6 +258,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         marginBottom: 10,
+        textAlign: 'right',
+    },
+    signOut: {
+        fontSize: 15,
+        paddingVertical: 75,
         textAlign: 'right',
     },
 });
