@@ -79,16 +79,8 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                 {view === 'guest' && (
                     <Animated.View style={{
-                        opacity: fadeOut.interpolate({
-                            inputRange: [0,1],
-                            outputRange: [1,0]
-                        }),
-                        transform:[{
-                            translateY: fadeOut.interpolate({
-                                inputRange: [0,1],
-                                outputRange: [0,15]
-                            })
-                        }]
+                        opacity: fadeOut.interpolate({inputRange: [0,1], outputRange: [1,0]}),
+                        transform:[{translateY: fadeOut.interpolate({inputRange: [0,1], outputRange: [0,15]})}]
                     }}>
                         <Text style={styles.header}>Launch yourself towards your next destination</Text>
                         <Text style={styles.subHeader}>Save and customize your preferences.</Text>
@@ -106,16 +98,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                 )}
 
                 {view === 'login' && (
-                    <Animated.View style={{
-                        flex: 1,
-                        opacity: fadeIn,
-                        transform:[{
-                            translateY: fadeOut.interpolate({
-                                inputRange: [0,1],
-                                outputRange: [0,15]
-                            })
-                        }]
-                    }}>
+                    <Animated.View style={{opacity: fadeIn, transform: [{ translateY: fadeIn.interpolate({ inputRange:[0,1], outputRange:[15,0] }) }], flex: 1}}>
                         <Text style={styles.header}>Welcome Back</Text>
 
                         <View style={styles.separator} />
@@ -123,7 +106,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <TextInput style={styles.input} placeholder="Email" />
                         <TextInput style={styles.input} placeholder="Password" secureTextEntry />
 
-                        <TouchableOpacity style={styles.loginButton}>
+                        <TouchableOpacity onPress={() => switchView('loggedin')} style={styles.loginButton} >
                             <Text style={styles.loginButtonText}>Log In</Text>
                         </TouchableOpacity>
 
@@ -138,15 +121,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                 )}
 
                 {view === 'register' && (
-                    <Animated.View style={{
-                        opacity: fadeIn,
-                        transform:[{
-                            translateY: fadeOut.interpolate({
-                                inputRange: [1,2],
-                                outputRange: [0,15]
-                            })
-                        }]
-                    }}>
+                    <Animated.View style={{opacity: fadeIn, transform: [{ translateY: fadeIn.interpolate({ inputRange:[0,1], outputRange:[15,0] }) }]}}>
                         <Text style={styles.header}>Create Account</Text>
 
                         <View style={styles.separator} />
@@ -158,6 +133,25 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <TouchableOpacity style={styles.loginButton}>
                             <Text style={styles.loginButtonText}>Register</Text>
                         </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => switchView('guest')}>
+                            <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                )}
+
+                {view === 'loggedin' && (
+                    <Animated.View style={{
+                        opacity: fadeOut.interpolate({inputRange: [0,1], outputRange: [1,0]}),
+                        transform:[{translateY: fadeOut.interpolate({inputRange: [0,1], outputRange: [15,0]})}]
+                    }}>
+                        <Text style={styles.loggedInHeader}>{"{ username }"}</Text>
+
+                        <View style={styles.separator} />
+
+                        <Text style={styles.loggedInItem}>Account</Text>
+                        <Text style={styles.loggedInItem}>Profile</Text>
+                        <Text style={styles.loggedInItem}>Preferences</Text>
 
                         <TouchableOpacity onPress={() => switchView('guest')}>
                             <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
@@ -247,6 +241,17 @@ const styles = StyleSheet.create({
     backButton: {
         fontSize: 15,
         paddingVertical: 25,
+        textAlign: 'right',
+    },
+    loggedInItem: {
+        fontSize: 15,
+        paddingVertical: 25,
+        textAlign: 'right',
+    },
+    loggedInHeader: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 10,
         textAlign: 'right',
     },
 });
