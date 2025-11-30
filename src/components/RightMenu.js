@@ -6,12 +6,18 @@ import { AuthContext } from '../context/AuthContext';
 export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const [view, setView] = useState('guest');
-    const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
+    
+    const [inputError, setInputError] = useState(false);
+    const [username, inputUsername] = useState("");
+    const [password, inputPassword] = useState("");
+    const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
 
     const translateX = useRef(new Animated.Value(width)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
     const fadeOut = useRef(new Animated.Value(0)).current;
     const fadeIn = useRef(new Animated.Value(1)).current;
+    const shake = useRef(new Animated.Value(0)).current;
+    const errorMessage = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         Animated.parallel([
@@ -32,6 +38,8 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
     function switchView(next) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        resetTextInputVisuals();
+        resetTextInputValues();
 
         if (next === 'guest') {
             Animated.timing(fadeIn, {
@@ -39,6 +47,8 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                 duration: 200,
                 useNativeDriver: true,
             }).start(() => {
+                resetTextInputVisuals();
+                resetTextInputValues();
                 setView('guest');   
 
                 Animated.timing(fadeIn, {
@@ -68,7 +78,48 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
         if (!visible && !isLoggedIn) setView('guest');
         fadeOut.setValue(0);
     }, [visible]);
+
+    function shakeError() {
+        Animated.sequence([
+            Animated.timing(shake, { toValue: 10, duration: 80, useNativeDriver: true }),
+            Animated.timing(shake, { toValue: -10, duration: 80, useNativeDriver: true }),
+            Animated.timing(shake, { toValue: 6, duration: 60, useNativeDriver: true }),
+            Animated.timing(shake, { toValue: -4, duration: 60, useNativeDriver: true }),
+            Animated.timing(shake, { toValue: 0, duration: 50, useNativeDriver: true }),
+        ]).start();
+        loginError();
+    }
+
+    function loginError() {
+        Animated.timing(errorMessage, {
+            toValue: 1,
+            duration: 250,
+            useNativeDriver: true
+        }).start();
+    }
+
+    function resetTextInputValues() {
+        inputUsername("");
+        inputPassword("");
+    }
+
+    function resetTextInputVisuals() {
+        setInputError(false);
+        errorMessage.setValue(0);
+    }
     
+    // Fonction temporaire pour trigger le visuel d'erreur, on va changer ça quand on aura le backend
+    function handleLogin(email, password) {
+        if (email === 'toto@tata.com' && password === 'titi') {
+            setLoggedIn(true);
+            resetTextInputVisuals();
+            switchView("loggedin");
+            resetTextInputValues();
+            return;
+        }
+        setInputError(true);
+        shakeError();
+    }
 
     return (
         <View style={[styles.overlay, { pointerEvents: visible ? 'auto' : 'none' }]}>
@@ -101,25 +152,41 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                 )}
 
                 {view === 'login' && (
-                    <Animated.View style={{opacity: fadeIn, transform: [{ translateY: fadeIn.interpolate({ inputRange:[0,1], outputRange:[15,0] }) }], flex: 1}}>
+                    <Animated.View style={{opacity: fadeIn, transform: [{ translateY: fadeIn.interpolate({ inputRange:[0,1], outputRange:[15,0] }) }, { translateX: shake }], flex: 1}}>
                         <Text style={styles.header}>Welcome Back</Text>
 
                         <View style={styles.separator} />
 
-                        <TextInput style={styles.input} placeholder="Email" />
-                        <TextInput style={styles.input} placeholder="Password" secureTextEntry />
+                        <Animated.View>
+                            <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }]} placeholder="Username" value={username} onChangeText={inputUsername} autoCapitalize='none' autoCorrect={false} />
+                            <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }]} placeholder="Password" secureTextEntry value={password} onChangeText={inputPassword} autoCapitalize='none' autoCorrect={false}/>
+                        </Animated.View>
 
-                        <TouchableOpacity onPress={() => {setLoggedIn(true); switchView('loggedin'); }} style={styles.loginButton} >
+                        <TouchableOpacity onPress={() =>  handleLogin(username, password)} style={styles.loginButton} >
                             <Text style={styles.loginButtonText}>Log In</Text>
                         </TouchableOpacity>
+
+                        {inputError && (
+                            <Animated.Text
+                                style={{
+                                    color: "#ff3b30",
+                                    textAlign: "center",
+                                    marginTop: 12,
+                                    opacity: errorMessage
+                                }}
+                            >
+                                Invalid username or password
+                            </Animated.Text>
+                        )}
 
                         <TouchableOpacity onPress={() => switchView('guest')}>
                             <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
                         </TouchableOpacity>
 
                         <View style={{ flex: 1 }} />
-
-                        <Text style={[styles.lostPassword]}>Lost Password?</Text>
+                        <TouchableOpacity onPress={() => switchView('lostPassword')}>
+                            <Text style={[styles.lostPassword]}>Lost Password?</Text>
+                        </TouchableOpacity>
                     </Animated.View>
                 )}
 
@@ -129,9 +196,10 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={styles.separator} />
 
-                        <TextInput style={styles.input} placeholder="Email" />
-                        <TextInput style={styles.input} placeholder="Password" secureTextEntry /> 
-                        <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry />
+                        <TextInput style={styles.input} placeholder="Email" autoCapitalize='none' autoCorrect={false}/>
+                        <TextInput style={styles.input} placeholder="Username" autoCapitalize='none' autoCorrect={false}/>
+                        <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize='none' autoCorrect={false}/> 
+                        <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry autoCapitalize='none' autoCorrect={false}/>
 
                         <TouchableOpacity style={styles.loginButton}>
                             <Text style={styles.loginButtonText}>Register</Text>
@@ -149,7 +217,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         opacity: fadeOut.interpolate({inputRange: [0,1], outputRange: [1,0]}),
                         transform:[{translateY: fadeOut.interpolate({inputRange: [0,1], outputRange: [15,0]})}]
                     }}>
-                        <Text style={styles.loggedInHeader}>{"{ username }"}</Text>
+                        <Text style={styles.loggedInHeader}>{"Toto"}</Text>
 
                         <View style={styles.separator} />
 
@@ -162,6 +230,32 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <TouchableOpacity onPress={() => {setLoggedIn(false); setView('guest');} }>
                             <Text style={[styles.signOut, { marginTop: 20 }]}>Sign Out</Text>
                         </TouchableOpacity>
+                    </Animated.View>
+                )}
+
+                {view === 'lostPassword' && (
+                    <Animated.View style={{
+                        flex: 1,
+                        opacity: fadeOut.interpolate({inputRange: [0,1], outputRange: [1,0]}),
+                        transform:[{translateY: fadeOut.interpolate({inputRange: [0,1], outputRange: [15,0]})}]
+                    }}>
+                        <Text style={styles.header}>Forgot your password?</Text>
+
+                        <View style={styles.separator} />
+
+                        <Text style={styles.menuItem}>Enter your email to receive a link to reset your password</Text>
+
+                        <TextInput style={styles.input} placeholder="Email" autoCapitalize='none' autoCorrect={false}/>
+
+                        <TouchableOpacity style={styles.loginButton}>
+                            <Text style={styles.loginButtonText}>Submit Request</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => switchView('guest')}>
+                            <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
+                        </TouchableOpacity>
+                        
+                        <View style={{ flex: 1 }} />
                     </Animated.View>
                 )}
             </Animated.View>
