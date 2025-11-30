@@ -34,7 +34,8 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
                 <Text style={styles.header}>Menu</Text>
                 <View style={styles.separator} />
 
-                <Text style={styles.menuItem}>Countries</Text>
+                <Text style={styles.menuItem}>Search</Text>
+                <Text style={styles.menuItem}>All Countries</Text>
                 <Text style={styles.menuItem}>Exchange Rates</Text>
 
                 <View style={{ flex: 1 }} />

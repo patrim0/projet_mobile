@@ -8,8 +8,11 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     const [view, setView] = useState('guest');
     
     const [inputError, setInputError] = useState(false);
+    const [focusedTextInput, setFocusedTextInput] = useState(null);
+
     const [username, inputUsername] = useState("");
     const [password, inputPassword] = useState("");
+
     const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
 
     const translateX = useRef(new Animated.Value(width)).current;
@@ -109,8 +112,8 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     }
     
     // Fonction temporaire pour trigger le visuel d'erreur, on va changer ça quand on aura le backend
-    function handleLogin(email, password) {
-        if (email === 'toto@tata.com' && password === 'titi') {
+    function handleLogin(username, password) {
+        if (username === 'toto' && password === 'tata') {
             setLoggedIn(true);
             resetTextInputVisuals();
             switchView("loggedin");
@@ -158,8 +161,13 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <View style={styles.separator} />
 
                         <Animated.View>
-                            <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }]} placeholder="Username" value={username} onChangeText={inputUsername} autoCapitalize='none' autoCorrect={false} />
-                            <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }]} placeholder="Password" secureTextEntry value={password} onChangeText={inputPassword} autoCapitalize='none' autoCorrect={false}/>
+                            <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }, focusedTextInput === "username" && !inputError && { borderColor: "#673AB7"} ]}
+                                placeholder="Username" value={username} onChangeText={inputUsername} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("username")} onBlur={() => setFocusedTextInput(null)} 
+                            />
+
+                            <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }, focusedTextInput === "password" && !inputError && { borderColor: "#673AB7"} ]} 
+                                placeholder="Password" secureTextEntry value={password} onChangeText={inputPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("password")} onBlur={() => setFocusedTextInput(null)}
+                            />
                         </Animated.View>
 
                         <TouchableOpacity onPress={() =>  handleLogin(username, password)} style={styles.loginButton} >
@@ -196,10 +204,21 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={styles.separator} />
 
-                        <TextInput style={styles.input} placeholder="Email" autoCapitalize='none' autoCorrect={false}/>
-                        <TextInput style={styles.input} placeholder="Username" autoCapitalize='none' autoCorrect={false}/>
-                        <TextInput style={styles.input} placeholder="Password" secureTextEntry autoCapitalize='none' autoCorrect={false}/> 
-                        <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry autoCapitalize='none' autoCorrect={false}/>
+                        <TextInput style={[styles.input, focusedTextInput === "Email"  && { borderColor: "#673AB7"} ]} 
+                            placeholder="Email" autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Email")} onBlur={() => setFocusedTextInput(null)}
+                        />
+
+                        <TextInput style={[styles.input, focusedTextInput === "Username"  && { borderColor: "#673AB7"} ]} 
+                            placeholder="Username" autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Username")} onBlur={() => setFocusedTextInput(null)}
+                        />
+
+                        <TextInput style={[styles.input, focusedTextInput === "Password"  && { borderColor: "#673AB7"} ]} 
+                            placeholder="Password" secureTextEntry autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Password")} onBlur={() => setFocusedTextInput(null)}
+                        /> 
+
+                        <TextInput style={[styles.input, focusedTextInput === "Confirm"  && { borderColor: "#673AB7"} ]} 
+                            placeholder="Confirm Password" secureTextEntry autoCapitalize='none' autoCorrect={false}onFocus={() => setFocusedTextInput("Confirm")} onBlur={() => setFocusedTextInput(null)}
+                        />
 
                         <TouchableOpacity style={styles.loginButton}>
                             <Text style={styles.loginButtonText}>Register</Text>
