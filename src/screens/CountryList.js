@@ -9,7 +9,7 @@ function FlagCard({ nom, reg, url }) {
       <Image source={{ uri: url }} style={s.img} />
       <View style={{ flex: 1 }}>
         <Text style={s.nom}>{nom}</Text>
-        <Text style={s.reg}>{reg || "—"}</Text>
+        <Text style={s.reg}>{reg ? reg : "-"}</Text>
       </View>
     </View>
   );

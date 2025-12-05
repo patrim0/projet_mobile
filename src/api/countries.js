@@ -1,13 +1,60 @@
 import axios from "axios";
+
 const base = "https://restcountries.com/v3.1";
 
 export async function findCountries(q) {
-  if (!q || q.length < 1) return [];
-  const url = `${base}/name/${encodeURIComponent(q)}?fields=name,flags,region`;
-  const { data } = await axios.get(url);
-  return data.map(p => ({
-    name: p?.name?.common || "",
-    region: p?.region || "",
-    flagPng: p?.flags?.png || "",
-  }));
+
+  if (!q) {
+    return [];
+  }
+
+  if (q.length < 1) {
+    return [];
+  }
+
+  try {
+    const url = base + "/name/" + encodeURIComponent(q) + "?fields=name,flags,region";
+    const rep = await axios.get(url);
+    const data = rep.data;
+
+    const resultat = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const pays = data[i];
+
+      let nom = "";
+      let region = "";
+      let drapeau = "";
+
+      if (pays.name) {
+        if (pays.name.common) {
+          nom = pays.name.common;
+        }
+      }
+
+      if (pays.region) {
+        region = pays.region;
+      }
+
+      if (pays.flags) {
+        if (pays.flags.png) {
+          drapeau = pays.flags.png;
+        }
+      }
+
+      const item = {
+        name: nom,
+        region: region,
+        flagPng: drapeau
+      };
+
+      resultat.push(item);
+    }
+
+    return resultat;
+
+  } catch (e) {
+    return [];
+  }
 }
+
