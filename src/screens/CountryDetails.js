@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { View, Text, Image, ActivityIndicator, StyleSheet } from "react-native";
+import AnimationFlag from "../components/AnimationFlag";
+
 
 export default function CountryDetails() {
   const route = useRoute();
@@ -42,10 +44,7 @@ export default function CountryDetails() {
 
   return (
     <View style={styles.page}>
-      <Image
-        source={{ uri: pays.flags.png }}
-        style={styles.drapeau}
-      />
+      <AnimationFlag uri={pays.flags.png} />
       <Text style={styles.nom}>{pays.name.common}</Text>
     </View>
   );
