@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { findCountries } from "../api/countries";
 
@@ -15,24 +15,23 @@ function FlagCard({ nom, reg, url }) {
   );
 }
 
-export default function CountryList() {
+export default function CountrySearchResults({ query }) {
 
-  const route = useRoute();
   const navigation = useNavigation();
-  const init = (route.params?.initialQuery || "").trim();
 
-  const [q, setQ] = useState(init);
   const [liste, setListe] = useState([]);
   const [charge, setCharge] = useState(false);
 
   useEffect(() => {
     let ok = true;
     const run = async () => {
-      if (q.trim().length < 2) { setListe([]); return; }
+      if (query.trim().length < 2) { setListe([]); return; }
       setCharge(true);
       try {
-        const d = await findCountries(q.trim());
-        if (ok) setListe(d);
+        const d = await findCountries(query.trim());
+        const regex = new RegExp(`^${query.trim()}`, "i");
+        const filtered = d.filter((c) => regex.test(c.name));
+        if (ok) setListe(filtered);
       } catch(e) {
         if (ok) setListe([]);
       }
@@ -40,16 +39,10 @@ export default function CountryList() {
     };
     const t = setTimeout(run, 250);
     return () => { ok = false; clearTimeout(t); };
-  }, [q]);
+  }, [query]);
 
   return (
     <SafeAreaView style={s.wrap}>
-      <TextInput
-        value={q}
-        onChangeText={setQ}
-        placeholder="Rechercher un pays"
-        style={s.input}
-      />
       {charge ? <ActivityIndicator style={{ marginTop: 8 }} /> : null}
       <FlatList
         data={liste}

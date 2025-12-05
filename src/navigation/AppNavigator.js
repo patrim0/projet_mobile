@@ -2,9 +2,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Animated } from 'react-native';
 
-import SearchScreen from '../screens/SearchScreen';
-import CountryList from "../screens/CountryList";
+import CountryList from "../components/CountrySearchResults";
 import CountryDetails from '../screens/CountryDetails';
+import SearchScreen from '../screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 

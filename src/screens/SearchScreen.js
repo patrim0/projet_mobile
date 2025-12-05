@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, TextInput, TouchableOpacity, Animated } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Animated, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import RightMenu from '../components/RightMenu';
+import CountrySearchResults from '../components/CountrySearchResults';
 import LeftMenu from '../components/LeftMenu';
+import RightMenu from '../components/RightMenu';
 
-export default function HomeScreen({ parallax }) {
+export default function SearchScreen({ parallax }) {
 
     const { t } = useTranslation();
 
@@ -21,12 +22,13 @@ export default function HomeScreen({ parallax }) {
         transform: [
             { rotateY: parallax.interpolate({ inputRange:[-1,0,1], outputRange:['25deg','0deg','-25deg'] })},
             { scale: parallax.interpolate({ inputRange:[-1,0,1], outputRange:[0.96, 1,0.96] })},
-        ]};
+        ]
+    };
 
     return (
         <SafeAreaProvider>
             <Animated.View style={[{ flex: 1, backgroundColor: "transparent" }, sideBarParallax ]}>
-                <SafeAreaView>
+                <SafeAreaView style={{ flex: 1 }}>
                     
                     <StatusBar barStyle={'dark-content'}/>
 
@@ -59,6 +61,14 @@ export default function HomeScreen({ parallax }) {
                                 </TouchableOpacity>
                             )}
                         </View>
+
+
+                    </View>
+
+                    <View style={{ flex: 1 }}>
+                        {search.length >= 2 && (
+                        <CountrySearchResults query={search} />
+                        )}
                     </View>
                 </SafeAreaView>
 
