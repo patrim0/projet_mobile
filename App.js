@@ -2,7 +2,9 @@ import 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider } from './src/context/AuthContext';
+import AnimatedButton from './src/components/AnimatedButton';
 import { findCountries } from "./src/api/countries";
+import i18nextConfig from './src/i18n/i18nextConfig';
 
 
 export default function App() {
