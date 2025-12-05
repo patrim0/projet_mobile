@@ -2,6 +2,7 @@ import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState, useContext } from 'react';
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+import { login } from "../api/auth";
 
 export default function RightMenu({ visible, onClose, width = 260 }) {
 
@@ -13,7 +14,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     const [username, inputUsername] = useState("");
     const [password, inputPassword] = useState("");
 
-    const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, setLoggedIn, setToken } = useContext(AuthContext);
 
     const translateX = useRef(new Animated.Value(width)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
@@ -111,9 +112,14 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
         errorMessage.setValue(0);
     }
 
-    // Fonction temporaire pour trigger le visuel d'erreur, on va changer ça quand on aura le backend
-    function handleLogin(username, password) {
-        if (username === 'toto' && password === 'tata') {
+    async function handleLogin(username, password) {
+
+        const { success, token } = await login(username, password);
+
+        console.log('Success: ', success, 'Token: ', token)
+        
+        if (success) {
+            setToken(token)
             setLoggedIn(true);
             resetTextInputVisuals();
             switchView("loggedin");
@@ -246,7 +252,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={{ flex: 1 }} />
 
-                        <TouchableOpacity onPress={() => { setLoggedIn(false); setView('guest'); }}>
+                        <TouchableOpacity onPress={() => { setLoggedIn(false); setView('guest'); setToken(null);}}>
                             <Text style={[styles.signOut, { marginTop: 20 }]}>Sign Out</Text>
                         </TouchableOpacity>
                     </Animated.View>
