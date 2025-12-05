@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useRoute } from "@react-navigation/native";
-import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { findCountries } from "../api/countries";
 
 function FlagCard({ nom, reg, url }) {
@@ -18,6 +18,7 @@ function FlagCard({ nom, reg, url }) {
 export default function CountryList() {
 
   const route = useRoute();
+  const navigation = useNavigation();
   const init = (route.params?.initialQuery || "").trim();
 
   const [q, setQ] = useState(init);
@@ -54,7 +55,9 @@ export default function CountryList() {
         data={liste}
         keyExtractor={(it, i) => it.name + i}
         renderItem={({ item }) => (
-          <Flag nom={item.name} reg={item.region} url={item.flagPng} />
+           <Pressable onPress={() => navigation.navigate("CountryDetails", { name: item.name })}>
+             <FlagCard nom={item.name} reg={item.region} url={item.flagPng} />
+           </Pressable>
         )}
         contentContainerStyle={{ padding: 12 }}
         keyboardShouldPersistTaps="handled"
