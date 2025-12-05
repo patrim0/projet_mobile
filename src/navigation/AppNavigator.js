@@ -1,7 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import CountryList from "../screens/CountryList";
 import HomeScreen from '../screens/HomeScreen';
+import CountryDetails from '../screens/CountryDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -10,6 +11,8 @@ export default function AppNavigator() {
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Tabs" component={HomeScreen} />
+                <Stack.Screen name="Countries" component={CountryList} options={{ headerShown: true, title: 'Countries' }}/>
+                <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
