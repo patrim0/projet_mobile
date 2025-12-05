@@ -8,6 +8,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import RightMenu from '../components/RightMenu';
 import LeftMenu from '../components/LeftMenu';
+import AnimatedButton from '../components/AnimatedButton';
 
 export default function HomeScreen() {
 
@@ -51,6 +52,13 @@ export default function HomeScreen() {
                             </TouchableOpacity>
                         )}
                     </View>
+                </View>
+
+                <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
+                    <AnimatedButton
+                        title={"Voir les pays"}
+                        onPress={() => "Diego"}
+                    />
                 </View>
 
                 <RightMenu visible={openRight} onClose={() => setOpenRight(false)}>
