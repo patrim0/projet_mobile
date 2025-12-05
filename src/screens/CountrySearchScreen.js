@@ -9,7 +9,7 @@ import CountrySearchResults from '../components/CountrySearchResults';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
 
-export default function SearchScreen({ parallax }) {
+export default function CountrySearchScreen({ parallax }) {
 
     const { t } = useTranslation();
 
@@ -20,33 +20,33 @@ export default function SearchScreen({ parallax }) {
 
     const sideBarParallax = {
         transform: [
-            { rotateY: parallax.interpolate({ inputRange:[-1,0,1], outputRange:['25deg','0deg','-25deg'] })},
-            { scale: parallax.interpolate({ inputRange:[-1,0,1], outputRange:[0.96, 1,0.96] })},
+            { rotateY: parallax.interpolate({ inputRange: [-1, 0, 1], outputRange: ['25deg', '0deg', '-25deg'] }) },
+            { scale: parallax.interpolate({ inputRange: [-1, 0, 1], outputRange: [0.96, 1, 0.96] }) },
         ]
     };
 
     return (
         <SafeAreaProvider>
-            <Animated.View style={[{ flex: 1, backgroundColor: "transparent" }, sideBarParallax ]}>
+            <Animated.View style={[{ flex: 1, backgroundColor: "transparent" }, sideBarParallax]}>
                 <SafeAreaView style={{ flex: 1 }}>
-                    
-                    <StatusBar barStyle={'dark-content'}/>
+
+                    <StatusBar barStyle={'dark-content'} />
 
                     <View style={styles.topBar}>
-                        <TouchableOpacity onPress={() => { setOpenLeft(true); Animated.spring(parallax, {toValue: -1, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }}>
+                        <TouchableOpacity onPress={() => { setOpenLeft(true); Animated.spring(parallax, { toValue: -1, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }}>
                             <Feather name="menu" size={24} />
                         </TouchableOpacity>
 
                         <Text style={styles.title}>WorldInfo</Text>
 
-                        <TouchableOpacity onPress={() => {setOpenRight(true); Animated.spring(parallax, {toValue: 1, speed: 12, bounciness: 6, useNativeDriver: true }).start();}}>
+                        <TouchableOpacity onPress={() => { setOpenRight(true); Animated.spring(parallax, { toValue: 1, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }}>
                             <Feather name="user" size={24} />
                         </TouchableOpacity>
                     </View>
 
                     <View style={styles.searchContainer}>
                         <Text style={styles.searchLabel}>Search Country</Text>
-                
+
                         <View style={styles.searchBox}>
                             <TextInput
                                 style={styles.input}
@@ -67,7 +67,7 @@ export default function SearchScreen({ parallax }) {
 
                     <View style={{ flex: 1 }}>
                         {search.length >= 2 && (
-                        <CountrySearchResults query={search} />
+                            <CountrySearchResults query={search} />
                         )}
                     </View>
                 </SafeAreaView>
@@ -77,7 +77,7 @@ export default function SearchScreen({ parallax }) {
 
             <RightMenu visible={openRight} onClose={() => { setOpenRight(false); Animated.spring(parallax, { toValue: 0, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }} parallax={parallax} />
             <LeftMenu visible={openLeft} onClose={() => { setOpenLeft(false); Animated.spring(parallax, { toValue: 0, speed: 12, bounciness: 6, useNativeDriver: true }).start(); }} parallax={parallax} />
-            
+
         </SafeAreaProvider>
     );
 }

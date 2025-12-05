@@ -10,8 +10,8 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
     const navigation = useNavigation();
 
     const go = (screen) => {
-      onClose && onClose();
-      navigation.navigate(screen);
+        onClose && onClose();
+        navigation.navigate(screen);
     };
 
     useEffect(() => {
@@ -34,26 +34,25 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
     return (
         <View style={[styles.overlay, { pointerEvents: visible ? 'auto' : 'none' }]}>
 
-        <TouchableWithoutFeedback onPress={onClose}>
-            <Animated.View style={[styles.backdrop, {opacity: backdropOpacity}]} />
-        </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={onClose}>
+                <Animated.View style={[styles.backdrop, { opacity: backdropOpacity }]} />
+            </TouchableWithoutFeedback>
 
-        <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
-          <Text style={styles.header}>Menu</Text>
-          <View style={styles.separator} />
+            <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
+                <Text style={styles.header}>Menu</Text>
+                <View style={styles.separator} />
 
-          <Text style={styles.menuItem} onPress={() => go('Search')}>Search</Text>
-          <Text style={styles.menuItem} onPress={() => go('Countries')}>All Countries</Text>
-          <Text style={styles.menuItem} onPress={() => go('ExchangeRates')}>Exchange Rates</Text>
+                <Text style={styles.menuItem} onPress={() => go('Search')}>Search</Text>
+                <Text style={styles.menuItem} onPress={() => go('Countries')}>All Countries</Text>
+                <Text style={styles.menuItem} onPress={() => go('ExchangeRates')}>Exchange Rates</Text>
+                <Text style={styles.menuItem} onPress={() => go('Weather')}>Weather</Text>
 
-        <View style={{ flex: 1 }} />
+                <View style={{ flex: 1 }} />
 
-        <Text style={styles.menuItem} onPress={() => go('Language')}>
-          Language
-        </Text>
-      </Animated.View>
-    </View>
-  );
+                <Text style={[styles.menuItem, {paddingVertical: 50}]} onPress={() => go('Language')}>Language</Text>
+            </Animated.View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

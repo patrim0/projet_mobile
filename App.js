@@ -13,17 +13,15 @@ export default function App() {
 
     useEffect(() => {
         init();
-  }, []);
+    }, []);
 
-  useEffect(() => {
-  (async () => {
-    const result = await findCountries("ca");
-    console.log("TEST API:", result);
-  })();
-}, []);
+    useEffect(() => {
+        (async () => {
+            const result = await findCountries("ca");
+            console.log("TEST API:", result);
+        })();
+    }, []);
 
-
-  
     return (
         <AuthProvider>
             <AppNavigator />
