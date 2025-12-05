@@ -1,10 +1,8 @@
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
-import { ThemeProvider } from './src/context/ThemeContext';
-import { FontSizeProvider } from './src/context/FontSizeContext';
-import { BackgroundProvider } from './src/context/BackgroundContext';
+import { useEffect } from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
-import { TextColorProvider } from './src/context/ColorContext';
+import { findCountries } from "./src/api/countries";
+
 
 export default function App() {
 
@@ -14,17 +12,18 @@ export default function App() {
 
     useEffect(() => {
         init();
-    }, []);
+  }, []);
+
+  useEffect(() => {
+  (async () => {
+    const result = await findCountries("ca");
+    console.log("TEST API:", result);
+  })();
+}, []);
+
+
   
     return (
-        <ThemeProvider>
-            <FontSizeProvider>
-                <TextColorProvider>
-                <BackgroundProvider>
-                <AppNavigator />
-                </BackgroundProvider>
-                </TextColorProvider>
-            </FontSizeProvider>
-        </ThemeProvider>
+        <AppNavigator />
     );
 }
