@@ -1,10 +1,18 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function LeftMenu({ visible, onClose, width = 260 }) {
 
     const translateX = useRef(new Animated.Value(-width)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
+
+    const navigation = useNavigation();
+
+    const go = (screen) => {
+      onClose && onClose();
+      navigation.navigate(screen);
+    };
 
     useEffect(() => {
         Animated.parallel([
@@ -26,24 +34,32 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
     return (
         <View style={[styles.overlay, { pointerEvents: visible ? 'auto' : 'none' }]}>
 
-            <TouchableWithoutFeedback onPress={onClose}>
-                <Animated.View style={[styles.backdrop, {opacity: backdropOpacity}]} />
-            </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={onClose}>
+            <Animated.View style={[styles.backdrop, {opacity: backdropOpacity}]} />
+        </TouchableWithoutFeedback>
 
-            <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
-                <Text style={styles.header}>Menu</Text>
-                <View style={styles.separator} />
+        <Animated.View style={[styles.sidebar, { width, transform: [{ translateX }] }]}>
+          <Text style={styles.header}>Menu</Text>
+          <View style={styles.separator} />
 
-                <Text style={styles.menuItem}>Search</Text>
-                <Text style={styles.menuItem}>All Countries</Text>
-                <Text style={styles.menuItem}>Exchange Rates</Text>
+          <Text style={styles.menuItem} onPress={() => go('Search')}>
+            Search
+          </Text>
 
-                <View style={{ flex: 1 }} />
-                
-                <Text style={styles.menuItem}>Language</Text>
-            </Animated.View>
-        </View>
-    );
+          <Text style={styles.menuItem}>All Countries</Text>
+
+          <Text style={styles.menuItem} onPress={() => go('ExchangeRates')}>
+            Exchange Rates
+          </Text>
+
+        <View style={{ flex: 1 }} />
+
+        <Text style={styles.menuItem} onPress={() => go('Language')}>
+          Language
+        </Text>
+      </Animated.View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
