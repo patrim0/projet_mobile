@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-
+import { useNavigation } from '@react-navigation/native'; // +++
 
 import RightMenu from '../components/RightMenu';
 import LeftMenu from '../components/LeftMenu';
@@ -14,8 +14,18 @@ export default function HomeScreen() {
     const { t } = useTranslation();
     const [openRight, setOpenRight] = useState(false);
     const [openLeft, setOpenLeft] = useState(false);
-
     const [search, setSearch] = useState("");
+
+    const nav = useNavigation(); // +++
+
+    // handler minimal: dès 2 lettres -> aller vers Countries avec la requête
+    const onChangeSearch = (txt) => { // +++
+      setSearch(txt);
+      const q = txt.trim();
+      if (q.length >= 2) {
+        nav.navigate('Countries', { initialQuery: q });
+      }
+    }; // +++
 
     return (
         <SafeAreaProvider>
@@ -36,13 +46,17 @@ export default function HomeScreen() {
 
                 <View style={styles.searchContainer}>
                     <Text style={styles.searchLabel}>Search Country</Text>
-            
+
                     <View style={styles.searchBox}>
                         <TextInput
                             style={styles.input}
                             placeholder="Search..."
                             value={search}
-                            onChangeText={setSearch}
+                            onChangeText={onChangeSearch}                   // +++
+                            onSubmitEditing={() => {                         // +++
+                              const q = search.trim();
+                              if (q.length) nav.navigate('Countries', { initialQuery: q });
+                            }}
                         />
 
                         {search.length > 0 && (
@@ -57,7 +71,7 @@ export default function HomeScreen() {
                     <Text style={{ fontSize: 22, margin: 20, textAlign: 'right' }}>Sidebar Menu</Text>
                     <Button title="Close" onPress={() => setOpenRight(false)} />
                 </RightMenu>
-                
+
                 <LeftMenu visible={openLeft} onClose={() => setOpenLeft(false)}>
                     <Text style={{ fontSize: 22, margin: 20, textAlign: 'left' }}>Sidebar Menu</Text>
                     <Button title="Close" onPress={() => setOpenLeft(false)} />
@@ -106,12 +120,7 @@ const styles = StyleSheet.create({
     clearButton: {
         padding: 6,
     },
-    light: {
-        backgroundColor: '#ffffff',
-        color: '#111111'
-    },
-    dark: {
-        backgroundColor: '#111111',
-        color: '#ffffff'
-    }
+    light: { backgroundColor: '#ffffff', color: '#111111' },
+    dark: { backgroundColor: '#111111', color: '#ffffff' }
 });
+
