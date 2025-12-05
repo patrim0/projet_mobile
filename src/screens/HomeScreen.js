@@ -1,22 +1,32 @@
-import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, Button, TextInput, TouchableOpacity } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-
-import RightMenu from '../components/RightMenu';
 import LeftMenu from '../components/LeftMenu';
 import AnimatedButton from '../components/AnimatedButton';
+import RightMenu from '../components/RightMenu';
 
 export default function HomeScreen() {
 
     const { t } = useTranslation();
     const [openRight, setOpenRight] = useState(false);
     const [openLeft, setOpenLeft] = useState(false);
-
     const [search, setSearch] = useState("");
+
+    const nav = useNavigation();
+
+    
+    const onChangeSearch = (txt) => {
+      setSearch(txt);
+      const q = txt.trim();
+      if (q.length >= 2) {
+        nav.navigate('Countries', { initialQuery: q });
+      }
+    };
 
     return (
         <SafeAreaProvider>
@@ -37,20 +47,25 @@ export default function HomeScreen() {
 
                 <View style={styles.searchContainer}>
                     <Text style={styles.searchLabel}>Search Country</Text>
-            
+
                     <View style={styles.searchBox}>
                         <TextInput
                             style={styles.input}
                             placeholder="Search..."
                             value={search}
-                            onChangeText={setSearch}
+                            onChangeText={onChangeSearch}
+                            onSubmitEditing={() => {
+                              const q = search.trim();
+                              if (q.length) nav.navigate('Countries', { initialQuery: q });
+                            }}
                         />
 
-                        {search.length > 0 && (
-                            <TouchableOpacity onPress={() => setSearch("")} style={styles.clearButton}>
-                                <MaterialIcons name="cancel" size={20} color="#673AB7" />
-                            </TouchableOpacity>
-                        )}
+                        {search.length > 0 ? (
+                          <TouchableOpacity onPress={() => setSearch("")} style={styles.clearButton}>
+                            <MaterialIcons name="cancel" size={20} color="#673AB7" />
+                          </TouchableOpacity>
+                        ) : null}
+
                     </View>
                 </View>
 
@@ -65,7 +80,7 @@ export default function HomeScreen() {
                     <Text style={{ fontSize: 22, margin: 20, textAlign: 'right' }}>Sidebar Menu</Text>
                     <Button title="Close" onPress={() => setOpenRight(false)} />
                 </RightMenu>
-                
+
                 <LeftMenu visible={openLeft} onClose={() => setOpenLeft(false)}>
                     <Text style={{ fontSize: 22, margin: 20, textAlign: 'left' }}>Sidebar Menu</Text>
                     <Button title="Close" onPress={() => setOpenLeft(false)} />
@@ -114,12 +129,7 @@ const styles = StyleSheet.create({
     clearButton: {
         padding: 6,
     },
-    light: {
-        backgroundColor: '#ffffff',
-        color: '#111111'
-    },
-    dark: {
-        backgroundColor: '#111111',
-        color: '#ffffff'
-    }
+    light: { backgroundColor: '#ffffff', color: '#111111' },
+    dark: { backgroundColor: '#111111', color: '#ffffff' }
 });
+
