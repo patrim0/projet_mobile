@@ -63,3 +63,27 @@ export async function signup(email, username, password) {
         return { success: false };
     }
 }
+
+export async function editUserInfo(token, updates) {
+    try {
+        const res = await fetch(`http://${BACKEND_IP}:${BACKEND_PORT}/api/users/me`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(updates),
+        });
+
+        if (!res.ok) {
+            const error = await res.json();
+            return { success: false, message: error.message };
+        }
+
+        const data = await res.json();
+        return { success: true, user: data.user, token: data.accessToken };
+
+    } catch (err) {
+        return { success: false };
+    }
+}

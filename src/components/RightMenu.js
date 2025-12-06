@@ -1,10 +1,13 @@
 import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState, useContext } from 'react';
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { AuthContext } from '../../context/AuthContext';
-import { getUserInfo, login, signup } from "../../api/auth";
+import { AuthContext } from '../context/AuthContext';
+import { getUserInfo, login, signup } from "../api/auth";
+import { useNavigation } from '@react-navigation/native';
 
 export default function RightMenu({ visible, onClose, width = 260 }) {
+
+    const navigation = useNavigation();
 
     const [view, setView] = useState('guest');
 
@@ -175,9 +178,9 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
         if (success) {
             signupSuccess();
-/*             setTimeout(() => {
-                switchView('login');
-            }, 1200); */
+            /*             setTimeout(() => {
+                            switchView('login');
+                        }, 1200); */
         }
 
     }
@@ -262,21 +265,24 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={styles.separator} />
 
-                        <TextInput style={[styles.input, focusedTextInput === "Email" && { borderColor: "#673AB7" }]}
+                        <TextInput style={[styles.registerInput, focusedTextInput === "Email" && { borderColor: "#673AB7" }]}
                             placeholder="Email" autoCapitalize='none' value={registerEmail} onChangeText={setRegisterEmail} autoCorrect={false} onFocus={() => setFocusedTextInput("Email")} onBlur={() => setFocusedTextInput(null)}
                         />
+                        <Text style={styles.registerHint}>Use a valid email address</Text>
 
-                        <TextInput style={[styles.input, focusedTextInput === "Username" && { borderColor: "#673AB7" }]}
+                        <TextInput style={[styles.registerInput, focusedTextInput === "Username" && { borderColor: "#673AB7" }]}
                             placeholder="Username" autoCapitalize='none' value={registerUsername} onChangeText={setRegisterUsername} autoCorrect={false} onFocus={() => setFocusedTextInput("Username")} onBlur={() => setFocusedTextInput(null)}
                         />
+                        <Text style={styles.registerHint}>3–30 characters, must start with a letter</Text>
 
-                        <TextInput style={[styles.input, focusedTextInput === "Password" && { borderColor: "#673AB7" }]}
+                        <TextInput style={[styles.registerInput, focusedTextInput === "Password" && { borderColor: "#673AB7" }]}
                             placeholder="Password" secureTextEntry value={registerPassword} onChangeText={setRegisterPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Password")} onBlur={() => setFocusedTextInput(null)}
                         />
 
-                        <TextInput style={[styles.input, focusedTextInput === "Confirm" && { borderColor: "#673AB7" }]}
+                        <TextInput style={[styles.registerInput, focusedTextInput === "Confirm" && { borderColor: "#673AB7" }]}
                             placeholder="Confirm Password" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Confirm")} onBlur={() => setFocusedTextInput(null)}
                         />
+                        <Text style={styles.registerHint}>Minimum 8 characters{"\n"}Must have at least 1 uppercase, 1 number and 1 special character.</Text>
 
                         <TouchableOpacity onPress={() => handleRegister()} style={styles.loginButton}>
                             <Text style={styles.loginButtonText}>Register</Text>
@@ -311,8 +317,14 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={styles.separator} />
 
-                        <Text style={styles.loggedInItem}>Account</Text>
-                        <Text style={styles.loggedInItem}>Profile</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("UserAccount")}>
+                            <Text style={styles.loggedInItem}>Account</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => navigation.navigate("UserProfile")}>
+                            <Text style={styles.loggedInItem}>Profile</Text>
+                        </TouchableOpacity>
+
                         <Text style={styles.loggedInItem}>Preferences</Text>
 
                         <View style={{ flex: 1 }} />
@@ -416,6 +428,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
     },
+    registerInput: {
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: "#ccc",
+    },
     loginButton: {
         backgroundColor: "#673AB7",
         paddingVertical: 12,
@@ -449,4 +469,10 @@ const styles = StyleSheet.create({
         paddingVertical: 75,
         textAlign: 'right',
     },
+    registerHint: {
+        fontSize: 11,
+        color: "#666",
+        marginBottom: 20,
+        marginLeft: 4,
+    }
 });
