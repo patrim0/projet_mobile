@@ -1,20 +1,26 @@
 import * as Haptics from 'expo-haptics';
 import { useEffect, useRef, useState, useContext } from 'react';
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-import { login } from "../api/auth";
+import { AuthContext } from '../../context/AuthContext';
+import { getUserInfo, login, signup } from "../../api/auth";
 
 export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const [view, setView] = useState('guest');
 
     const [inputError, setInputError] = useState(false);
+
     const [focusedTextInput, setFocusedTextInput] = useState(null);
 
-    const [username, inputUsername] = useState("");
-    const [password, inputPassword] = useState("");
+    const [loginUsername, setLoginUsername] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
 
-    const { isLoggedIn, setLoggedIn, setToken } = useContext(AuthContext);
+    const [registerEmail, setRegisterEmail] = useState("");
+    const [registerUsername, setRegisterUsername] = useState("");
+    const [registerPassword, setRegisterPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const { isLoggedIn, setLoggedIn, setToken, username, setUsername } = useContext(AuthContext);
 
     const translateX = useRef(new Animated.Value(width)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
@@ -22,6 +28,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     const fadeIn = useRef(new Animated.Value(1)).current;
     const shake = useRef(new Animated.Value(0)).current;
     const errorMessage = useRef(new Animated.Value(0)).current;
+    const successMessage = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         Animated.parallel([
@@ -102,9 +109,21 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
         }).start();
     }
 
+    function signupSuccess() {
+        Animated.timing(successMessage, {
+            toValue: 1,
+            duration: 350,
+            useNativeDriver: true
+        }).start(() => {
+            setTimeout(() => {
+                successMessage.setValue(0);
+            }, 1200);
+        });
+    }
+
     function resetTextInputValues() {
-        inputUsername("");
-        inputPassword("");
+        setLoginUsername("");
+        setLoginPassword("");
     }
 
     function resetTextInputVisuals() {
@@ -112,14 +131,21 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
         errorMessage.setValue(0);
     }
 
-    async function handleLogin(username, password) {
+    async function handleLogin() {
 
-        const { success, token } = await login(username, password);
+        const { success, token } = await login(loginUsername, loginPassword);
 
-        console.log('Success: ', success, 'Token: ', token)
-        
         if (success) {
-            setToken(token)
+            setToken(token);
+
+            if (token) {
+                const user = await getUserInfo(token);
+                setUsername(user.username);
+            }
+            else {
+                setUsername('toto');
+            }
+
             setLoggedIn(true);
             resetTextInputVisuals();
             switchView("loggedin");
@@ -128,6 +154,32 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
         }
         setInputError(true);
         shakeError();
+        return;
+    }
+
+    async function handleRegister() {
+
+        if (!registerEmail || !registerUsername || !registerPassword || !confirmPassword) {
+            setInputError(true);
+            shakeError();
+            return;
+        }
+
+        if (registerPassword !== confirmPassword) {
+            setInputError(true);
+            shakeError();
+            return;
+        }
+
+        const { success } = await signup(registerEmail, registerUsername, registerPassword);
+
+        if (success) {
+            signupSuccess();
+/*             setTimeout(() => {
+                switchView('login');
+            }, 1200); */
+        }
+
     }
 
     return (
@@ -168,15 +220,15 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <Animated.View>
                             <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }, focusedTextInput === "username" && !inputError && { borderColor: "#673AB7" }]}
-                                placeholder="Username" value={username} onChangeText={inputUsername} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("username")} onBlur={() => setFocusedTextInput(null)}
+                                placeholder="Username" value={loginUsername} onChangeText={setLoginUsername} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("username")} onBlur={() => setFocusedTextInput(null)}
                             />
 
                             <TextInput style={[styles.input, inputError && { borderColor: "#ff3b30" }, focusedTextInput === "password" && !inputError && { borderColor: "#673AB7" }]}
-                                placeholder="Password" secureTextEntry value={password} onChangeText={inputPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("password")} onBlur={() => setFocusedTextInput(null)}
+                                placeholder="Password" secureTextEntry value={loginPassword} onChangeText={setLoginPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("password")} onBlur={() => setFocusedTextInput(null)}
                             />
                         </Animated.View>
 
-                        <TouchableOpacity onPress={() => handleLogin(username, password)} style={styles.loginButton} >
+                        <TouchableOpacity onPress={() => handleLogin()} style={styles.loginButton} >
                             <Text style={styles.loginButtonText}>Log In</Text>
                         </TouchableOpacity>
 
@@ -211,24 +263,37 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         <View style={styles.separator} />
 
                         <TextInput style={[styles.input, focusedTextInput === "Email" && { borderColor: "#673AB7" }]}
-                            placeholder="Email" autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Email")} onBlur={() => setFocusedTextInput(null)}
+                            placeholder="Email" autoCapitalize='none' value={registerEmail} onChangeText={setRegisterEmail} autoCorrect={false} onFocus={() => setFocusedTextInput("Email")} onBlur={() => setFocusedTextInput(null)}
                         />
 
                         <TextInput style={[styles.input, focusedTextInput === "Username" && { borderColor: "#673AB7" }]}
-                            placeholder="Username" autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Username")} onBlur={() => setFocusedTextInput(null)}
+                            placeholder="Username" autoCapitalize='none' value={registerUsername} onChangeText={setRegisterUsername} autoCorrect={false} onFocus={() => setFocusedTextInput("Username")} onBlur={() => setFocusedTextInput(null)}
                         />
 
                         <TextInput style={[styles.input, focusedTextInput === "Password" && { borderColor: "#673AB7" }]}
-                            placeholder="Password" secureTextEntry autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Password")} onBlur={() => setFocusedTextInput(null)}
+                            placeholder="Password" secureTextEntry value={registerPassword} onChangeText={setRegisterPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Password")} onBlur={() => setFocusedTextInput(null)}
                         />
 
                         <TextInput style={[styles.input, focusedTextInput === "Confirm" && { borderColor: "#673AB7" }]}
-                            placeholder="Confirm Password" secureTextEntry autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Confirm")} onBlur={() => setFocusedTextInput(null)}
+                            placeholder="Confirm Password" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} autoCapitalize='none' autoCorrect={false} onFocus={() => setFocusedTextInput("Confirm")} onBlur={() => setFocusedTextInput(null)}
                         />
 
-                        <TouchableOpacity style={styles.loginButton}>
+                        <TouchableOpacity onPress={() => handleRegister()} style={styles.loginButton}>
                             <Text style={styles.loginButtonText}>Register</Text>
                         </TouchableOpacity>
+
+                        {successMessage && (
+                            <Animated.Text
+                                style={{
+                                    color: "#4CAF50",
+                                    textAlign: "center",
+                                    marginTop: 12,
+                                    opacity: successMessage
+                                }}
+                            >
+                                Account created successfully!
+                            </Animated.Text>
+                        )}
 
                         <TouchableOpacity onPress={() => switchView('guest')}>
                             <Text style={[styles.backButton, { marginTop: 20 }]}>← Back</Text>
@@ -242,7 +307,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         opacity: fadeOut.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }),
                         transform: [{ translateY: fadeOut.interpolate({ inputRange: [0, 1], outputRange: [15, 0] }) }]
                     }}>
-                        <Text style={styles.loggedInHeader}>{"Toto"}</Text>
+                        <Text style={styles.loggedInHeader}>{username}</Text>
 
                         <View style={styles.separator} />
 
@@ -252,7 +317,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={{ flex: 1 }} />
 
-                        <TouchableOpacity onPress={() => { setLoggedIn(false); setView('guest'); setToken(null);}}>
+                        <TouchableOpacity onPress={() => { setLoggedIn(false); setToken(null); setUsername(null); setView('guest'); }}>
                             <Text style={[styles.signOut, { marginTop: 20 }]}>Sign Out</Text>
                         </TouchableOpacity>
                     </Animated.View>
