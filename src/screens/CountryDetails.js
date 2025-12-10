@@ -4,6 +4,7 @@ import { View, Text, Image, ActivityIndicator, StyleSheet } from "react-native";
 import AnimationFlag from "../components/AnimationFlag";
 
 
+
 export default function CountryDetails() {
     const route = useRoute();
     const nom = route.params?.name;
@@ -41,13 +42,34 @@ export default function CountryDetails() {
             </View>
         );
     }
+    let devises = "Inconnues";
 
+    if (pays.currencies) {
+    const codes = Object.keys(pays.currencies);
+
+    devises = codes
+        .map((code) => {
+        const info = pays.currencies[code];
+        const nom = info && info.name ? info.name : "Inconnue";
+        const symbole = info && info.symbol ? " (" + info.symbol + ")" : "";
+        return code + " - " + nom + symbole;
+        })
+        .join(", ");
+    }
+
+  
     return (
         <View style={styles.page}>
-            <AnimationFlag uri={pays.flags.png} />
-            <Text style={styles.nom}>{pays.name.common}</Text>
+          <AnimationFlag uri={pays.flags.png} />
+          <Text style={styles.nom}>{pays.name.common}</Text>
+
+          <Text style={{ marginTop: 8, fontSize: 18 }}>
+             Devise(s) : {devises}
+            
+          </Text>
         </View>
-    );
+      );
+      
 }
 
 const styles = StyleSheet.create({
