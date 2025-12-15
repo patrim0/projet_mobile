@@ -50,121 +50,128 @@ export default function AccountScreen() {
         setSuccess(true);
     }
 
-    return (
-        <SafeAreaProvider>
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle={'dark-content'} />
+return (
+  <SafeAreaProvider>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'dark-content'} />
 
-                <Text style={styles.header}>Edit Profile</Text>
+      <Text style={styles.screenTitle}>Edit Account</Text>
 
-                <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+      <View style={styles.card}>
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          value={profile?.email ?? ""}
+          onChangeText={(txt) => setProfile({ ...profile, email: txt })}
+          autoCapitalize="none"
+        />
+      </View>
 
-                    <View style={{ marginBottom: 18 }}>
-                        <Text style={styles.label}>Email</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profile?.email ?? ""}
-                            onChangeText={(txt) => setProfile({ ...profile, email: txt })}
-                            autoCapitalize="none"
-                        />
-                    </View>
+      <View style={styles.card}>
+        <Text style={styles.label}>Username</Text>
+        <TextInput
+          style={styles.input}
+          value={profile?.username ?? ""}
+          onChangeText={(txt) => setProfile({ ...profile, username: txt })}
+          autoCapitalize="none"
+        />
+      </View>
 
-                    <View style={{ marginBottom: 18 }}>
-                        <Text style={styles.label}>Username</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profile?.username ?? ""}
-                            onChangeText={(txt) => setProfile({ ...profile, username: txt })}
-                            autoCapitalize="none"
-                        />
-                    </View>
+      <View style={styles.card}>
+        <Text style={styles.label}>First Name</Text>
+        <TextInput
+          style={styles.input}
+          value={profile?.firstName ?? ""}
+          onChangeText={(txt) => setProfile({ ...profile, firstName: txt })}
+          autoCapitalize="none"
+        />
+      </View>
 
-                    <View style={{ marginBottom: 18 }}>
-                        <Text style={styles.label}>First Name</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profile?.firstName ?? ""}
-                            onChangeText={(txt) => setProfile({ ...profile, firstName: txt })}
-                            autoCapitalize="none"
-                        />
-                    </View>
+      <View style={styles.card}>
+        <Text style={styles.label}>Last Name</Text>
+        <TextInput
+          style={styles.input}
+          value={profile?.lastName ?? ""}
+          onChangeText={(txt) => setProfile({ ...profile, lastName: txt })}
+          autoCapitalize="none"
+        />
+      </View>
 
-                    <View style={{ marginBottom: 18 }}>
-                        <Text style={styles.label}>Last Name</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={profile?.lastName ?? ""}
-                            onChangeText={(txt) => setProfile({ ...profile, lastName: txt })}
-                            autoCapitalize="none"
-                        />
-                    </View>
+      <TouchableOpacity style={styles.button} onPress={handleEdit}>
+        <Text style={styles.buttonText}>Save Changes</Text>
+      </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button} onPress={handleEdit}>
-                        <Text style={styles.buttonText}>Save Changes</Text>
-                    </TouchableOpacity>
+      {success && <Text style={styles.success}>Changes saved.</Text>}
+      {error && <Text style={styles.error}>Update failed.</Text>}
 
-                    {success && <Text style={styles.success}>Changes saved.</Text>}
-                    {error && <Text style={styles.error}>Update failed.</Text>}
-
-                </View>
-
-            </SafeAreaView>
-        </SafeAreaProvider>
-    )
+    </SafeAreaView>
+  </SafeAreaProvider>
+);
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: "#F5EEF9",
-    },
-    header: {
-        fontSize: 20,
-        fontWeight: "600",
-        textAlign: "center",
-        marginTop: 20,
-    },
-    separator: {
-        height: 1,
-        backgroundColor: "#ddd",
-        marginVertical: 20,
-    },
-    label: {
-        fontSize: 12,
-        color: "#673AB7",
-        marginBottom: 6,
-        paddingLeft: 6,
-    },
-    input: {
-        backgroundColor: "#fff",
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: "#673AB7",
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        fontSize: 15,
-    },
-    button: {
-        backgroundColor: "#673AB7",
-        paddingVertical: 12,
-        borderRadius: 8,
-        marginTop: 10,
-    },
-    buttonText: {
-        color: "#fff",
-        fontWeight: "600",
-        textAlign: "center",
-        fontSize: 15,
-    },
-    success: {
-        color: "#4CAF50",
-        textAlign: "center",
-        marginTop: 12,
-    },
-    error: {
-        color: "#ff3b30",
-        textAlign: "center",
-        marginTop: 12,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#F5EEF9",
+    padding: 20,
+  },
+
+  screenTitle: {
+    fontSize: 22,
+    fontWeight: "600",
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#673AB7"
+  },
+
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#ddd"
+  },
+
+  label: {
+    fontSize: 12,
+    color: "#673AB7",
+    marginBottom: 6,
+  },
+
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#673AB7",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    fontSize: 15,
+  },
+
+  button: {
+    backgroundColor: "#673AB7",
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    textAlign: "center",
+    fontSize: 15,
+  },
+
+  success: {
+    color: "#4CAF50",
+    textAlign: "center",
+    marginTop: 12,
+  },
+
+  error: {
+    color: "#ff3b30",
+    textAlign: "center",
+    marginTop: 12,
+  }
 });

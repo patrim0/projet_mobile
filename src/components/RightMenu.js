@@ -313,7 +313,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         opacity: fadeOut.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }),
                         transform: [{ translateY: fadeOut.interpolate({ inputRange: [0, 1], outputRange: [15, 0] }) }]
                     }}>
-                        <Text style={styles.loggedInHeader}>{username}</Text>
+                        <Text style={styles.loggedInHeader}>Hello, {username}</Text>
 
                         <View style={styles.separator} />
 
