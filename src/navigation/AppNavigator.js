@@ -3,8 +3,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Animated } from 'react-native';
 
 import CountrySearchResults from "../components/CountrySearchResults";
+import AllCountriesList from '../screens/AllCountriesList';
 import CountryDetails from '../screens/CountryDetails';
 import SearchScreen from '../screens/CountrySearchScreen';
+import ExchangeRates from "../screens/ExchangeRates";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +18,7 @@ export default function AppNavigator() {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="CountrySearch" children={() => <SearchScreen parallax={parallax} />} />
                 <Stack.Screen name="CountryResults" component={CountrySearchResults}/>
+                <Stack.Screen name="AllCountries" component={AllCountriesList} options={{ headerShown: true, title: "Pays" }}/>
                 <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
             </Stack.Navigator>
         </NavigationContainer>
