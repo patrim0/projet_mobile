@@ -44,17 +44,20 @@ export default function CountryDetails() {
     let nativeNames = [];
 
     if (pays.name.nativeName) {
-        const languages = Object.keys(pays.name.nativeName);
+        const codes = Object.keys(pays.name.nativeName);
 
-        nativeNames = languages.map((lang) => {
-            const info = pays.name.nativeName[lang];
-            const nom = info && info.official ? info.official : "Inconnu";
-            return nom;
+        nativeNames = codes.map((code) => {
+            const info = pays.name.nativeName[code];
+            const nom = info && info.official ? info.official : 'Inconnu';
+
+            if (nom === pays.name.common) return null;
+
+            return { nom, code };
         })
-        .filter((nom) => nom && nom !== pays.name.common);
+        .filter(Boolean);
     }
 
-    let devises = "";
+    let devises = '';
 
     if (pays.currencies) {
         const codes = Object.keys(pays.currencies);
@@ -69,23 +72,54 @@ export default function CountryDetails() {
             .join(", ");
     }
 
+    let continents = '';
+
+    if (pays.continents) {
+        continents = pays.continents.join(', ')
+    }
+
     return (
         <View style={styles.page}>
             <AnimationFlag uri={pays.flags.png} />
             <Text style={styles.nom}>{pays.name.common}</Text>
 
-            {nativeNames.map((nom, index) => (
-                <Text key={index}>{nom}</Text>
+            {nativeNames.map((item, index) => (
+            <View key={index} style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap' }}>
+                <Text>{item.nom}</Text>
+
+                {nativeNames.length > 1 && (
+                    <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>
+                        {item.code.toUpperCase()}
+                    </Text>
+                )}
+            </View>
             ))}
 
-            <Text style={{ marginTop: 8, fontSize: 18 }}>
-                Devise(s) : {devises}
+            <View style={{marginTop: 20}}>
+                <Text style={{ marginTop: 8, fontSize: 18 }}>
+                    Devise(s) : {devises}
+                </Text>
 
+                <Text style={{ marginTop: 8, fontSize: 18 }}>
+                    Continent: {continents}
+                </Text>
 
-            </Text>
+                <Text style={{ marginTop: 8, fontSize: 18 }}>
+                    Capital: {pays.capital}
+                </Text>
+
+                <Text style={{ marginTop: 8, fontSize: 18 }}>
+                    Population: {pays.population.toLocaleString()}
+                </Text>
+
+                <Text style={{ marginTop: 8, fontSize: 18 }}>
+                    Area: {pays.area.toLocaleString('en')} km²
+                </Text>
+
+            </View>
+
         </View>
     );
-
 }
 
 const styles = StyleSheet.create({
