@@ -62,7 +62,6 @@ export default function CountryDetails() {
         <View style={styles.page}>
           <AnimationFlag uri={pays.flags.png} />
           <Text style={styles.nom}>{pays.name.common}</Text>
-
           <Text style={{ marginTop: 8, fontSize: 18 }}>
              Devise(s) : {devises}
             

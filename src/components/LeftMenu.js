@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View, TouchableWithoutFeedback, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 
 export default function LeftMenu({ visible, onClose, width = 260 }) {
 
@@ -43,7 +43,7 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
                 <View style={styles.separator} />
 
                 <Text style={styles.menuItem} onPress={() => go('Search')}>Search</Text>
-                <Text style={styles.menuItem} onPress={() => go('Countries')}>All Countries</Text>
+                <Text style={styles.menuItem} onPress={() => go('AllCountries')}>All Countries</Text>
                 <Text style={styles.menuItem} onPress={() => go('ExchangeRates')}>Exchange Rates</Text>
                 <Text style={styles.menuItem} onPress={() => go('Weather')}>Weather</Text>
 
