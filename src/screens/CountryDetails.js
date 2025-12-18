@@ -1,14 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRoute } from "@react-navigation/native";
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Linking } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert } from "react-native";
 import AnimationFlag from "../components/AnimationFlag";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { AuthContext } from "../context/AuthContext";
+import { editUserInfo, getUserInfo } from "../api/auth";
 
 export default function CountryDetails() {
     const route = useRoute();
     const nom = route.params?.name;
     const [pays, setPays] = useState(null);
     const [charge, setCharge] = useState(true);
+
+    const [profile, setProfile] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const { token, setToken } = useContext(AuthContext);
 
     useEffect(() => {
         const chercher = async () => {
@@ -25,6 +31,50 @@ export default function CountryDetails() {
 
         chercher();
     }, [nom]);
+
+    useEffect(() => {
+        if (!token) return;
+
+        async function loadProfile() {
+            const data = await getUserInfo(token);
+            setProfile(data);
+
+            if (!data.favoriteCountries) return;
+
+            if (data.favoriteCountries.includes(pays.name.common)) {
+                setIsFavorite(true);
+            }
+        }
+
+        loadProfile();
+    }, [token, pays]);
+
+    async function toggleFavorite() {
+        if (!token) {
+            Alert.alert(
+                "Oops!",
+                "You must be logged in to add a favorite"
+            );
+            return;
+        }
+
+        const country = pays.name.common;
+        const favorites = profile.favoriteCountries || [];
+
+        const updatedFavorites = favorites.includes(country)
+            ? favorites.filter(c => c !== country)
+            : [...favorites, country];
+
+        const { success, user, token: newToken } = await editUserInfo(token, {
+            favoriteCountries: updatedFavorites
+        });
+
+        if (!success) return;
+
+        setProfile(user);
+        setToken(newToken);
+        setIsFavorite(!isFavorite);
+    }
 
     if (charge) {
         return (
@@ -124,9 +174,9 @@ export default function CountryDetails() {
                     <Text style={styles.buttonText}>Show on Map</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button}>
-                    <MaterialIcons name="favorite-border" size={18} color="#ffffff" />
-                    <Text style={styles.buttonText}>Add to Favorites</Text>
+                <TouchableOpacity style={styles.button} onPress={toggleFavorite}>
+                    <MaterialIcons name={isFavorite ? "favorite" : "favorite-border"} size={18} color="#ffffff" />
+                    <Text style={styles.buttonText}>{isFavorite ? "In Favorites" : "Add to Favorites"}</Text>
                 </TouchableOpacity>
             </View>
 
