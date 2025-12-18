@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Linking } from "react-native";
 import AnimationFlag from "../components/AnimationFlag";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
@@ -119,13 +119,13 @@ export default function CountryDetails() {
             ))}
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
-                <TouchableOpacity style={styles.button}>
-                    <MaterialIcons name="map" size={18} color="#fff" />
+                <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(pays.maps.googleMaps)}>
+                    <MaterialIcons name="map" size={18} color="#ffffff" />
                     <Text style={styles.buttonText}>Show on Map</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}>
-                    <MaterialIcons name="favorite-border" size={18} color="#fff" />
+                    <MaterialIcons name="favorite-border" size={18} color="#ffffff" />
                     <Text style={styles.buttonText}>Add to Favorites</Text>
                 </TouchableOpacity>
             </View>
@@ -148,7 +148,7 @@ export default function CountryDetails() {
                     <View style={styles.separator}/>
 
                     <Text style={styles.valueLabel}>Area</Text>
-                    <Text style={styles.value}>{pays.area.toLocaleString('en')} km²</Text>
+                    <Text style={styles.value}>{pays.area.toLocaleString()} km²</Text>
                     <View style={styles.separator}/>
 
                     <Text style={styles.valueLabel}>Timezones</Text>
@@ -221,17 +221,17 @@ const styles = StyleSheet.create({
     },
     value: {
         fontSize: 15,
-        color: "#222",
+        color: "#272727ff",
         marginTop: 4
     },
     valueLabel: {
         fontSize: 13,
-        color: "#666",
+        color: "#646464ff",
         marginTop: 6
     },
     separator: {
         height: 1, 
-        backgroundColor: "#eee", 
+        backgroundColor: "#e6e3e3ff", 
         marginVertical: 8
     },
     button: {
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
         width: '45%'
     },
     buttonText: {
-        color: "#fff",
+        color: "#ffffff",
         fontWeight: "600",
         textAlign: "center",
         fontSize: 15,
