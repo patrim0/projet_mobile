@@ -66,9 +66,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5EEF9",
-    padding: 20,
+    padding: 20
   },
-
   screenTitle: {
     fontSize: 22,
     fontWeight: "600",
@@ -76,7 +75,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#673AB7"
   },
-
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
@@ -85,31 +83,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd"
   },
-
   label: {
     fontSize: 12,
     color: "#673AB7",
-    marginBottom: 4,
+    marginBottom: 4
   },
-
   value: {
     fontSize: 15,
-    color: "#222",
+    color: "#222"
   },
-
   chips: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
-    marginTop: 6,
+    marginTop: 6
   },
-
   chip: {
     backgroundColor: "#673AB7",
     color: "#fff",
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 12,
-    fontSize: 13,
+    fontSize: 13
   }
 });

@@ -325,7 +325,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                             <Text style={styles.loggedInItem}>Profile</Text>
                         </TouchableOpacity>
 
-                        <Text style={styles.loggedInItem}>Preferences</Text>
+                        <Text style={styles.loggedInItem}>Favorites</Text>
 
                         <View style={{ flex: 1 }} />
 

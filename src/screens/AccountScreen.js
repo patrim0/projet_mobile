@@ -113,9 +113,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5EEF9",
-    padding: 20,
+    padding: 20
   },
-
   screenTitle: {
     fontSize: 22,
     fontWeight: "600",
@@ -123,7 +122,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#673AB7"
   },
-
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
@@ -132,13 +130,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd"
   },
-
   label: {
     fontSize: 12,
     color: "#673AB7",
-    marginBottom: 6,
+    marginBottom: 6
   },
-
   input: {
     backgroundColor: "#fff",
     borderRadius: 8,
@@ -146,32 +142,28 @@ const styles = StyleSheet.create({
     borderColor: "#673AB7",
     paddingVertical: 8,
     paddingHorizontal: 12,
-    fontSize: 15,
+    fontSize: 15
   },
-
   button: {
     backgroundColor: "#673AB7",
     paddingVertical: 12,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 20
   },
-
   buttonText: {
     color: "#fff",
     fontWeight: "600",
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 15
   },
-
   success: {
     color: "#4CAF50",
     textAlign: "center",
-    marginTop: 12,
+    marginTop: 12
   },
-
   error: {
     color: "#ff3b30",
     textAlign: "center",
-    marginTop: 12,
+    marginTop: 12
   }
 });
