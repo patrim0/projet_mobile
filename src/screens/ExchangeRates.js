@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   devise: {
-    fontSize: 10,
+    fontSize: 8,
     color: "#555",
   },
 });
