@@ -57,6 +57,10 @@ export default function CountryDetails() {
         .join(", ");
     }
 
+    let capitale = "Inconnue";
+     if (pays.capital && pays.capital.length > 0) {
+      capitale = pays.capital[0];
+    }
   
     return (
         <View style={styles.page}>
@@ -65,8 +69,11 @@ export default function CountryDetails() {
 
           <Text style={{ marginTop: 8, fontSize: 18 }}>
              Devise(s) : {devises}
-            
           </Text>
+          <Text style={{ marginTop: 8, fontSize: 18 }}>
+             Capitale : {capitale}
+         </Text>
+          
         </View>
       );
       
