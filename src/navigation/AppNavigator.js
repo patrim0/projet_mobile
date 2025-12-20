@@ -20,6 +20,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="CountryResults" component={CountrySearchResults}/>
                 <Stack.Screen name="AllCountries" component={AllCountriesList} options={{ headerShown: true, title: "Pays" }}/>
                 <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
+                <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
