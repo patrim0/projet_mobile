@@ -53,7 +53,7 @@ export default function CapitalsWeather() {
             lon = pays.capitalInfo.latlng[1];
           }
 
-          // Valeurs météo par défaut
+         
           let tempTexte = "?";
           let iconeUri = "";
 

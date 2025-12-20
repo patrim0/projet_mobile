@@ -5,6 +5,7 @@ import { Animated } from 'react-native';
 import CountrySearchResults from "../components/CountrySearchResults";
 import CountryDetails from '../screens/CountryDetails';
 import SearchScreen from '../screens/CountrySearchScreen';
+import CapitalsWeather from '../screens/CapitalsWeather';
 
 const Stack = createNativeStackNavigator();
 
