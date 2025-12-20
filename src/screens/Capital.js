@@ -100,13 +100,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 6,
     borderBottomWidth: 0.5,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#eee",
   },
   nomPays: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+    color : "#000",
   },
   capitale: {
-    fontSize: 16,
+    fontSize: 14,
+    fontStyle: "italic",
+    color : "#555",
   },
 });
