@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   nomPays: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "600",
   },
   devise: {
