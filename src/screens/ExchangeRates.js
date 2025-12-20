@@ -1,4 +1,3 @@
-// src/screens/ExchangeRates.js
 import { useEffect, useState } from "react";
 import {
   View,
@@ -6,6 +5,7 @@ import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
+  Image,
 } from "react-native";
 
 export default function ExchangeRates() {
@@ -16,17 +16,17 @@ export default function ExchangeRates() {
   useEffect(() => {
     const charger = async () => {
       try {
-        
+         
         const repPays = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name,currencies"
+          "https://restcountries.com/v3.1/all?fields=name,currencies,flags"
         );
-        const dataPays = await repPays.json(); 
+        const dataPays = await repPays.json();  
 
-        
+         
         const repTaux = await fetch(
           "https://latest.currency-api.pages.dev/v1/currencies/usd.json"
         );
-        const dataTaux = await repTaux.json(); 
+        const dataTaux = await repTaux.json();  
 
         let rates = {};
         if (dataTaux && dataTaux.usd) {
@@ -38,21 +38,21 @@ export default function ExchangeRates() {
         for (let i = 0; i < dataPays.length; i++) {
           const pays = dataPays[i];
 
-           
-          let nom = "Pays inconnu";
-          if (pays.name && pays.name.common) {
-            nom = pays.name.common;
+         
+          let drapeauUri = "";
+          if (pays.flags && pays.flags.png) {
+            drapeauUri = pays.flags.png;
           }
 
-           
-          let deviseTexte = "Inconnue";
+          
+          let texteDevise = "Devise inconnue";
+          let valeurAffichee = "?";
 
           if (pays.currencies) {
             const codes = Object.keys(pays.currencies);
+            const code = codes.length > 0 ? codes[0] : null;
 
-            if (codes.length > 0) {
-               
-              const code = codes[0];  
+            if (code) {
               let info = pays.currencies[code];
               if (!info) {
                 info = {};
@@ -68,31 +68,30 @@ export default function ExchangeRates() {
                 symbole = " (" + info.symbol + ")";
               }
 
-              // taux 1 USD -> devise du pays
+              
+              texteDevise = nomDevise + " - " + code + symbole;
+
+              
               const cleTaux = code.toLowerCase();
               const valeurTaux = rates[cleTaux];
 
-              let tauxTexte = "Taux inconnu";
               if (typeof valeurTaux === "number") {
-                const arrondi = valeurTaux.toFixed(3);
-                tauxTexte = "1 USD = " + arrondi + " " + code;
+                valeurAffichee = valeurTaux.toFixed(3);
               }
-
-              deviseTexte =
-                nomDevise + " - " + code + symbole + " - " + tauxTexte;
             }
           }
 
           liste.push({
-            id: nom + "-" + i,
-            pays: nom,
-            devise: deviseTexte,
+            id: String(i),
+            deviseNom: texteDevise,
+            drapeau: drapeauUri,
+            taux: valeurAffichee,
           });
         }
 
         
         liste.sort(function (a, b) {
-          return a.pays.localeCompare(b.pays);
+          return a.deviseNom.localeCompare(b.deviseNom);
         });
 
         setDonnees(liste);
@@ -123,7 +122,7 @@ export default function ExchangeRates() {
 
   return (
     <View style={styles.page}>
-      <Text style={styles.titre}>Devises et taux (base USD)</Text>
+      <Text style={styles.titre}>Taux des devises (base USD)</Text>
 
       <FlatList
         data={donnees}
@@ -133,9 +132,20 @@ export default function ExchangeRates() {
         renderItem={function ({ item }) {
           return (
             <View style={styles.ligne}>
-              <Text style={styles.nomPays}>{item.pays}</Text>
+              
+              <View style={styles.gauche}>
+                <Text style={styles.nomDevise}>{item.deviseNom}</Text>
+                {item.drapeau ? (
+                  <Image
+                    source={{ uri: item.drapeau }}
+                    style={styles.drapeau}
+                  />
+                ) : null}
+              </View>
+
+              
               <View style={styles.deviseBox}>
-                <Text style={styles.devise}>{item.devise}</Text>
+                <Text style={styles.valeur}>{item.taux}</Text>
               </View>
             </View>
           );
@@ -164,26 +174,39 @@ const styles = StyleSheet.create({
   ligne: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 6,
     borderBottomWidth: 0.5,
     borderBottomColor: "#eee",
   },
-  nomPays: {
-    fontSize: 16,
+  gauche: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexShrink: 1,
+  },
+  nomDevise: {
+    fontSize: 14,
     fontWeight: "600",
+    marginRight: 6,
+  },
+  drapeau: {
+    width: 28,
+    height: 18,
+    borderRadius: 2,
   },
   deviseBox: {
-    backgroundColor: "#111",    
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    backgroundColor: "#111",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     borderRadius: 4,
-    maxWidth: "55%",
+    minWidth: 70,
+    alignItems: "flex-end",
   },
-  devise: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#00ff66",          
-    fontFamily: "Menlo",     
+  valeur: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "red",
+    fontFamily: "Menlo", 
     textAlign: "right",
   },
 });
