@@ -17,6 +17,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="CountrySearch" children={() => <SearchScreen parallax={parallax} />} />
                 <Stack.Screen name="CountryResults" component={CountrySearchResults}/>
                 <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
+                <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ title: "Météo des capitales" }}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

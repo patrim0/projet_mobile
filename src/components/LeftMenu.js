@@ -45,7 +45,7 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
                 <Text style={styles.menuItem} onPress={() => go('Search')}>Search</Text>
                 <Text style={styles.menuItem} onPress={() => go('Countries')}>All Countries</Text>
                 <Text style={styles.menuItem} onPress={() => go('ExchangeRates')}>Exchange Rates</Text>
-                <Text style={styles.menuItem} onPress={() => go('Weather')}>Weather</Text>
+                <Text style={styles.menuItem} onPress={() => go('CapitalsWeather')}>Capitals Weather</Text>
 
                 <View style={{ flex: 1 }} />
 
