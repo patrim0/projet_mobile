@@ -46,7 +46,7 @@ export default function ExchangeRates() {
 
           
           let texteDevise = "Devise inconnue";
-          let valeurAffichee = "?";
+          let valeurAffichee = "- - -";
 
           if (pays.currencies) {
             const codes = Object.keys(pays.currencies);
