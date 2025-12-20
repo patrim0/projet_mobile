@@ -136,10 +136,14 @@ export default function CapitalsWeather() {
   if (charge) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator />
+        <Text style={styles.loadingText}>
+          Bienvenue sur Capitals Weathers!{"\n"}Patientez svp...
+        </Text>
+        <ActivityIndicator size="large" />
       </View>
     );
   }
+  
 
   if (erreur) {
     return (
@@ -206,6 +210,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 16,
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 16,
   },
   page: {
     flex: 1,
