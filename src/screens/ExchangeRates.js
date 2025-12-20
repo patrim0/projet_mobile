@@ -15,16 +15,27 @@ export default function ExchangeRates() {
   useEffect(() => {
     const charger = async () => {
       try {
-        const rep = await fetch(
+        
+        const repPays = await fetch(
           "https://restcountries.com/v3.1/all?fields=name,currencies"
         );
-        const data = await rep.json(); 
+        const dataPays = await repPays.json(); 
+
+       
+        const repTaux = await fetch(
+          "https://latest.currency-api.pages.dev/v1/currencies/usd.json"
+        );
+        const dataTaux = await repTaux.json(); 
+
+        let rates = {};
+        if (dataTaux && dataTaux.usd) {
+          rates = dataTaux.usd;
+        }
 
         const liste = [];
 
-        
-        for (let i = 0; i < data.length; i++) {
-          const pays = data[i];
+        for (let i = 0; i < dataPays.length; i++) {
+          const pays = dataPays[i];
 
           
           let nom = "Pays inconnu";
@@ -32,46 +43,56 @@ export default function ExchangeRates() {
             nom = pays.name.common;
           }
 
-          
+         
           let deviseTexte = "Inconnue";
 
           if (pays.currencies) {
-            const codes = Object.keys(pays.currencies); 
+            const codes = Object.keys(pays.currencies);
 
             if (codes.length > 0) {
-              const morceaux = [];
-
-              for (let j = 0; j < codes.length; j++) {
-                const code = codes[j];
-                const info = pays.currencies[code] || {};
-
-                let nomDevise = "Inconnue";
-                if (info.name) {
-                  nomDevise = info.name;
-                }
-
-                let symbole = "";
-                if (info.symbol) {
-                  symbole = " (" + info.symbol + ")";
-                }
-
-                const texte = code + " - " + nomDevise + symbole;
-                morceaux.push(texte);
+              
+              const code = codes[0]; 
+              let info = pays.currencies[code];
+              if (!info) {
+                info = {};
               }
 
-              deviseTexte = morceaux.join(", ");
+              let nomDevise = "Inconnue";
+              if (info.name) {
+                nomDevise = info.name;
+              }
+
+              let symbole = "";
+              if (info.symbol) {
+                symbole = " (" + info.symbol + ")";
+              }
+
+              
+              const cleTaux = code.toLowerCase();
+              const valeurTaux = rates[cleTaux];
+
+              let tauxTexte = "Taux inconnu";
+              if (typeof valeurTaux === "number") {
+                const arrondi = valeurTaux.toFixed(3);
+                tauxTexte = "1 USD = " + arrondi + " " + code;
+              }
+
+              deviseTexte =
+                nomDevise + " - " + code + symbole + " - " + tauxTexte;
             }
           }
 
           liste.push({
-            id: nom + "-" + deviseTexte,
+            id: nom + "-" + i,
             pays: nom,
             devise: deviseTexte,
           });
         }
 
         
-        liste.sort((a, b) => a.pays.localeCompare(b.pays));
+        liste.sort(function (a, b) {
+          return a.pays.localeCompare(b.pays);
+        });
 
         setDonnees(liste);
       } catch (e) {
@@ -101,17 +122,21 @@ export default function ExchangeRates() {
 
   return (
     <View style={styles.page}>
-      <Text style={styles.titre}>Devises par pays</Text>
+      <Text style={styles.titre}>Devises et taux (base USD)</Text>
 
       <FlatList
         data={donnees}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.ligne}>
-            <Text style={styles.nomPays}>{item.pays}</Text>
-            <Text style={styles.devise}>{item.devise}</Text>
-          </View>
-        )}
+        keyExtractor={function (item) {
+          return item.id;
+        }}
+        renderItem={function ({ item }) {
+          return (
+            <View style={styles.ligne}>
+              <Text style={styles.nomPays}>{item.pays}</Text>
+              <Text style={styles.devise}>{item.devise}</Text>
+            </View>
+          );
+        }}
       />
     </View>
   );
@@ -141,11 +166,13 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eee",
   },
   nomPays: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "600",
   },
   devise: {
-    fontSize: 8,
+    fontSize: 10,
     color: "#555",
+    textAlign: "right",
+    flexShrink: 1,
   },
 });
