@@ -1,3 +1,4 @@
+// src/screens/ExchangeRates.js
 import { useEffect, useState } from "react";
 import {
   View,
@@ -21,7 +22,7 @@ export default function ExchangeRates() {
         );
         const dataPays = await repPays.json(); 
 
-       
+        
         const repTaux = await fetch(
           "https://latest.currency-api.pages.dev/v1/currencies/usd.json"
         );
@@ -37,21 +38,21 @@ export default function ExchangeRates() {
         for (let i = 0; i < dataPays.length; i++) {
           const pays = dataPays[i];
 
-          
+           
           let nom = "Pays inconnu";
           if (pays.name && pays.name.common) {
             nom = pays.name.common;
           }
 
-         
+           
           let deviseTexte = "Inconnue";
 
           if (pays.currencies) {
             const codes = Object.keys(pays.currencies);
 
             if (codes.length > 0) {
-              
-              const code = codes[0]; 
+               
+              const code = codes[0];  
               let info = pays.currencies[code];
               if (!info) {
                 info = {};
@@ -67,7 +68,7 @@ export default function ExchangeRates() {
                 symbole = " (" + info.symbol + ")";
               }
 
-              
+              // taux 1 USD -> devise du pays
               const cleTaux = code.toLowerCase();
               const valeurTaux = rates[cleTaux];
 
@@ -133,7 +134,9 @@ export default function ExchangeRates() {
           return (
             <View style={styles.ligne}>
               <Text style={styles.nomPays}>{item.pays}</Text>
-              <Text style={styles.devise}>{item.devise}</Text>
+              <View style={styles.deviseBox}>
+                <Text style={styles.devise}>{item.devise}</Text>
+              </View>
             </View>
           );
         }}
@@ -169,10 +172,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  deviseBox: {
+    backgroundColor: "#111",    
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    maxWidth: "55%",
+  },
   devise: {
-    fontSize: 10,
-    color: "#555",
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#00ff66",          
+    fontFamily: "Menlo",     
     textAlign: "right",
-    flexShrink: 1,
   },
 });
