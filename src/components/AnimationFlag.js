@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Animated } from "react-native";
+import { Animated, Easing } from "react-native";
 
 export default function AnimationFlag({ uri }) {
     const anim = useRef(new Animated.Value(0)).current;
@@ -7,22 +7,17 @@ export default function AnimationFlag({ uri }) {
     useEffect(() => {
         const loop = Animated.loop(
             Animated.sequence([
-                Animated.timing(anim, { toValue: 1, duration: 1200, useNativeDriver: true }),
-                Animated.timing(anim, { toValue: 0, duration: 1200, useNativeDriver: true })
+                Animated.timing(anim, { toValue: 1, duration: 1000, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+                Animated.timing(anim, { toValue: 0, duration: 1000, easing: Easing.inOut(Easing.sin), useNativeDriver: true })
             ])
         );
         loop.start();
         return () => loop.stop();
     }, []);
 
-    const rotate = anim.interpolate({
+    const rotateY = anim.interpolate({
         inputRange: [0, 1],
-        outputRange: ["-200deg", "200deg"]
-    });
-
-    const translateY = anim.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, -3]
+        outputRange: ["15deg", "-15deg"]
     });
 
     return (
@@ -34,11 +29,11 @@ export default function AnimationFlag({ uri }) {
                 height: 150,
                 borderRadius: 12,
                 alignSelf: "center",
-                backgroundColor: "#eee",
                 marginTop: 20,
+                backgroundColor: "#eee",
                 transform: [
-                    { rotateZ: rotate },
-                    { translateY: translateY }
+                    { perspective: 500 },
+                    { rotateY }
                 ]
             }}
         />
