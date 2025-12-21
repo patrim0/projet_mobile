@@ -46,12 +46,11 @@ export default function LeftMenu({ visible, onClose, width = 260 }) {
                 <Text style={styles.menuItem} onPress={() => go('AllCountries')}>All Countries</Text>
                 <Text style={styles.menuItem} onPress={() => go('ExchangeRates')}>Exchange Rates</Text>
                 <Text style={styles.menuItem} onPress={() => go('Capital')}>Capital</Text>
-                <Text style={styles.menuItem} onPress={() => go('Weather')}>Weather</Text>
                 <Text style={styles.menuItem} onPress={() => go('CapitalsWeather')}>Capitals Weather</Text>
 
                 <View style={{ flex: 1 }} />
 
-                <Text style={[styles.menuItem, {paddingVertical: 50}]} onPress={() => go('Language')}>Language</Text>
+                {/* <Text style={[styles.menuItem, {paddingVertical: 50}]} onPress={() => go('Language')}>Language</Text> */}
             </Animated.View>
         </View>
     );
