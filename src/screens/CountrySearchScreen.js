@@ -6,6 +6,7 @@ import { Animated, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, Vie
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import CountrySearchResults from '../components/CountrySearchResults';
+import CompareFloatingButton from '../components/CompareFloatingButton';
 import LeftMenu from '../components/LeftMenu';
 import RightMenu from '../components/RightMenu';
 
@@ -70,6 +71,9 @@ export default function CountrySearchScreen({ parallax }) {
                             <CountrySearchResults query={search} />
                         )}
                     </View>
+
+                    <CompareFloatingButton />
+                    
                 </SafeAreaView>
 
 

@@ -10,8 +10,10 @@ import CountryDetails from '../screens/CountryDetails';
 import CountrySearchScreen from '../screens/CountrySearchScreen';
 import AccountScreen from '../screens/AccountScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import CompareScreen from '../screens/CompareScreen';
 
 import { AuthContext } from "../context/AuthContext";
+import { CompareProvider } from '../context/CompareContext';
 import { getUserInfo } from "../api/auth";
 import ExchangeRates from "../screens/ExchangeRates";
 
@@ -39,7 +41,8 @@ export default function AppNavigator() {
     }, [token]);
 
     return (
-        <NavigationContainer>
+
+/*         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="CountrySearch" children={() => <CountrySearchScreen parallax={parallax} />} />
                 <Stack.Screen name="UserAccount" component={AccountScreen} options={{ headerShown: true, title: `${profile?.username}'s Account` }} />
@@ -51,6 +54,33 @@ export default function AppNavigator() {
                 <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
                 <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ headerShown: true, title: "Météo des capitales" }}/>
             </Stack.Navigator>
-        </NavigationContainer>
+        </NavigationContainer> */
+
+        <CompareProvider>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="CountrySearch" children={() => <CountrySearchScreen parallax={parallax} />} />
+                <Stack.Screen name="UserAccount" component={AccountScreen} options={{ headerShown: true, title: `${profile?.username}'s Account` }} />
+                <Stack.Screen name="UserProfile" component={ProfileScreen} options={{ headerShown: true, title: `${profile?.username}'s Profile` }} />
+                <Stack.Screen name="CountryResults" component={CountrySearchResults} />
+                <Stack.Screen name="AllCountries" component={AllCountriesList} options={{ headerShown: true, title: "Pays" }}/>
+                <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
+                <Stack.Screen name="Capital" component={Capital} options={{ headerShown: true, title: "Capitales" }} />
+                <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
+                <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ headerShown: true, title: "Météo des capitales" }}/>
+                    <Stack.Screen 
+                        name="CompareCountries" 
+                        component={CompareScreen} 
+                        options={{ 
+                            headerShown: true, 
+                            title: "Comparaison des pays",
+                            headerStyle: { backgroundColor: '#673AB7' },
+                            headerTintColor: '#fff',
+                            headerTitleStyle: { fontWeight: '600' }
+                        }} 
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </CompareProvider>
     );
 }
