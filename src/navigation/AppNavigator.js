@@ -11,6 +11,7 @@ import CountrySearchScreen from '../screens/CountrySearchScreen';
 import AccountScreen from '../screens/AccountScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CompareScreen from '../screens/CompareScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 
 import { AuthContext } from "../context/AuthContext";
 import { CompareProvider } from '../context/CompareContext';
@@ -68,6 +69,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="Capital" component={Capital} options={{ headerShown: true, title: "Capitales" }} />
                 <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
                 <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ headerShown: true, title: "Météo des capitales" }}/>
+                <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ headerShown: true, title: "Favorites" }} />
                     <Stack.Screen 
                         name="CompareCountries" 
                         component={CompareScreen} 

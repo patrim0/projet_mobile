@@ -87,3 +87,13 @@ export async function editUserInfo(token, updates) {
         return { success: false };
     }
 }
+
+export async function removeFavorite(token, favorites, countryName) {
+    const updatedFavorites = favorites.filter(
+        c => c !== countryName
+    );
+
+    return await editUserInfo(token, {
+        favoriteCountries: updatedFavorites
+    });
+}

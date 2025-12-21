@@ -325,7 +325,9 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                             <Text style={styles.loggedInItem}>Profile</Text>
                         </TouchableOpacity>
 
-                        <Text style={styles.loggedInItem}>Favorites</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("Favorites")}>
+                            <Text style={styles.loggedInItem}>Favorites</Text>
+                        </TouchableOpacity>
 
                         <View style={{ flex: 1 }} />
 
