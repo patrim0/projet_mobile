@@ -1,11 +1,51 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import { findCountries, getAllCountries } from "../api/countries";
+import { CompareContext } from "../context/CompareContext";
+import CompareFloatingButton from "../components/CompareFloatingButton";
+
+function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect }) {
+    const handleSelectPress = () => {
+        if (!isSelected && !canSelect) {
+            Alert.alert("Limite atteinte", "Vous pouvez comparer maximum 3 pays.");
+            return;
+        }
+        onToggleSelect();
+    };
+
+    return (
+        <View style={[styles.ligne, isSelected && styles.ligneSelected]}>
+            <TouchableOpacity 
+                onPress={handleSelectPress}
+                style={styles.checkbox}
+                activeOpacity={0.6}
+            >
+                <Ionicons 
+                    name={isSelected ? "checkbox" : "square-outline"} 
+                    size={28} 
+                    color={isSelected ? "#673AB7" : "#999"} 
+                />
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                onPress={onPress}
+                style={styles.ligneContent}
+                activeOpacity={0.7}
+            >
+                <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
+                <Text style={styles.nom}>{item.name}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+}
 
 export default function AllCountriesList() {
 
     const navigation = useNavigation();
+
+    const { toggleCountry, isSelected, canAddMore } = useContext(CompareContext);
 
     const [texte, setTexte] = useState("");
     const [liste, setListe] = useState([]);
@@ -41,6 +81,10 @@ export default function AllCountriesList() {
         navigation.navigate("CountryDetails", { name: nom });
     };
 
+    const handleToggleSelect = (item) => {
+        toggleCountry(item);
+    };
+
     return (
         <View style={styles.page}>
 
@@ -55,13 +99,16 @@ export default function AllCountriesList() {
                 data={liste}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <Pressable style={styles.ligne} onPress={() => ouvrirPays(item.name)}>
-                        <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
-                        <Text style={styles.nom}>{item.name}</Text>
-                    </Pressable>
+                    <CountryRow
+                        item={item}
+                        isSelected={isSelected(item.name)}
+                        onToggleSelect={() => handleToggleSelect(item)}
+                        onPress={() => ouvrirPays(item.name)}
+                        canSelect={canAddMore()}
+                    />
                 )}
             />
-
+            <CompareFloatingButton />
         </View>
     );
 }
