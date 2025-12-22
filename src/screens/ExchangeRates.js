@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
-  Image,
 } from "react-native";
 
 export default function ExchangeRates() {
@@ -16,82 +15,44 @@ export default function ExchangeRates() {
   useEffect(() => {
     const charger = async () => {
       try {
-         
-        const repPays = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name,currencies,flags"
-        );
-        const dataPays = await repPays.json();  
-
-         
+        
         const repTaux = await fetch(
           "https://latest.currency-api.pages.dev/v1/currencies/usd.json"
         );
-        const dataTaux = await repTaux.json();  
+        const dataTaux = await repTaux.json();
 
         let rates = {};
         if (dataTaux && dataTaux.usd) {
-          rates = dataTaux.usd;
+          rates = dataTaux.usd; 
         }
 
         const liste = [];
 
-        for (let i = 0; i < dataPays.length; i++) {
-          const pays = dataPays[i];
-
-         
-          let drapeauUri = "";
-          if (pays.flags && pays.flags.png) {
-            drapeauUri = pays.flags.png;
-          }
+        const codesMinuscules = Object.keys(rates);
+        for (let i = 0; i < codesMinuscules.length; i++) {
+          const codeMin = codesMinuscules[i];
 
           
-          let texteDevise = "Devise inconnue";
+          if (codeMin === "usd") continue;
+
+          const codeMaj = codeMin.toUpperCase();
+          const tauxBrut = rates[codeMin];
+
           let valeurAffichee = "- - -";
-
-          if (pays.currencies) {
-            const codes = Object.keys(pays.currencies);
-            const code = codes.length > 0 ? codes[0] : null;
-
-            if (code) {
-              let info = pays.currencies[code];
-              if (!info) {
-                info = {};
-              }
-
-              let nomDevise = "Inconnue";
-              if (info.name) {
-                nomDevise = info.name;
-              }
-
-              let symbole = "";
-              if (info.symbol) {
-                symbole = " (" + info.symbol + ")";
-              }
-
-              
-              texteDevise = nomDevise + " - " + code + symbole;
-
-              
-              const cleTaux = code.toLowerCase();
-              const valeurTaux = rates[cleTaux];
-
-              if (typeof valeurTaux === "number") {
-                valeurAffichee = valeurTaux.toFixed(3);
-              }
-            }
+          if (typeof tauxBrut === "number") {
+            valeurAffichee = tauxBrut.toFixed(3);
           }
 
           liste.push({
-            id: String(i),
-            deviseNom: texteDevise,
-            drapeau: drapeauUri,
+            id: codeMaj,
+            codeDevise: codeMaj,
             taux: valeurAffichee,
           });
         }
 
         
         liste.sort(function (a, b) {
-          return a.deviseNom.localeCompare(b.deviseNom);
+          return a.codeDevise.localeCompare(b.codeDevise);
         });
 
         setDonnees(liste);
@@ -133,15 +94,10 @@ export default function ExchangeRates() {
           return (
             <View style={styles.ligne}>
               
-              <View style={styles.gauche}>
-                <Text style={styles.nomDevise}>{item.deviseNom}</Text>
-                {item.drapeau ? (
-                  <Image
-                    source={{ uri: item.drapeau }}
-                    style={styles.drapeau}
-                  />
-                ) : null}
-              </View>
+              <Text style={styles.code}>{item.codeDevise}</Text>
+
+              
+              <View style={styles.spacer} />
 
               
               <View style={styles.deviseBox}>
@@ -164,6 +120,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     padding: 16,
+    alignItems: "center",  
   },
   titre: {
     fontSize: 22,
@@ -172,27 +129,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   ligne: {
+    width: "80%", 
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 6,
     borderBottomWidth: 0.5,
     borderBottomColor: "#eee",
   },
-  gauche: {
-    flexDirection: "row",
-    alignItems: "center",
-    flexShrink: 1,
-  },
-  nomDevise: {
-    fontSize: 14,
+  code: {
+    fontSize: 16,
     fontWeight: "600",
-    marginRight: 6,
+    textAlign: "left",
   },
-  drapeau: {
-    width: 28,
-    height: 18,
-    borderRadius: 2,
+  spacer: {
+    flex: 1,
+    marginHorizontal: 16, 
   },
   deviseBox: {
     backgroundColor: "#111",
@@ -200,13 +151,13 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 4,
     minWidth: 70,
-    alignItems: "flex-end",
+    alignItems: "flex-end", 
   },
   valeur: {
     fontSize: 14,
     fontWeight: "700",
     color: "red",
-    fontFamily: "Menlo", 
+    fontFamily: "Menlo",
     textAlign: "right",
   },
 });
