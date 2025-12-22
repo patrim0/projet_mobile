@@ -83,31 +83,23 @@ export default function ExchangeRates() {
 
   return (
     <View style={styles.page}>
-      <Text style={styles.titre}>Taux des devises (base USD)</Text>
-
-      <View style={styles.headerRow}>
-        <Text style={styles.headerCode}>Code</Text>
-        <Text style={styles.headerRate}>Rate</Text>
-      </View>
+      <Text style={styles.titre}>Taux de change à jour</Text>
+      <Text style={styles.sousTitre}>Base currency: USD</Text>
 
       <FlatList
         data={donnees}
         keyExtractor={function (item) {
           return item.id;
         }}
-        renderItem={function ({ item }) {
-          return (
-            <View style={styles.ligne}>
-              
-              <Text style={styles.code}>{item.codeDevise}</Text>
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Text style={styles.code}>{item.codeDevise}</Text>
 
-              <View style={styles.deviseBox}>
-                <Text style={styles.valeur}>{item.taux}</Text>
-              </View>
-
+            <View style={styles.deviseBox}>
+              <Text style={styles.valeur}>{item.taux}</Text>
             </View>
-          );
-        }}
+          </View>
+        )}
       />
     </View>
   );
@@ -121,64 +113,56 @@ const styles = StyleSheet.create({
   },
   page: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 16
+    padding: 12,
+    backgroundColor: "#f6f4f8"
   },
   titre: {
     fontSize: 22,
     fontWeight: "700",
     marginBottom: 12,
-    textAlign: "center"
+    textAlign: "center",
+    color: "#673AB7"
   },
-  ligne: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eaeaea"
+  sousTitre: {
+    fontSize: 12,
+    color: "#673AB7",
+    marginBottom: 8,
+    marginLeft: 4,
+    textAlign: "right"
   },
   code: {
-    width: 56,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
+    color: "#222",
     letterSpacing: 0.5
   },
   deviseBox: {
-    marginLeft: "auto",
-    backgroundColor: "#111",
-    paddingHorizontal: 10,
+    width: 120,
+    backgroundColor: "#f0ebfa",
     paddingVertical: 4,
-    borderRadius: 6,
-    minWidth: 80,
-    alignItems: "flex-end"
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    alignItems: "center"
   },
   valeur: {
     fontSize: 14,
     fontWeight: "700",
-    color: "red",
-    fontFamily: "Menlo",
+    color: "#673AB7",
+    fontFamily: "Menlo"
   },
-  headerRow: {
+  card: {
     flexDirection: "row",
-    paddingHorizontal: 8,
-    paddingBottom: 6,
-    marginBottom: 4,
-    borderBottomWidth: 2,
-    borderBottomColor: "#673AB7",
-  },
-  headerCode: {
-    width: 56,
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#673AB7",
-    textTransform: "uppercase",
-  },
-  headerRate: {
-    marginLeft: "auto",
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#673AB7",
-    textTransform: "uppercase",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    marginBottom: 8,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2
   },
 });
