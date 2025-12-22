@@ -1,10 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { useRoute } from "@react-navigation/native";
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, Image } from "react-native";
 import AnimationFlag from "../components/AnimationFlag";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { AuthContext } from "../context/AuthContext";
 import { editUserInfo, getUserInfo } from "../api/auth";
+import { getCurrentUsdBase } from "../api/rates";
+import { getTodayCapitalWeather } from "../api/weather";
 
 export default function CountryDetails() {
     const route = useRoute();
@@ -15,6 +17,10 @@ export default function CountryDetails() {
     const [profile, setProfile] = useState(null);
     const [isFavorite, setIsFavorite] = useState(false);
     const { token, setToken } = useContext(AuthContext);
+
+    const [usdBase, setUsdBase] = useState(null);
+    const [weather, setWeather] = useState(null);
+    const [weatherLoading, setWeatherLoading] = useState(false);
 
     useEffect(() => {
         const chercher = async () => {
@@ -31,6 +37,32 @@ export default function CountryDetails() {
 
         chercher();
     }, [nom]);
+
+    useEffect(() => {
+        if (!pays?.currencies) return;
+
+        async function loadUsdBase() {
+            const data = await getCurrentUsdBase();
+            setUsdBase(data);
+        }
+        loadUsdBase();
+    }, [pays]);
+
+    useEffect(() => {
+        if (!pays?.capital) return;
+
+        const latlng = pays.capitalInfo?.latlng;
+
+        setWeatherLoading(true);
+
+        getTodayCapitalWeather({
+            capital: pays.capital[0],
+            lat: latlng?.[0],
+            lon: latlng?.[1]
+        })
+        .then(setWeather)
+        .finally(() => setWeatherLoading(false));;
+    }, [pays]);
 
     useEffect(() => {
         if (!token) return;
@@ -108,19 +140,19 @@ export default function CountryDetails() {
         .filter(Boolean);
     }
 
-    let devises = '';
+    let devises = [];
 
     if (pays.currencies) {
         const codes = Object.keys(pays.currencies);
 
-        devises = codes
-            .map((code) => {
-                const info = pays.currencies[code];
-                const nom = info && info.name ? info.name : "Inconnue";
-                const symbole = info && info.symbol ? " (" + info.symbol + ")" : "";
-                return code + " - " + nom + symbole;
-            })
-            .join(", ");
+        devises = codes.map((code) => {
+            const info = pays.currencies[code];
+
+            return { code,
+                name: info.name || "Inconnue",
+                symbol: info.symbol || ""
+            };
+        });
     }
 
     let continents = '';
@@ -161,9 +193,7 @@ export default function CountryDetails() {
                 <Text>{item.nom}</Text>
 
                 {nativeNames.length > 1 && (
-                    <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>
-                        {item.code.toUpperCase()}
-                    </Text>
+                    <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>{item.code.toUpperCase()}</Text>
                 )}
             </View>
             ))}
@@ -182,8 +212,24 @@ export default function CountryDetails() {
 
             <View style={{marginTop: 20}}>
                 <View style={styles.card}>
-                    <Text style={styles.label}>Currency</Text>
-                    <Text style={styles.value}>{devises}</Text>
+                    <Text style={styles.label}>Currencies</Text>
+                    {devises.map((devise, index) => {
+                        const rate = usdBase?.[devise.code.toLowerCase()];
+
+                        return (
+                            <View key={index} style={{ marginTop: 6 }}>
+                                <Text style={styles.valueLabel}>{devise.name}</Text>
+
+                                <Text style={styles.value}>{devise.code} ({devise.symbol})</Text>
+
+                                <Text style={styles.valueRate}>{rate ? `Today: 1 ${devise.code} = ${(1/rate).toFixed(3)} USD` : "Rate unavailable"}</Text>
+                                {index < devises.length - 1 && (
+                                    <View style={styles.separator}/>
+                                )}
+                            </View>
+                        );
+                    })}
+              
                 </View>
 
                 <View style={styles.card}>
@@ -191,6 +237,16 @@ export default function CountryDetails() {
 
                     <Text style={styles.valueLabel}>Capital</Text>
                     <Text style={styles.value}>{pays.capital}</Text>
+
+                    {weatherLoading && (
+                        <ActivityIndicator size="small" style={{ marginTop: 6 }} />
+                    )}
+                    {!weatherLoading && weather && (
+                        <View style={{ flexDirection: "row", alignItems: "center"}}>
+                            <Text style={[styles.valueRate]}>Currently: {weather.tempC.toFixed(1)}°C · {weather.condition}</Text>
+                            <Image source={{ uri: weather.icon }} style={{ width: 30, height: 30}}/>
+                        </View>
+                    )}
                     <View style={styles.separator}/>
 
                     <Text style={styles.valueLabel}>Continent</Text>
@@ -277,6 +333,11 @@ const styles = StyleSheet.create({
     valueLabel: {
         fontSize: 13,
         color: "#646464ff",
+        marginTop: 6
+    },
+    valueRate: {
+        fontSize: 11,
+        color: "#a1a1a1ff",
         marginTop: 6
     },
     separator: {
