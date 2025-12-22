@@ -7,6 +7,7 @@ import {
     StyleSheet,
 } from "react-native";
 import NavigationUI from "../components/NavigationUI";
+import RateCard from "../components/cards/RateCard";
 
 export default function ExchangeRates({ parallax }) {
     const [donnees, setDonnees] = useState([]);
@@ -93,14 +94,9 @@ export default function ExchangeRates({ parallax }) {
                     keyExtractor={function (item) {
                         return item.id;
                     }}
+                    contentContainerStyle={{ padding: 12 }}
                     renderItem={({ item }) => (
-                        <View style={styles.card}>
-                            <Text style={styles.code}>{item.codeDevise}</Text>
-
-                            <View style={styles.deviseBox}>
-                                <Text style={styles.valeur}>{item.taux}</Text>
-                            </View>
-                        </View>
+                        <RateCard code={item.codeDevise} rate={item.taux} />
                     )}
                 />
             </View>
@@ -116,7 +112,6 @@ const styles = StyleSheet.create({
     },
     page: {
         flex: 1,
-        padding: 12,
         backgroundColor: "#f6f4f8"
     },
     titre: {
@@ -130,7 +125,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#673AB7",
         marginBottom: 8,
-        marginLeft: 4,
+        paddingHorizontal: 14,
         textAlign: "right"
     },
     code: {
@@ -152,20 +147,5 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         color: "#673AB7",
         fontFamily: "Menlo"
-    },
-    card: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        backgroundColor: "#fff",
-        paddingVertical: 12,
-        paddingHorizontal: 14,
-        borderRadius: 12,
-        marginBottom: 8,
-        elevation: 2,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2
     },
 });

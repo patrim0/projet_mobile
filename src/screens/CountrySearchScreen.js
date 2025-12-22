@@ -14,6 +14,7 @@ export default function CountrySearchScreen({ parallax }) {
 
     return (
         <NavigationUI title="WorldInfo" parallax={parallax}>
+            <View style={styles.page}>
                 <View style={styles.searchContainer}>
                     <Text style={styles.searchLabel}>Search Country</Text>
 
@@ -31,8 +32,6 @@ export default function CountrySearchScreen({ parallax }) {
                             </TouchableOpacity>
                         )}
                     </View>
-
-
                 </View>
 
                 <View style={{ flex: 1 }}>
@@ -40,30 +39,25 @@ export default function CountrySearchScreen({ parallax }) {
                         <CountrySearchResults query={search} />
                     )}
                 </View>
+            </View>
         </NavigationUI>
     );
 }
 
 const styles = StyleSheet.create({
-    topBar: {
-        marginTop: 20,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    title: {
-        fontWeight: '600',
-        fontSize: 20
+    page: {
+         flex: 1,
+         backgroundColor: "#f6f4f8" 
     },
     searchContainer: {
-        marginTop: 25,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        backgroundColor: "#f6f4f8" 
     },
     searchLabel: {
         fontSize: 12,
         marginBottom: 6,
         paddingLeft: 10,
+        paddingTop: 25,
         color: '#673AB7'
     },
     searchBox: {
@@ -73,7 +67,8 @@ const styles = StyleSheet.create({
         borderColor: '#673AB7',
         borderRadius: 8,
         paddingHorizontal: 10,
-        height: 42
+        height: 42,
+        backgroundColor: "#fff"
     },
     input: {
         flex: 1,

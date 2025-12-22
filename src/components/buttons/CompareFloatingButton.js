@@ -1,9 +1,8 @@
-import { useContext } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
-import { CompareContext } from "../context/CompareContext";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useContext } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { CompareContext } from "../../context/CompareContext";
 
 export default function CompareFloatingButton() {
     const { selectedCountries } = useContext(CompareContext);

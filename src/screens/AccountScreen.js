@@ -52,7 +52,7 @@ export default function AccountScreen({ parallax }) {
 
     return (
         <NavigationUI title={`${profile?.username}'s Account`} parallax={parallax}>
-            <View>
+            <View style={styles.page}>
                 <Text style={styles.screenTitle}>Edit Infos</Text>
 
                 <View style={styles.card}>
@@ -107,6 +107,11 @@ export default function AccountScreen({ parallax }) {
 }
 
 const styles = StyleSheet.create({
+    page: {
+        flex: 1,
+        backgroundColor: "#f6f4f8",
+        padding: 12
+    },
     container: {
         flex: 1,
         backgroundColor: "#F5EEF9",
@@ -125,7 +130,8 @@ const styles = StyleSheet.create({
         padding: 16,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: "#ddd"
+        borderColor: "#ddd",
+        elevation: 2
     },
     label: {
         fontSize: 12,

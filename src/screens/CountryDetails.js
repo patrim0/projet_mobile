@@ -192,17 +192,18 @@ export default function CountryDetails({ parallax }) {
         <NavigationUI title={pays.name.common} parallax={parallax}>
             <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
                 <AnimationFlag uri={pays.flags.png} />
-                <Text style={styles.nom}>{pays.name.common}</Text>
 
-                {nativeNames.map((item, index) => (
-                <View key={index} style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    <Text>{item.nom}</Text>
+                <View style={{paddingTop: 15}}>
+                    {nativeNames.map((item, index) => (
+                    <View key={index} style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        <Text>{item.nom}</Text>
 
-                    {nativeNames.length > 1 && (
-                        <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>{item.code.toUpperCase()}</Text>
-                    )}
+                        {nativeNames.length > 1 && (
+                            <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>{item.code.toUpperCase()}</Text>
+                        )}
+                    </View>
+                    ))}
                 </View>
-                ))}
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
                     <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(pays.maps.googleMaps)}>
@@ -300,7 +301,7 @@ const styles = StyleSheet.create({
     page: {
         flexGrow: 1,
         padding: 20,
-        backgroundColor: "#F5EEF9"
+        backgroundColor: "#f6f4f8"
     },
     drapeau: {
         width: 250,
@@ -324,7 +325,8 @@ const styles = StyleSheet.create({
         padding: 16,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: "#ddd"
+        borderColor: "#ddd",
+        elevation: 2
     },
     label: {
         fontSize: 12,

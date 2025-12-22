@@ -70,6 +70,7 @@ export default function Favorites({ parallax }) {
                 <FlatList
                     data={liste.filter(item => profile?.favoriteCountries.includes(item.name))}
                     keyExtractor={(item) => item.name}
+                    contentContainerStyle={{ padding: 12 }}
                     renderItem={({ item }) => (
 
                         <View style={styles.ligne}>
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: "#f6f4f8",
-        padding: 12
+        paddingVertical: 25
     },
     input: {
         backgroundColor: "#fff",
@@ -109,7 +110,8 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 10,
         marginBottom: 8,
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        elevation: 2
     },
     drapeau: {
         width: 50,
