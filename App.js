@@ -15,12 +15,12 @@ export default function App() {
         init();
     }, []);
 
-    useEffect(() => {
+/*     useEffect(() => {
         (async () => {
             const result = await findCountries("ca");
             console.log("TEST API:", result);
         })();
-    }, []);
+    }, []); */
 
     return (
         <AuthProvider>
