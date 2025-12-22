@@ -8,8 +8,9 @@ import { editUserInfo, getUserInfo } from "../api/auth";
 import { getDetails } from "../api/countries";
 import { getCurrentUsdBase } from "../api/rates";
 import { getTodayCapitalWeather } from "../api/weather";
+import NavigationUI from "../components/NavigationUI";
 
-export default function CountryDetails() {
+export default function CountryDetails({ parallax }) {
     const route = useRoute();
     const nom = route.params?.name;
     const [pays, setPays] = useState(null);
@@ -188,102 +189,105 @@ export default function CountryDetails() {
     }    
 
     return (
-        <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
-            <AnimationFlag uri={pays.flags.png} />
-            <Text style={styles.nom}>{pays.name.common}</Text>
+        <NavigationUI title={pays.name.common} parallax={parallax}>
+            <ScrollView contentContainerStyle={styles.page} showsVerticalScrollIndicator={false}>
+                <AnimationFlag uri={pays.flags.png} />
+                <Text style={styles.nom}>{pays.name.common}</Text>
 
-            {nativeNames.map((item, index) => (
-            <View key={index} style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Text>{item.nom}</Text>
+                {nativeNames.map((item, index) => (
+                <View key={index} style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <Text>{item.nom}</Text>
 
-                {nativeNames.length > 1 && (
-                    <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>{item.code.toUpperCase()}</Text>
-                )}
-            </View>
-            ))}
+                    {nativeNames.length > 1 && (
+                        <Text style={{ color: '#a3a3a3ff', fontSize: 9, marginLeft: 6, letterSpacing: 0.5 }}>{item.code.toUpperCase()}</Text>
+                    )}
+                </View>
+                ))}
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
-                <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(pays.maps.googleMaps)}>
-                    <MaterialIcons name="map" size={18} color="#ffffff" />
-                    <Text style={styles.buttonText}>Show on Map</Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
+                    <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(pays.maps.googleMaps)}>
+                        <MaterialIcons name="map" size={18} color="#ffffff" />
+                        <Text style={styles.buttonText}>Show on Map</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={toggleFavorite}>
-                    <MaterialIcons name={isFavorite ? "favorite" : "favorite-border"} size={18} color="#ffffff" />
-                    <Text style={styles.buttonText}>{isFavorite ? "In Favorites" : "Add to Favorites"}</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity style={styles.button} onPress={toggleFavorite}>
+                        <MaterialIcons name={isFavorite ? "favorite" : "favorite-border"} size={18} color="#ffffff" />
+                        <Text style={styles.buttonText}>{isFavorite ? "In Favorites" : "Add to Favorites"}</Text>
+                    </TouchableOpacity>
+                </View>
 
-            <View style={{marginTop: 20}}>
-                <View style={styles.card}>
-                    <Text style={styles.label}>Currencies</Text>
-                    {devises.map((devise, index) => {
-                        const rate = usdBase?.[devise.code.toLowerCase()];
+                <View style={{marginTop: 20}}>
+                    <View style={styles.card}>
+                        <Text style={styles.label}>Currencies</Text>
+                        {devises.map((devise, index) => {
+                            const rate = usdBase?.[devise.code.toLowerCase()];
 
-                        return (
-                            <View key={index} style={{ marginTop: 6 }}>
-                                <Text style={styles.valueLabel}>{devise.name}</Text>
+                            return (
+                                <View key={index} style={{ marginTop: 6 }}>
+                                    <Text style={styles.valueLabel}>{devise.name}</Text>
 
-                                <Text style={styles.value}>{devise.code} ({devise.symbol})</Text>
+                                    <Text style={styles.value}>{devise.code} ({devise.symbol})</Text>
 
-                                <Text style={styles.valueRate}>{rate ? `Today: 1 ${devise.code} = ${(1/rate).toFixed(3)} USD` : "Rate unavailable"}</Text>
-                                {index < devises.length - 1 && (
-                                    <View style={styles.separator}/>
-                                )}
+                                    <Text style={styles.valueRate}>{rate ? `Today: 1 ${devise.code} = ${(1/rate).toFixed(3)} USD` : "Rate unavailable"}</Text>
+                                    {index < devises.length - 1 && (
+                                        <View style={styles.separator}/>
+                                    )}
+                                </View>
+                            );
+                        })}
+                
+                    </View>
+
+                    <View style={styles.card}>
+                        <Text style={styles.label}>Geography</Text>
+
+                        <Text style={styles.valueLabel}>Capital</Text>
+                        <Text style={styles.value}>{pays.capital}</Text>
+
+                        {weatherLoading && (
+                            <ActivityIndicator size="small" style={{ marginTop: 6 }} />
+                        )}
+                        {!weatherLoading && weather && (
+                            <View style={{ flexDirection: "row", alignItems: "center"}}>
+                                <Text style={[styles.valueRate]}>Currently: {Math.round(weather.tempC)}°C · {weather.condition}</Text>
+                                <Image source={{ uri: weather.icon }} style={{ width: 30, height: 30}}/>
                             </View>
-                        );
-                    })}
-              
-                </View>
+                        )}
+                        <View style={styles.separator}/>
 
-                <View style={styles.card}>
-                    <Text style={styles.label}>Geography</Text>
+                        <Text style={styles.valueLabel}>Continent</Text>
+                        <Text style={styles.value}>{continents}</Text>
+                        <View style={styles.separator}/>
 
-                    <Text style={styles.valueLabel}>Capital</Text>
-                    <Text style={styles.value}>{pays.capital}</Text>
+                        <Text style={styles.valueLabel}>Area</Text>
+                        <Text style={styles.value}>{pays.area.toLocaleString()} km²</Text>
+                        <View style={styles.separator}/>
 
-                    {weatherLoading && (
-                        <ActivityIndicator size="small" style={{ marginTop: 6 }} />
-                    )}
-                    {!weatherLoading && weather && (
-                        <View style={{ flexDirection: "row", alignItems: "center"}}>
-                            <Text style={[styles.valueRate]}>Currently: {Math.round(weather.tempC)}°C · {weather.condition}</Text>
-                            <Image source={{ uri: weather.icon }} style={{ width: 30, height: 30}}/>
-                        </View>
-                    )}
-                    <View style={styles.separator}/>
+                        <Text style={styles.valueLabel}>Timezones</Text>
+                        <Text style={styles.value}>{timezones}</Text>
 
-                    <Text style={styles.valueLabel}>Continent</Text>
-                    <Text style={styles.value}>{continents}</Text>
-                    <View style={styles.separator}/>
+                    </View>
 
-                    <Text style={styles.valueLabel}>Area</Text>
-                    <Text style={styles.value}>{pays.area.toLocaleString()} km²</Text>
-                    <View style={styles.separator}/>
+                    <View style={styles.card}>
+                        <Text style={styles.label}>Demography</Text>
 
-                    <Text style={styles.valueLabel}>Timezones</Text>
-                    <Text style={styles.value}>{timezones}</Text>
+                        <Text style={styles.valueLabel}>Demonym</Text>
+                        <Text style={styles.value}>{pays.demonyms.eng.m}</Text>
+                        <View style={styles.separator}/>
 
-                </View>
+                        <Text style={styles.valueLabel}>Population</Text>
+                        <Text style={styles.value}>{pays.population.toLocaleString()}</Text>
+                        <View style={styles.separator}/>
 
-                <View style={styles.card}>
-                    <Text style={styles.label}>Demography</Text>
+                        <Text style={styles.valueLabel}>Languages</Text>
+                        <Text style={styles.value}>{languages}</Text>
 
-                    <Text style={styles.valueLabel}>Demonym</Text>
-                    <Text style={styles.value}>{pays.demonyms.eng.m}</Text>
-                    <View style={styles.separator}/>
-
-                    <Text style={styles.valueLabel}>Population</Text>
-                    <Text style={styles.value}>{pays.population.toLocaleString()}</Text>
-                    <View style={styles.separator}/>
-
-                    <Text style={styles.valueLabel}>Languages</Text>
-                    <Text style={styles.value}>{languages}</Text>
+                    </View>
 
                 </View>
+            </ScrollView>
+        </NavigationUI>
 
-            </View>
-        </ScrollView>
     );
 }
 

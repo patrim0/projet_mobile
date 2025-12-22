@@ -7,10 +7,11 @@ import {
     StyleSheet,
     Image,
 } from "react-native";
+import NavigationUI from "../components/NavigationUI";
 
 const WEATHER_API_KEY = "24923ddba8b949cb902144825252012";
 
-export default function CapitalsWeather() {
+export default function CapitalsWeather({ parallax }) {
     const [donnees, setDonnees] = useState([]);
     const [enChargement, setEnChargement] = useState(true);
     const [erreur, setErreur] = useState(null);
@@ -168,50 +169,52 @@ export default function CapitalsWeather() {
     }
 
     return (
-        <View style={styles.page}>
-            <Text style={styles.titre}>Météo des capitales (°C)</Text>
+        <NavigationUI title="Weather" parallax={parallax}>
+            <View style={styles.page}>
+                <Text style={styles.titre}>Météo des capitales (°C)</Text>
 
-            {enChargement && (
-                <View style={styles.inlineLoading}>
-                    <ActivityIndicator size="small" />
-                    <Text style={styles.inlineLoadingText}>
-                        Chargement de la météo...
-                    </Text>
-                </View>
-            )}
-
-            <FlatList
-                data={donnees}
-                keyExtractor={function (item) {
-                    return item.id;
-                }}
-                renderItem={({ item }) => (
-                    <View style={styles.card}>
-                        <View style={styles.gauche}>
-                            <View style={styles.drapeauVille}>
-                                {item.drapeau ? (
-                                    <Image source={{ uri: item.drapeau }} style={styles.drapeau} />
-                                ) : null}
-
-                                <Text style={styles.capitale}>{item.capitale}</Text>
-                            </View>
-
-                            <Text style={styles.pays}>{item.pays}</Text>
-                        </View>
-
-                        <View style={styles.meteoBox}>
-                            {item.icone ? (
-                                <Image source={{ uri: item.icone }} style={styles.iconeMeteo} />
-                            ) : (
-                                <Text style={styles.placeholder}>☀️</Text>
-                            )}
-
-                            <Text style={styles.temperature}>{item.temperature}</Text>
-                        </View>
+                {enChargement && (
+                    <View style={styles.inlineLoading}>
+                        <ActivityIndicator size="small" />
+                        <Text style={styles.inlineLoadingText}>
+                            Chargement de la météo...
+                        </Text>
                     </View>
                 )}
-            />
-        </View>
+
+                <FlatList
+                    data={donnees}
+                    keyExtractor={function (item) {
+                        return item.id;
+                    }}
+                    renderItem={({ item }) => (
+                        <View style={styles.card}>
+                            <View style={styles.gauche}>
+                                <View style={styles.drapeauVille}>
+                                    {item.drapeau ? (
+                                        <Image source={{ uri: item.drapeau }} style={styles.drapeau} />
+                                    ) : null}
+
+                                    <Text style={styles.capitale}>{item.capitale}</Text>
+                                </View>
+
+                                <Text style={styles.pays}>{item.pays}</Text>
+                            </View>
+
+                            <View style={styles.meteoBox}>
+                                {item.icone ? (
+                                    <Image source={{ uri: item.icone }} style={styles.iconeMeteo} />
+                                ) : (
+                                    <Text style={styles.placeholder}>☀️</Text>
+                                )}
+
+                                <Text style={styles.temperature}>{item.temperature}</Text>
+                            </View>
+                        </View>
+                    )}
+                />
+            </View>
+        </NavigationUI>
     );
 }
 

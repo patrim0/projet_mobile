@@ -6,8 +6,9 @@ import {
     FlatList,
     StyleSheet,
 } from "react-native";
+import NavigationUI from "../components/NavigationUI";
 
-export default function ExchangeRates() {
+export default function ExchangeRates({ parallax }) {
     const [donnees, setDonnees] = useState([]);
     const [charge, setCharge] = useState(true);
     const [erreur, setErreur] = useState(null);
@@ -82,26 +83,28 @@ export default function ExchangeRates() {
     }
 
     return (
-        <View style={styles.page}>
-            <Text style={styles.titre}>Taux de change à jour</Text>
-            <Text style={styles.sousTitre}>Base currency: USD</Text>
+        <NavigationUI title="Exchange Rates" parallax={parallax}>
+            <View style={styles.page}>
+                <Text style={styles.titre}>Taux de change à jour</Text>
+                <Text style={styles.sousTitre}>Base currency: USD</Text>
 
-            <FlatList
-                data={donnees}
-                keyExtractor={function (item) {
-                    return item.id;
-                }}
-                renderItem={({ item }) => (
-                    <View style={styles.card}>
-                        <Text style={styles.code}>{item.codeDevise}</Text>
+                <FlatList
+                    data={donnees}
+                    keyExtractor={function (item) {
+                        return item.id;
+                    }}
+                    renderItem={({ item }) => (
+                        <View style={styles.card}>
+                            <Text style={styles.code}>{item.codeDevise}</Text>
 
-                        <View style={styles.deviseBox}>
-                            <Text style={styles.valeur}>{item.taux}</Text>
+                            <View style={styles.deviseBox}>
+                                <Text style={styles.valeur}>{item.taux}</Text>
+                            </View>
                         </View>
-                    </View>
-                )}
-            />
-        </View>
+                    )}
+                />
+            </View>
+        </NavigationUI>
     );
 }
 
