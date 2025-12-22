@@ -23,34 +23,36 @@ export default function ProfileScreen({ parallax }) {
 
     return (
         <NavigationUI title={`${profile?.username}'s Profile`} parallax={parallax}>
-            <Text style={styles.screenTitle}></Text>
+            <View style={styles.page}>
+                <Text style={styles.screenTitle}></Text>
 
-            <View style={styles.card}>
-                <Text style={styles.label}>Username</Text>
-                <Text style={styles.value}>{profile?.username}</Text>
-            </View>
+                <View style={styles.card}>
+                    <Text style={styles.label}>Username</Text>
+                    <Text style={styles.value}>{profile?.username}</Text>
+                </View>
 
-            <View style={styles.card}>
-                <Text style={styles.label}>Email</Text>
-                <Text style={styles.value}>{profile?.email}</Text>
-            </View>
+                <View style={styles.card}>
+                    <Text style={styles.label}>Email</Text>
+                    <Text style={styles.value}>{profile?.email}</Text>
+                </View>
 
-            <View style={styles.card}>
-                <Text style={styles.label}>Full Name</Text>
-                <Text style={styles.value}>
-                    {profile?.firstName} {profile?.lastName}
-                </Text>
-            </View>
+                <View style={styles.card}>
+                    <Text style={styles.label}>Full Name</Text>
+                    <Text style={styles.value}>
+                        {profile?.firstName} {profile?.lastName}
+                    </Text>
+                </View>
 
-            <View style={styles.card}>
-                <Text style={styles.label}>Favorite Countries</Text>
+                <View style={styles.card}>
+                    <Text style={styles.label}>Favorite Countries</Text>
 
-                <View style={styles.chips}>
-                    {profile?.favoriteCountries?.map((c, index) => (
-                        <Text key={index} style={styles.chip}>
-                            {c}
-                        </Text>
-                    ))}
+                    <View style={styles.chips}>
+                        {profile?.favoriteCountries?.map((c, index) => (
+                            <Text key={index} style={styles.chip}>
+                                {c}
+                            </Text>
+                        ))}
+                    </View>
                 </View>
             </View>
         </NavigationUI>
@@ -58,6 +60,11 @@ export default function ProfileScreen({ parallax }) {
 }
 
 const styles = StyleSheet.create({
+    page: {
+        flex: 1,
+        backgroundColor: "#f6f4f8",
+        padding: 12
+    },
     container: {
         flex: 1,
         backgroundColor: "#F5EEF9",
@@ -73,10 +80,11 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: "#fff",
         borderRadius: 8,
-        padding: 16,
+        padding: 12,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: "#ddd"
+        borderColor: "#ddd",
+        elevation: 2
     },
     label: {
         fontSize: 12,

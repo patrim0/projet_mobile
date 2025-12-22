@@ -8,6 +8,7 @@ import {
     Image,
 } from "react-native";
 import NavigationUI from "../components/NavigationUI";
+import WeatherCard from "../components/cards/WeatherCard";
 
 const WEATHER_API_KEY = "24923ddba8b949cb902144825252012";
 
@@ -187,30 +188,9 @@ export default function CapitalsWeather({ parallax }) {
                     keyExtractor={function (item) {
                         return item.id;
                     }}
+                    contentContainerStyle={{ padding: 12 }}
                     renderItem={({ item }) => (
-                        <View style={styles.card}>
-                            <View style={styles.gauche}>
-                                <View style={styles.drapeauVille}>
-                                    {item.drapeau ? (
-                                        <Image source={{ uri: item.drapeau }} style={styles.drapeau} />
-                                    ) : null}
-
-                                    <Text style={styles.capitale}>{item.capitale}</Text>
-                                </View>
-
-                                <Text style={styles.pays}>{item.pays}</Text>
-                            </View>
-
-                            <View style={styles.meteoBox}>
-                                {item.icone ? (
-                                    <Image source={{ uri: item.icone }} style={styles.iconeMeteo} />
-                                ) : (
-                                    <Text style={styles.placeholder}>☀️</Text>
-                                )}
-
-                                <Text style={styles.temperature}>{item.temperature}</Text>
-                            </View>
-                        </View>
+                        <WeatherCard capital={item.capitale} country={item.pays} flag={item.drapeau} temperature={item.temperature} icon={item.icone}/>
                     )}
                 />
             </View>
@@ -227,7 +207,6 @@ const styles = StyleSheet.create({
     },
     page: {
         flex: 1,
-        padding: 12,
         backgroundColor: "#f6f4f8"
     },
     titre: {

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     },
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)'
+        backgroundColor: 'rgba(37, 38, 87, 0.3)'
     },
     sidebar: {
         position: 'absolute',
@@ -91,12 +91,11 @@ const styles = StyleSheet.create({
     },
     separator: {
         height: 2,
-        backgroundColor: '#ddd',
+        backgroundColor: '#673AB7',
         marginBottom: 25,
     },
     menuItem: {
         fontSize: 15,
-        marginBottom: 25,
-        color: '#222',
-    },
+        paddingVertical: 25
+    }
 });

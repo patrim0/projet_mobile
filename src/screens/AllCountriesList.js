@@ -1,13 +1,13 @@
-import { useNavigation } from "@react-navigation/native";
-import { useContext, useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useNavigation } from "@react-navigation/native";
+import { useContext, useEffect, useState } from "react";
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { findCountries, getAllCountries } from "../api/countries";
-import { CompareContext } from "../context/CompareContext";
-import CompareFloatingButton from "../components/CompareFloatingButton";
+import CompareFloatingButton from "../components/buttons/CompareFloatingButton";
+import CountryCard from "../components/cards/CountryCard";
 import NavigationUI from "../components/NavigationUI";
-import DataCard from "../components/DataCard";
+import { CompareContext } from "../context/CompareContext";
 
 function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect, compareMode }) {
 
@@ -37,7 +37,7 @@ function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect, comp
                         />
                     </TouchableOpacity>
                 )}
-                <DataCard nom={item.name} reg={item.region} url={item.flagPng} />
+                <CountryCard name={item.name} region={item.region} flag={item.flagPng} />
         </TouchableOpacity>
     );
 }
@@ -100,7 +100,7 @@ export default function AllCountriesList({ parallax }) {
 
     return (
         <NavigationUI title={"Countries"} parallax={parallax}>
-            <View style={{ flex: 1, backgroundColor: "#f6f4f8" }}>
+            <View style={styles.page}>
 
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
@@ -168,6 +168,10 @@ export default function AllCountriesList({ parallax }) {
 }
 
 const styles = StyleSheet.create({
+    page: {
+         flex: 1,
+         backgroundColor: "#f6f4f8" 
+    },
     toggleButtons: {
         flexDirection: "row",
         alignItems: "center",

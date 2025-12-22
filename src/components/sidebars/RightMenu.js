@@ -1,9 +1,9 @@
 import * as Haptics from 'expo-haptics';
-import { useEffect, useRef, useState, useContext } from 'react';
-import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-import { getUserInfo, login, signup } from "../api/auth";
 import { useNavigation } from '@react-navigation/native';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { getUserInfo, login, signup } from "../../api/auth";
+import { AuthContext } from '../../context/AuthContext';
 
 
 export default function RightMenu({ visible, onClose, width = 260 }) {
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     },
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)'
+        backgroundColor: 'rgba(37, 38, 87, 0.3)'
     },
     sidebar: {
         position: 'absolute',
@@ -417,8 +417,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     separator: {
-        height: 1,
-        backgroundColor: '#ddd',
+        height: 2,
+        backgroundColor: '#673AB7',
         marginBottom: 25,
     },
     menuItem: {

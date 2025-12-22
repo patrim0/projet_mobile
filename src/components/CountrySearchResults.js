@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View, Pressable} from "react-native";
-import { findCountries } from "../api/countries";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DataCard from "./DataCard";
+import { findCountries } from "../api/countries";
+import CountryCard from "./cards/CountryCard";
 
 export default function CountrySearchResults({ query }) {
 
@@ -43,7 +43,7 @@ export default function CountrySearchResults({ query }) {
                 keyExtractor={(it, i) => it.name + i}
                 renderItem={({ item }) => (
                     <Pressable onPress={() => handleCardPress(item)}>
-                        <DataCard nom={item.name} reg={item.region} url={item.flagPng} />
+                        <CountryCard name={item.name} region={item.region} flag={item.flagPng} />
                     </Pressable>
                 )}
                 contentContainerStyle={{ padding: 12 }}
