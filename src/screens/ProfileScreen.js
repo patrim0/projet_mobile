@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, View } from 'react-native';
 import { AuthContext } from "../context/AuthContext";
 import { getUserInfo } from "../api/auth";
+import NavigationUI from "../components/NavigationUI";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ parallax }) {
 
     const { token } = useContext(AuthContext);
 
@@ -21,12 +21,9 @@ export default function ProfileScreen() {
         load();
     }, [token]);
 
-        return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.container}>
-            <StatusBar barStyle={'dark-content'} />
-
-            <Text style={styles.screenTitle}>Your Profile</Text>
+    return (
+        <NavigationUI title={`${profile?.username}'s Profile`} parallax={parallax}>
+            <Text style={styles.screenTitle}></Text>
 
             <View style={styles.card}>
                 <Text style={styles.label}>Username</Text>
@@ -41,7 +38,7 @@ export default function ProfileScreen() {
             <View style={styles.card}>
                 <Text style={styles.label}>Full Name</Text>
                 <Text style={styles.value}>
-                {profile?.firstName} {profile?.lastName}
+                    {profile?.firstName} {profile?.lastName}
                 </Text>
             </View>
 
@@ -49,61 +46,59 @@ export default function ProfileScreen() {
                 <Text style={styles.label}>Favorite Countries</Text>
 
                 <View style={styles.chips}>
-                {profile?.favoriteCountries?.map((c, index) => (
-                    <Text key={index} style={styles.chip}>
-                    {c}
-                    </Text>
-                ))}
+                    {profile?.favoriteCountries?.map((c, index) => (
+                        <Text key={index} style={styles.chip}>
+                            {c}
+                        </Text>
+                    ))}
                 </View>
             </View>
-
-            </SafeAreaView>
-        </SafeAreaProvider>
-        );
+        </NavigationUI>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5EEF9",
-    padding: 20
-  },
-  screenTitle: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "#673AB7"
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#ddd"
-  },
-  label: {
-    fontSize: 12,
-    color: "#673AB7",
-    marginBottom: 4
-  },
-  value: {
-    fontSize: 15,
-    color: "#222"
-  },
-  chips: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-    marginTop: 6
-  },
-  chip: {
-    backgroundColor: "#673AB7",
-    color: "#fff",
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 12,
-    fontSize: 13
-  }
+    container: {
+        flex: 1,
+        backgroundColor: "#F5EEF9",
+        padding: 20
+    },
+    screenTitle: {
+        fontSize: 22,
+        fontWeight: "600",
+        marginBottom: 20,
+        textAlign: "center",
+        color: "#673AB7"
+    },
+    card: {
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: "#ddd"
+    },
+    label: {
+        fontSize: 12,
+        color: "#673AB7",
+        marginBottom: 4
+    },
+    value: {
+        fontSize: 15,
+        color: "#222"
+    },
+    chips: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 8,
+        marginTop: 6
+    },
+    chip: {
+        backgroundColor: "#673AB7",
+        color: "#fff",
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        borderRadius: 12,
+        fontSize: 13
+    }
 });

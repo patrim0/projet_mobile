@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Image, StyleSheet, ActivityIndicator, Touchable
 import { Ionicons } from '@expo/vector-icons';
 import { CompareContext } from "../context/CompareContext";
 import { compareCountries } from "../api/countries";
+import NavigationUI from "../components/NavigationUI";
 
 function ComparisonRow({ label, values, highlight = false }) {
     const numericValues = values.map(v => {
@@ -36,7 +37,7 @@ function ComparisonRow({ label, values, highlight = false }) {
     );
 }
 
-export default function CompareScreen() {
+export default function CompareScreen({ parallax }) {
     const { selectedCountries, clearSelection } = useContext(CompareContext);
     const [countriesData, setCountriesData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -88,86 +89,88 @@ export default function CompareScreen() {
     }
 
     return (
-        <View style={styles.container}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ minWidth: '100%' }}>
-                    {/* En-têtes avec drapeaux */}
-                    <View style={styles.headerRow}>
-                        <View style={styles.labelColumn}>
-                            <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-                                <Ionicons name="trash-outline" size={20} color="#fff" />
-                            </TouchableOpacity>
-                        </View>
-                        {countriesData.map((country, index) => (
-                            <View key={index} style={styles.headerColumn}>
-                                <Image source={{ uri: country.flagPng }} style={styles.flag} />
-                                <Text style={styles.countryName}>{country.name}</Text>
+        <NavigationUI title="Comparison" parallax={parallax}>
+            <View style={styles.container}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <View style={{ minWidth: '100%' }}>
+                        {/* En-têtes avec drapeaux */}
+                        <View style={styles.headerRow}>
+                            <View style={styles.labelColumn}>
+                                <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
+                                    <Ionicons name="trash-outline" size={20} color="#fff" />
+                                </TouchableOpacity>
                             </View>
-                        ))}
-                    </View>
+                            {countriesData.map((country, index) => (
+                                <View key={index} style={styles.headerColumn}>
+                                    <Image source={{ uri: country.flagPng }} style={styles.flag} />
+                                    <Text style={styles.countryName}>{country.name}</Text>
+                                </View>
+                            ))}
+                        </View>
 
-                    <ScrollView style={styles.scrollContent}>
-                        <ComparisonRow 
-                            label="Nom officiel" 
-                            values={countriesData.map(c => c.officialName)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Population" 
-                            values={countriesData.map(c => formatNumber(c.population))} 
-                            highlight={true}
-                        />
-                        
-                        <ComparisonRow 
-                            label="Superficie km carre" 
-                            values={countriesData.map(c => formatNumber(c.area))} 
-                            highlight={true}
-                        />
-                        
-                        <ComparisonRow 
-                            label="Capitale" 
-                            values={countriesData.map(c => c.capital)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Region" 
-                            values={countriesData.map(c => c.region)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Sous-region" 
-                            values={countriesData.map(c => c.subregion)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Continent" 
-                            values={countriesData.map(c => c.continents)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Langues" 
-                            values={countriesData.map(c => c.languages)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Monnaies" 
-                            values={countriesData.map(c => c.currencies)} 
-                        />
-                        
-                        <ComparisonRow 
-                            label="Pays frontaliers" 
-                            values={countriesData.map(c => c.borders)} 
-                            highlight={true}
-                        />
-                        
-                        <ComparisonRow 
-                            label="Sans littoral" 
-                            values={countriesData.map(c => c.landlocked)} 
-                        />
-                    </ScrollView>
-                </View>
-            </ScrollView>
-        </View>
+                        <ScrollView style={styles.scrollContent}>
+                            <ComparisonRow 
+                                label="Nom officiel" 
+                                values={countriesData.map(c => c.officialName)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Population" 
+                                values={countriesData.map(c => formatNumber(c.population))} 
+                                highlight={true}
+                            />
+                            
+                            <ComparisonRow 
+                                label="Superficie km carre" 
+                                values={countriesData.map(c => formatNumber(c.area))} 
+                                highlight={true}
+                            />
+                            
+                            <ComparisonRow 
+                                label="Capitale" 
+                                values={countriesData.map(c => c.capital)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Region" 
+                                values={countriesData.map(c => c.region)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Sous-region" 
+                                values={countriesData.map(c => c.subregion)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Continent" 
+                                values={countriesData.map(c => c.continents)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Langues" 
+                                values={countriesData.map(c => c.languages)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Monnaies" 
+                                values={countriesData.map(c => c.currencies)} 
+                            />
+                            
+                            <ComparisonRow 
+                                label="Pays frontaliers" 
+                                values={countriesData.map(c => c.borders)} 
+                                highlight={true}
+                            />
+                            
+                            <ComparisonRow 
+                                label="Sans littoral" 
+                                values={countriesData.map(c => c.landlocked)} 
+                            />
+                        </ScrollView>
+                    </View>
+                </ScrollView>
+            </View>
+        </NavigationUI>
     );
 }
 

@@ -3,12 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { CompareContext } from "../context/CompareContext";
+import { useRoute } from "@react-navigation/native";
 
 export default function CompareFloatingButton() {
     const { selectedCountries } = useContext(CompareContext);
     const navigation = useNavigation();
+    const route = useRoute();
 
-    if (selectedCountries.length < 2) {
+    if (selectedCountries.length < 2 || route.name !== "AllCountries") {
         return null;
     }
 

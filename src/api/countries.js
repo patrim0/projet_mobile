@@ -98,6 +98,16 @@ export async function getAllCountries() {
     }
 }
 
+export async function getDetails(countryName) {
+    try {
+        const url = `${base}/name/${encodeURIComponent(countryName)}?fullText=true`;
+        const rep = await axios.get(url);
+        return rep.data[0];
+    } catch {
+        return null;
+    }
+}
+
 export async function getCountryDetails(countryName) {
 
     try {

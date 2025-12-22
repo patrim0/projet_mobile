@@ -6,8 +6,9 @@ import { AuthContext } from "../context/AuthContext";
 import { getUserInfo } from "../api/auth";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { removeFavorite } from "../api/auth";
+import NavigationUI from "../components/NavigationUI";
 
-export default function Favorites() {
+export default function Favorites({ parallax }) {
 
     const navigation = useNavigation();
 
@@ -64,25 +65,27 @@ export default function Favorites() {
     }
 
     return (
-        <View style={styles.page}>
-            <FlatList
-                data={liste.filter(item => profile?.favoriteCountries.includes(item.name))}
-                keyExtractor={(item) => item.name}
-                renderItem={({ item }) => (
+        <NavigationUI title={`${profile?.username}'s Favorites`} parallax={parallax}>
+            <View style={styles.page}>
+                <FlatList
+                    data={liste.filter(item => profile?.favoriteCountries.includes(item.name))}
+                    keyExtractor={(item) => item.name}
+                    renderItem={({ item }) => (
 
-                    <View style={styles.ligne}>
-                        <Pressable style={styles.countryText} onPress={() => ouvrirPays(item.name)}>
-                            <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
-                            <Text style={styles.nom}>{item.name}</Text>
-                        </Pressable>
+                        <View style={styles.ligne}>
+                            <Pressable style={styles.countryText} onPress={() => ouvrirPays(item.name)}>
+                                <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
+                                <Text style={styles.nom}>{item.name}</Text>
+                            </Pressable>
 
-                        <TouchableOpacity onPress={() => handleRemoveFavorite(item.name)}>
-                            <MaterialIcons name="cancel" size={20} color="#673AB7" />
-                        </TouchableOpacity>
-                    </View>
-                )}
-            />
-        </View>
+                            <TouchableOpacity onPress={() => handleRemoveFavorite(item.name)}>
+                                <MaterialIcons name="cancel" size={20} color="#673AB7" />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                />
+            </View>
+        </NavigationUI>
     );
 }
 

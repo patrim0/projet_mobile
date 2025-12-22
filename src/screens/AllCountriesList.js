@@ -1,11 +1,56 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import { findCountries, getAllCountries } from "../api/countries";
+import { CompareContext } from "../context/CompareContext";
+import CompareFloatingButton from "../components/CompareFloatingButton";
+import NavigationUI from "../components/NavigationUI";
 
-export default function AllCountriesList() {
+function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect, compareMode }) {
+
+    const handleSelectPress = () => {
+        if (!isSelected && !canSelect) {
+            Alert.alert("Limite atteinte", "Vous pouvez comparer maximum 3 pays.");
+            return;
+        }
+        onToggleSelect();
+    };
+
+    return (
+        <TouchableOpacity  
+            style={[styles.ligne, isSelected && styles.ligneSelected]} 
+            onPress={compareMode ? handleSelectPress : onPress}
+            activeOpacity={0.6}>
+
+            {compareMode && (
+                <TouchableOpacity
+                    onPress={handleSelectPress}
+                    style={styles.checkbox}
+                    activeOpacity={0.6}
+                >
+                    <Ionicons
+                        name={isSelected ? "checkbox" : "square-outline"}
+                        size={28}
+                        color={isSelected ? "#673AB7" : "#999"}
+                    />
+                </TouchableOpacity>
+            )}
+
+            <View style={styles.ligneContent}>
+                <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
+                <Text style={styles.nom}>{item.name}</Text>
+            </View>
+        </TouchableOpacity>
+    );
+}
+
+export default function AllCountriesList({ parallax }) {
 
     const navigation = useNavigation();
+
+    const [compareMode, setCompareMode] = useState(false);
+    const { toggleCountry, isSelected, canAddMore, clearSelection } = useContext(CompareContext);
 
     const [texte, setTexte] = useState("");
     const [liste, setListe] = useState([]);
@@ -41,28 +86,51 @@ export default function AllCountriesList() {
         navigation.navigate("CountryDetails", { name: nom });
     };
 
+    const handleToggleSelect = (item) => {
+        toggleCountry(item);
+    };
+
     return (
-        <View style={styles.page}>
+        <NavigationUI title={"Countries"} parallax={parallax}>
+            <View style={styles.page}>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Rechercher un pays"
-                value={texte}
-                onChangeText={changerTexte}
-            />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Rechercher un pays"
+                    value={texte}
+                    onChangeText={changerTexte}
+                />
 
-            <FlatList
-                data={liste}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <Pressable style={styles.ligne} onPress={() => ouvrirPays(item.name)}>
-                        <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
-                        <Text style={styles.nom}>{item.name}</Text>
-                    </Pressable>
-                )}
-            />
+                <TouchableOpacity
+                    style={styles.compareToggle}
+                    onPress={() => {
+                        setCompareMode(v => {
+                            if (v) clearSelection();
+                            return !v;
+                        });
+                    }}
+                >
+                    <Ionicons name="git-compare" size={18} color={compareMode ? "#fff" : "#673AB7"} />
+                    <Text style={[styles.compareToggleText, compareMode && { color: "#fff" }]}>Comparer</Text>
+                </TouchableOpacity>
 
-        </View>
+                <FlatList
+                    data={liste}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <CountryRow
+                            item={item}
+                            isSelected={isSelected(item.name)}
+                            onToggleSelect={() => handleToggleSelect(item)}
+                            onPress={() => ouvrirPays(item.name)}
+                            canSelect={canAddMore()}
+                            compareMode={compareMode}
+                        />
+                    )}
+                />
+                <CompareFloatingButton />
+            </View>
+        </NavigationUI>
     );
 }
 
@@ -97,6 +165,22 @@ const styles = StyleSheet.create({
     nom: {
         fontSize: 16,
         fontWeight: "500"
-    }
+    },
+    compareToggle: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        alignSelf: "flex-end",
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: "#ede7f6",
+        marginBottom: 8,
+    },
+        compareToggleText: {
+        fontSize: 14,
+        color: "#673AB7",
+        fontWeight: "600",
+    },
 });
 

@@ -18,7 +18,6 @@ import { CompareProvider } from '../context/CompareContext';
 import { getUserInfo } from "../api/auth";
 import ExchangeRates from "../screens/ExchangeRates";
 
-import Capital from '../screens/Capital';
 import CapitalsWeather from '../screens/CapitalsWeather';
 
 const Stack = createNativeStackNavigator();
@@ -51,36 +50,26 @@ export default function AppNavigator() {
                 <Stack.Screen name="CountryResults" component={CountrySearchResults} />
                 <Stack.Screen name="AllCountries" component={AllCountriesList} options={{ headerShown: true, title: "Pays" }}/>
                 <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
-                <Stack.Screen name="Capital" component={Capital} options={{ headerShown: true, title: "Capitales" }} />
                 <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
                 <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ headerShown: true, title: "Météo des capitales" }}/>
+                <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ headerShown: true, title: "Favorites" }} />
             </Stack.Navigator>
         </NavigationContainer> */
 
+        /* Pas une bonne idée de tout wrap dans un provider... à fix */
         <CompareProvider>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="CountrySearch" children={() => <CountrySearchScreen parallax={parallax} />} />
-                <Stack.Screen name="UserAccount" component={AccountScreen} options={{ headerShown: true, title: `${profile?.username}'s Account` }} />
-                <Stack.Screen name="UserProfile" component={ProfileScreen} options={{ headerShown: true, title: `${profile?.username}'s Profile` }} />
+                <Stack.Screen name="UserAccount" children={() => <AccountScreen parallax={parallax} />} />
+                <Stack.Screen name="UserProfile" children={() => <ProfileScreen parallax={parallax} />} />
                 <Stack.Screen name="CountryResults" component={CountrySearchResults} />
-                <Stack.Screen name="AllCountries" component={AllCountriesList} options={{ headerShown: true, title: "Pays" }}/>
-                <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
-                <Stack.Screen name="Capital" component={Capital} options={{ headerShown: true, title: "Capitales" }} />
-                <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
-                <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ headerShown: true, title: "Météo des capitales" }}/>
-                <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ headerShown: true, title: "Favorites" }} />
-                    <Stack.Screen 
-                        name="CompareCountries" 
-                        component={CompareScreen} 
-                        options={{ 
-                            headerShown: true, 
-                            title: "Comparaison des pays",
-                            headerStyle: { backgroundColor: '#673AB7' },
-                            headerTintColor: '#fff',
-                            headerTitleStyle: { fontWeight: '600' }
-                        }} 
-                    />
+                <Stack.Screen name="AllCountries" children={() => <AllCountriesList parallax={parallax} />}/>
+                <Stack.Screen name="CountryDetails" children={() => <CountryDetails parallax={parallax} />} />
+                <Stack.Screen name="ExchangeRates" children={() => <ExchangeRates parallax={parallax} />}/>
+                <Stack.Screen name="CapitalsWeather" children={() => <CapitalsWeather parallax={parallax}/>}/>
+                <Stack.Screen name="Favorites" children={() => <FavoritesScreen parallax={parallax}/>} />
+                <Stack.Screen name="CompareCountries" children={() => <CompareScreen parallax={parallax}/>} />
                 </Stack.Navigator>
             </NavigationContainer>
         </CompareProvider>

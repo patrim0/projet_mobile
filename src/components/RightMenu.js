@@ -5,11 +5,12 @@ import { AuthContext } from '../context/AuthContext';
 import { getUserInfo, login, signup } from "../api/auth";
 import { useNavigation } from '@react-navigation/native';
 
+
 export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const navigation = useNavigation();
 
-    const [view, setView] = useState('guest');
+    const [view, setView] = useState(() => (isLoggedIn ? "loggedin" : "guest"));
 
     const [inputError, setInputError] = useState(false);
 
@@ -34,6 +35,10 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
     const successMessage = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
+        setView(isLoggedIn ? "loggedin" : "guest");
+    }, [isLoggedIn]);
+
+    useEffect(() => {
         Animated.parallel([
             Animated.spring(translateX, {
                 toValue: visible ? 0 : width,
@@ -49,6 +54,12 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
             useNativeDriver: true
         }).start();
     }, [visible]);
+
+    const go = (screen) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        onClose && onClose();
+        navigation.navigate(screen);
+    };
 
     function switchView(next) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
@@ -317,15 +328,15 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={styles.separator} />
 
-                        <TouchableOpacity onPress={() => navigation.navigate("UserAccount")}>
+                        <TouchableOpacity onPress={() => go("UserAccount")}>
                             <Text style={styles.loggedInItem}>Account</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => navigation.navigate("UserProfile")}>
+                        <TouchableOpacity onPress={() => go("UserProfile")}>
                             <Text style={styles.loggedInItem}>Profile</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => navigation.navigate("Favorites")}>
+                        <TouchableOpacity onPress={() => go("Favorites")}>
                             <Text style={styles.loggedInItem}>Favorites</Text>
                         </TouchableOpacity>
 
