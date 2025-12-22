@@ -247,7 +247,7 @@ export default function CountryDetails() {
                     )}
                     {!weatherLoading && weather && (
                         <View style={{ flexDirection: "row", alignItems: "center"}}>
-                            <Text style={[styles.valueRate]}>Currently: {weather.tempC.toFixed(1)}°C · {weather.condition}</Text>
+                            <Text style={[styles.valueRate]}>Currently: {Math.round(weather.tempC)}°C · {weather.condition}</Text>
                             <Image source={{ uri: weather.icon }} style={{ width: 30, height: 30}}/>
                         </View>
                     )}
