@@ -12,96 +12,101 @@ const WEATHER_API_KEY = "24923ddba8b949cb902144825252012";
 
 export default function CapitalsWeather() {
   const [donnees, setDonnees] = useState([]);
-  const [charge, setCharge] = useState(true);
+  const [enChargement, setEnChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
 
   useEffect(() => {
-    const charger = async () => {
+    async function chargerDonnees() {
       try {
         
         const repPays = await fetch(
           "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,flags"
         );
-        const dataPays = await repPays.json();
+        const paysJson = await repPays.json();
 
-        const liste = [];
+        const listeTemp = [];
 
-        for (let i = 0; i < dataPays.length; i++) {
-          const pays = dataPays[i];
+        
+        for (let i = 0; i < paysJson.length; i++) {
+          const pays = paysJson[i];
 
-         
+          
           let capitale = "Inconnue";
           if (pays.capital && pays.capital.length > 0) {
             capitale = pays.capital[0];
           }
 
           
-          let drapeauUri = "";
+          let drapeau = "";
           if (pays.flags && pays.flags.png) {
-            drapeauUri = pays.flags.png;
+            drapeau = pays.flags.png;
           }
 
           
-          let lat = null;
-          let lon = null;
+          let latitudeCapitale = null;
+          let longitudeCapitale = null;
           if (
             pays.capitalInfo &&
             pays.capitalInfo.latlng &&
             pays.capitalInfo.latlng.length === 2
           ) {
-            lat = pays.capitalInfo.latlng[0];
-            lon = pays.capitalInfo.latlng[1];
+            latitudeCapitale = pays.capitalInfo.latlng[0];
+            longitudeCapitale = pays.capitalInfo.latlng[1];
           }
 
-         
-          let tempTexte = "?";
-          let iconeUri = "";
+          
+          let temperatureTexte = "?";
+          let icone = "";
 
           if (capitale !== "Inconnue") {
             try {
               
-              let q = capitale;
-              if (lat !== null && lon !== null) {
-                q = lat + "," + lon;
+              let texteRechercheMeteo = capitale;
+              if (
+                latitudeCapitale !== null &&
+                longitudeCapitale !== null
+              ) {
+                texteRechercheMeteo =
+                  latitudeCapitale + "," + longitudeCapitale;
               }
 
-              const url =
+              const urlMeteo =
                 "https://api.weatherapi.com/v1/current.json" +
                 "?key=" +
                 WEATHER_API_KEY +
                 "&q=" +
-                encodeURIComponent(q) +
+                encodeURIComponent(texteRechercheMeteo) +
                 "&aqi=no";
 
-              const repMeteo = await fetch(url);
-              const dataMeteo = await repMeteo.json();
+              const repMeteo = await fetch(urlMeteo);
+              const meteoJson = await repMeteo.json(); 
 
               
               let tempC = null;
-              if (dataMeteo && dataMeteo.current) {
-                tempC = dataMeteo.current.temp_c;
+              if (meteoJson && meteoJson.current) {
+                tempC = meteoJson.current.temp_c;
               }
 
               if (tempC !== null && !isNaN(tempC)) {
-                tempTexte = tempC.toFixed(1) + "°C";
+                temperatureTexte = tempC.toFixed(1) + "°C";
               }
 
               
               let iconBrut = "";
               if (
-                dataMeteo &&
-                dataMeteo.current &&
-                dataMeteo.current.condition &&
-                dataMeteo.current.condition.icon
+                meteoJson &&
+                meteoJson.current &&
+                meteoJson.current.condition &&
+                meteoJson.current.condition.icon
               ) {
-                iconBrut = dataMeteo.current.condition.icon;
+                iconBrut = meteoJson.current.condition.icon;
               }
 
               if (iconBrut !== "") {
                 if (iconBrut.indexOf("//") === 0) {
-                  iconeUri = "https:" + iconBrut;
+                  icone = "https:" + iconBrut;
                 } else {
-                  iconeUri = iconBrut;
+                  icone = iconBrut;
                 }
               }
             } catch (e) {
@@ -109,41 +114,44 @@ export default function CapitalsWeather() {
             }
           }
 
-          liste.push({
+          
+          listeTemp.push({
             id: String(i),
             capitale: capitale,
-            drapeau: drapeauUri,
-            temp: tempTexte,
-            icone: iconeUri,
+            drapeau: drapeau,
+            temperature: temperatureTexte,
+            icone: icone,
           });
         }
 
         
-        liste.sort(function (a, b) {
+        listeTemp.sort(function (a, b) {
           return a.capitale.localeCompare(b.capitale);
         });
 
-        setDonnees(liste);
+        
+        const listeFinale = [];
+        for (let i = 0; i < listeTemp.length; i++) {
+          const item = listeTemp[i];
+          if (
+            item.temperature !== "?" &&
+            item.temperature !== null &&
+            item.temperature !== ""
+          ) {
+            listeFinale.push(item);
+          }
+        }
+
+        setDonnees(listeFinale);
       } catch (e) {
         setErreur("Impossible de charger la météo des capitales.");
       }
-      setCharge(false);
-    };
 
-    charger();
+      setEnChargement(false);
+    }
+
+    chargerDonnees();
   }, []);
-
-  if (charge) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.loadingText}>
-          Bienvenue sur Capitals Weathers!{"\n"}Patientez svp...
-        </Text>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-  
 
   if (erreur) {
     return (
@@ -157,13 +165,21 @@ export default function CapitalsWeather() {
     <View style={styles.page}>
       <Text style={styles.titre}>Météo des capitales (°C)</Text>
 
+      {enChargement && (
+        <View style={styles.inlineLoading}>
+          <ActivityIndicator size="small" />
+          <Text style={styles.inlineLoadingText}>
+            Chargement de la météo...
+          </Text>
+        </View>
+      )}
+
       <FlatList
         data={donnees}
         keyExtractor={function (item) {
           return item.id;
         }}
         renderItem={function ({ item }) {
-          
           let drapeauComp = null;
           if (item.drapeau) {
             drapeauComp = (
@@ -171,31 +187,23 @@ export default function CapitalsWeather() {
             );
           }
 
-          
-          let iconeComp = (
-            <Text style={styles.placeholder}>☀️</Text>
-          );
+          let iconeComp = <Text style={styles.placeholder}>☀️</Text>;
           if (item.icone) {
             iconeComp = (
-              <Image
-                source={{ uri: item.icone }}
-                style={styles.iconeMeteo}
-              />
+              <Image source={{ uri: item.icone }} style={styles.iconeMeteo} />
             );
           }
 
           return (
             <View style={styles.ligne}>
-              
               <View style={styles.gauche}>
                 <Text style={styles.capitale}>{item.capitale}</Text>
                 {drapeauComp}
               </View>
 
-              
               <View style={styles.meteoBox}>
                 {iconeComp}
-                <Text style={styles.temperature}>{item.temp}</Text>
+                <Text style={styles.temperature}>{item.temperature}</Text>
               </View>
             </View>
           );
@@ -212,12 +220,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
   },
-  loadingText: {
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 16,
-  },
   page: {
     flex: 1,
     padding: 16,
@@ -227,6 +229,16 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 12,
     textAlign: "center",
+  },
+  inlineLoading: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  inlineLoadingText: {
+    marginLeft: 8,
+    fontSize: 14,
   },
   ligne: {
     flexDirection: "row",
