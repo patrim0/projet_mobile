@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
+import { FlatList, Image, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { findCountries, getAllCountries } from "../api/countries";
 import { CompareContext } from "../context/CompareContext";
@@ -17,19 +17,19 @@ function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect }) {
 
     return (
         <View style={[styles.ligne, isSelected && styles.ligneSelected]}>
-            <TouchableOpacity 
+            <TouchableOpacity
                 onPress={handleSelectPress}
                 style={styles.checkbox}
                 activeOpacity={0.6}
             >
-                <Ionicons 
-                    name={isSelected ? "checkbox" : "square-outline"} 
-                    size={28} 
-                    color={isSelected ? "#673AB7" : "#999"} 
+                <Ionicons
+                    name={isSelected ? "checkbox" : "square-outline"}
+                    size={28}
+                    color={isSelected ? "#673AB7" : "#999"}
                 />
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
                 onPress={onPress}
                 style={styles.ligneContent}
                 activeOpacity={0.7}

@@ -18,7 +18,6 @@ import { CompareProvider } from '../context/CompareContext';
 import { getUserInfo } from "../api/auth";
 import ExchangeRates from "../screens/ExchangeRates";
 
-import Capital from '../screens/Capital';
 import CapitalsWeather from '../screens/CapitalsWeather';
 
 const Stack = createNativeStackNavigator();
@@ -66,7 +65,6 @@ export default function AppNavigator() {
                 <Stack.Screen name="CountryResults" component={CountrySearchResults} />
                 <Stack.Screen name="AllCountries" component={AllCountriesList} options={{ headerShown: true, title: "Pays" }}/>
                 <Stack.Screen name="CountryDetails" component={CountryDetails} options={{ headerShown: true, title: "Pays" }} />
-                <Stack.Screen name="Capital" component={Capital} options={{ headerShown: true, title: "Capitales" }} />
                 <Stack.Screen name="ExchangeRates" component={ExchangeRates} options={{ headerShown: true, title: "Exchange Rates" }}/>
                 <Stack.Screen name="CapitalsWeather" component={CapitalsWeather} options={{ headerShown: true, title: "Météo des capitales" }}/>
                 <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ headerShown: true, title: "Favorites" }} />

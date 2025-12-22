@@ -5,6 +5,7 @@ import AnimationFlag from "../components/AnimationFlag";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { AuthContext } from "../context/AuthContext";
 import { editUserInfo, getUserInfo } from "../api/auth";
+import { getDetails } from "../api/countries";
 import { getCurrentUsdBase } from "../api/rates";
 import { getTodayCapitalWeather } from "../api/weather";
 
@@ -23,19 +24,22 @@ export default function CountryDetails() {
     const [weatherLoading, setWeatherLoading] = useState(false);
 
     useEffect(() => {
-        const chercher = async () => {
-            try {
-                const url = "https://restcountries.com/v3.1/name/" + nom + "?fullText=true";
-                const rep = await fetch(url);
-                const info = await rep.json();
-                setPays(info[0]);
-            } catch (e) {
-                setPays(null);
-            }
-            setCharge(false);
-        };
+        let mounted = true;
 
-        chercher();
+        async function load() {
+            setCharge(true);
+            const data = await getDetails(nom);
+            if (mounted) {
+                setPays(data);
+                setCharge(false);
+            }
+        }
+
+        load();
+
+        return () => {
+            mounted = false;
+        };
     }, [nom]);
 
     useEffect(() => {

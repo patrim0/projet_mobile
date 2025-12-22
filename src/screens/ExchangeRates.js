@@ -85,6 +85,11 @@ export default function ExchangeRates() {
     <View style={styles.page}>
       <Text style={styles.titre}>Taux des devises (base USD)</Text>
 
+      <View style={styles.headerRow}>
+        <Text style={styles.headerCode}>Code</Text>
+        <Text style={styles.headerRate}>Rate</Text>
+      </View>
+
       <FlatList
         data={donnees}
         keyExtractor={function (item) {
@@ -96,13 +101,10 @@ export default function ExchangeRates() {
               
               <Text style={styles.code}>{item.codeDevise}</Text>
 
-              
-              <View style={styles.spacer} />
-
-              
               <View style={styles.deviseBox}>
                 <Text style={styles.valeur}>{item.taux}</Text>
               </View>
+
             </View>
           );
         }}
@@ -115,49 +117,68 @@ const styles = StyleSheet.create({
   center: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   page: {
     flex: 1,
-    padding: 16,
-    alignItems: "center",  
+    paddingHorizontal: 16,
+    paddingTop: 16
   },
   titre: {
     fontSize: 22,
     fontWeight: "700",
     marginBottom: 12,
-    textAlign: "center",
+    textAlign: "center"
   },
   ligne: {
-    width: "80%", 
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 6,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#eee",
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eaeaea"
   },
   code: {
-    fontSize: 16,
+    width: 56,
+    fontSize: 14,
     fontWeight: "600",
-    textAlign: "left",
-  },
-  spacer: {
-    flex: 1,
-    marginHorizontal: 16, 
+    letterSpacing: 0.5
   },
   deviseBox: {
+    marginLeft: "auto",
     backgroundColor: "#111",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 4,
-    minWidth: 70,
-    alignItems: "flex-end", 
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+    minWidth: 80,
+    alignItems: "flex-end"
   },
   valeur: {
     fontSize: 14,
     fontWeight: "700",
     color: "red",
     fontFamily: "Menlo",
-    textAlign: "right",
+  },
+  headerRow: {
+    flexDirection: "row",
+    paddingHorizontal: 8,
+    paddingBottom: 6,
+    marginBottom: 4,
+    borderBottomWidth: 2,
+    borderBottomColor: "#673AB7",
+  },
+  headerCode: {
+    width: 56,
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#673AB7",
+    textTransform: "uppercase",
+  },
+  headerRate: {
+    marginLeft: "auto",
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#673AB7",
+    textTransform: "uppercase",
   },
 });
