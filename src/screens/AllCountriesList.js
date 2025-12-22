@@ -1,11 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
+import { FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { findCountries, getAllCountries } from "../api/countries";
 import { CompareContext } from "../context/CompareContext";
 import CompareFloatingButton from "../components/CompareFloatingButton";
 import NavigationUI from "../components/NavigationUI";
+import DataCard from "../components/DataCard";
 
 function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect, compareMode }) {
 
@@ -18,29 +20,24 @@ function CountryRow({ item, isSelected, onToggleSelect, onPress, canSelect, comp
     };
 
     return (
-        <TouchableOpacity  
-            style={[styles.ligne, isSelected && styles.ligneSelected]} 
+        <TouchableOpacity 
             onPress={compareMode ? handleSelectPress : onPress}
             activeOpacity={0.6}>
-
-            {compareMode && (
-                <TouchableOpacity
-                    onPress={handleSelectPress}
-                    style={styles.checkbox}
-                    activeOpacity={0.6}
-                >
-                    <Ionicons
-                        name={isSelected ? "checkbox" : "square-outline"}
-                        size={28}
-                        color={isSelected ? "#673AB7" : "#999"}
-                    />
-                </TouchableOpacity>
-            )}
-
-            <View style={styles.ligneContent}>
-                <Image source={{ uri: item.flagPng }} style={styles.drapeau} />
-                <Text style={styles.nom}>{item.name}</Text>
-            </View>
+            
+                {compareMode && (
+                    <TouchableOpacity
+                        onPress={handleSelectPress}
+                        style={styles.checkbox}
+                        activeOpacity={0.6}
+                    >
+                        <Ionicons
+                            name={isSelected ? "checkbox" : "square-outline"}
+                            size={28}
+                            color={isSelected ? "#673AB7" : "#999"}
+                        />
+                    </TouchableOpacity>
+                )}
+                <DataCard nom={item.name} reg={item.region} url={item.flagPng} />
         </TouchableOpacity>
     );
 }
@@ -50,6 +47,8 @@ export default function AllCountriesList({ parallax }) {
     const navigation = useNavigation();
 
     const [compareMode, setCompareMode] = useState(false);
+    const [filterMode, setfilterMode] = useState(false);
+
     const { toggleCountry, isSelected, canAddMore, clearSelection } = useContext(CompareContext);
 
     const [texte, setTexte] = useState("");
@@ -62,10 +61,19 @@ export default function AllCountriesList({ parallax }) {
     const charger = async (valeur) => {
         let data;
 
-        if (valeur.trim().length === 0) {
+        const query = valeur.trim()
+        
+        if (query.length === 0) {
             data = await getAllCountries();
-        } else {
-            data = await findCountries(valeur);
+        }
+        else if (query < 2) {
+            setListe([]);
+            return;
+        } 
+        else {
+            data = await findCountries(query);
+            const regex = new RegExp(`^${query}`, "i");
+            data = data.filter(c => regex.test(c.name));
         }
 
         data.sort((a, b) => {
@@ -92,30 +100,55 @@ export default function AllCountriesList({ parallax }) {
 
     return (
         <NavigationUI title={"Countries"} parallax={parallax}>
-            <View style={styles.page}>
+            <View style={{ flex: 1, backgroundColor: "#f6f4f8" }}>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Rechercher un pays"
-                    value={texte}
-                    onChangeText={changerTexte}
-                />
+                <View style={styles.buttonsRow}>
+                    <TouchableOpacity
+                        style={styles.toggleButtons}
+                        onPress={() => setfilterMode(v => !v)}
+                    >
+                        <Ionicons name="filter" size={18} color={filterMode ? "#fff" : "#673AB7"} />
+                        <Text style={[styles.buttonsText, filterMode && { color: "#fff" }]}>Filter</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={styles.compareToggle}
-                    onPress={() => {
-                        setCompareMode(v => {
-                            if (v) clearSelection();
-                            return !v;
-                        });
-                    }}
-                >
-                    <Ionicons name="git-compare" size={18} color={compareMode ? "#fff" : "#673AB7"} />
-                    <Text style={[styles.compareToggleText, compareMode && { color: "#fff" }]}>Comparer</Text>
-                </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.toggleButtons}
+                        onPress={() => {
+                            setCompareMode(v => {
+                                if (v) clearSelection();
+                                return !v;
+                            });
+                        }}
+                    >
+                        <Ionicons name="git-compare" size={18} color={compareMode ? "#fff" : "#673AB7"} />
+                        <Text style={[styles.buttonsText, compareMode && { color: "#fff" }]}>Compare</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {filterMode && (
+                    <View style={styles.filterContainer}>
+
+                        <View style={styles.filterBox}>
+                            <TextInput
+                                style={styles.filterInput}
+                                placeholder="Filter by name..."
+                                value={texte}
+                                onChangeText={changerTexte}
+                            />
+
+                            {texte.length > 0 && (
+                                <TouchableOpacity onPress={() => changerTexte("")} style={styles.clearButton}>
+                                    <MaterialIcons name="cancel" size={20} color="#673AB7" />
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                )}
 
                 <FlatList
                     data={liste}
+                    contentContainerStyle={{ padding: 12 }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                         <CountryRow
@@ -135,52 +168,61 @@ export default function AllCountriesList({ parallax }) {
 }
 
 const styles = StyleSheet.create({
-    page: {
-        flex: 1,
-        backgroundColor: "#f6f4f8",
-        padding: 12
-    },
-    input: {
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        padding: 12,
-        marginBottom: 10,
-        fontSize: 16
-    },
-    ligne: {
+    toggleButtons: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#fff",
-        padding: 12,
-        borderRadius: 10,
-        marginBottom: 8
-    },
-    drapeau: {
-        width: 50,
-        height: 32,
-        borderRadius: 4,
-        marginRight: 12,
-        backgroundColor: "#eee"
-    },
-    nom: {
-        fontSize: 16,
-        fontWeight: "500"
-    },
-    compareToggle: {
-        flexDirection: "row",
-        alignItems: "center",
+        justifyContent: "center",
         gap: 6,
-        alignSelf: "flex-end",
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 20,
+        paddingHorizontal: 14,
+        height: 36,
+        borderRadius: 18,
         backgroundColor: "#ede7f6",
-        marginBottom: 8,
+        minWidth: 110
     },
-        compareToggleText: {
+    buttonsText: {
         fontSize: 14,
         color: "#673AB7",
-        fontWeight: "600",
+        fontWeight: "600"
+    },
+    filterContainer: {
+        marginTop: 25,
+        paddingHorizontal: 20
+    },
+    filterLabel: {
+        fontSize: 12,
+        marginBottom: 6,
+        paddingLeft: 10,
+        color: '#673AB7'
+    },
+    filterBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#673AB7',
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        height: 42,
+        backgroundColor: '#fff'
+    },
+    filterInput: {
+        flex: 1,
+        fontSize: 16
+    },
+    clearButton: {
+        padding: 6
+    },
+    checkbox: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        zIndex: 10
+    },
+    buttonsRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingTop: 25,
+        paddingHorizontal: 12
     },
 });
 

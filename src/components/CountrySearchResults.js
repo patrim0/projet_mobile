@@ -1,19 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, View, Pressable} from "react-native";
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, View, Pressable} from "react-native";
 import { findCountries } from "../api/countries";
-
-function FlagCard({ nom, reg, url }) {
-    return (
-        <View style={s.card}>
-            <Image source={{ uri: url }} style={s.img} />
-            <View style={{ flex: 1 }}>
-                <Text style={s.nom}>{nom}</Text>
-                <Text style={s.reg}>{reg ? reg : "-"}</Text>
-            </View>
-        </View>
-    );
-}
+import { SafeAreaView } from 'react-native-safe-area-context';
+import DataCard from "./DataCard";
 
 export default function CountrySearchResults({ query }) {
 
@@ -53,7 +43,7 @@ export default function CountrySearchResults({ query }) {
                 keyExtractor={(it, i) => it.name + i}
                 renderItem={({ item }) => (
                     <Pressable onPress={() => handleCardPress(item)}>
-                        <FlagCard nom={item.name} reg={item.region} url={item.flagPng} />
+                        <DataCard nom={item.name} reg={item.region} url={item.flagPng} />
                     </Pressable>
                 )}
                 contentContainerStyle={{ padding: 12 }}
@@ -66,8 +56,4 @@ export default function CountrySearchResults({ query }) {
 const s = StyleSheet.create({
     wrap: { flex: 1, backgroundColor: "#f6f4f8" },
     input: { margin: 12, borderRadius: 12, padding: 12, backgroundColor: "#fff" },
-    card: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, marginVertical: 6, backgroundColor: "#fff", borderRadius: 12, elevation: 2 },
-    img: { width: 64, height: 42, borderRadius: 6, backgroundColor: "#eee" },
-    nom: { fontSize: 16, fontWeight: "600" },
-    reg: { color: "#666" },
 });

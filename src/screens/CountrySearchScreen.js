@@ -31,8 +31,6 @@ export default function CountrySearchScreen({ parallax }) {
                             </TouchableOpacity>
                         )}
                     </View>
-
-
                 </View>
 
                 <View style={{ flex: 1 }}>
