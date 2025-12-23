@@ -15,7 +15,7 @@ export default function CountrySearchResults({ query }) {
     useEffect(() => {
         let ok = true;
         const run = async () => {
-            if (query.trim().length < 2) { setListe([]); return; }
+            if (query.trim().length < 1) { setListe([]); return; }
             setCharge(true);
             try {
                 const d = await findCountries(query.trim());

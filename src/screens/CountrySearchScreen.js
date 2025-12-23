@@ -35,7 +35,7 @@ export default function CountrySearchScreen({ parallax }) {
                 </View>
 
                 <View style={{ flex: 1 }}>
-                    {search.length >= 2 && (
+                    {search.length >= 1 && (
                         <CountrySearchResults query={search} />
                     )}
                 </View>

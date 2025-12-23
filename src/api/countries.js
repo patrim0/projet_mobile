@@ -159,3 +159,38 @@ export async function compareCountries(countryNames) {
         return [];
     }
 }
+
+export async function getCountriesByCurrency() {
+    try {
+        const url = "https://restcountries.com/v3.1/all?fields=name,currencies,flags,region";
+        const rep = await axios.get(url);
+        const data = rep.data;
+
+        const list = {};
+
+        for (let i = 0; i < data.length; i++) {
+            const country = data[i];
+            if (!country.currencies) continue;
+
+            const codes = Object.keys(country.currencies);
+
+            for (let j = 0; j < codes.length; j++) {
+                const codeUpper = codes[j].toUpperCase();
+
+                if (!list[codeUpper]) {
+                    list[codeUpper] = [];
+                }
+
+                list[codeUpper].push({
+                    name: country.name?.common || "",
+                    flagPng: country.flags?.png || "",
+                    region: country.region || "",
+                });
+            }
+        }
+
+        return list;
+    } catch {
+        return {};
+    }
+}
