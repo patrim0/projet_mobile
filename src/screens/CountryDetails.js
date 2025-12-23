@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import { editUserInfo, getUserInfo } from "../api/auth";
 import { getDetails } from "../api/countries";
 import { getCurrentUsdBase } from "../api/rates";
-import { getTodayCapitalWeather } from "../api/weather";
+import { getTodayCityWeather } from "../api/weather";
 import NavigationUI from "../components/NavigationUI";
 
 export default function CountryDetails({ parallax }) {
@@ -16,12 +16,15 @@ export default function CountryDetails({ parallax }) {
     const navigation = useNavigation();
 
     const nom = route.params?.name;
+
+    const { token, setToken } = useContext(AuthContext);
+    
+    const [profile, setProfile] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+
     const [pays, setPays] = useState(null);
     const [charge, setCharge] = useState(true);
 
-    const [profile, setProfile] = useState(null);
-    const [isFavorite, setIsFavorite] = useState(false);
-    const { token, setToken } = useContext(AuthContext);
 
     const [usdBase, setUsdBase] = useState(null);
     const [weather, setWeather] = useState(null);
@@ -63,13 +66,13 @@ export default function CountryDetails({ parallax }) {
 
         setWeatherLoading(true);
 
-        getTodayCapitalWeather({
+        getTodayCityWeather({
             capital: pays.capital[0],
             lat: latlng?.[0],
             lon: latlng?.[1]
         })
         .then(setWeather)
-        .finally(() => setWeatherLoading(false));;
+        .finally(() => setWeatherLoading(false));
     }, [pays]);
 
     useEffect(() => {
@@ -228,14 +231,15 @@ export default function CountryDetails({ parallax }) {
 
                             return (
                                 <TouchableOpacity key={index} style={{ marginTop: 6 }} activeOpacity={0.6} onPress={() => navigation.navigate("CurrencyDetails", { currencyCode: devise.code, baseCurrency: "usd" })}>
-                                    <Text style={styles.valueLabel}>{devise.name}</Text>
+                                    <View style={styles.clickRow}>
+                                        <View style={{ flex: 1 }}>
+                                            <Text style={styles.valueLabel}>{devise.name}</Text>
+                                            <Text style={styles.value}>{devise.code} ({devise.symbol})</Text>
+                                            <Text style={styles.valueRate}>{rate ? `Today: 1 ${devise.code} = ${(1/rate).toFixed(3)} USD` : "Rate unavailable"}</Text>
+                                        </View>
 
-                                    <Text style={styles.value}>{devise.code} ({devise.symbol})</Text>
-
-                                    <Text style={styles.valueRate}>{rate ? `Today: 1 ${devise.code} = ${(1/rate).toFixed(3)} USD` : "Rate unavailable"}</Text>
-                                    {index < devises.length - 1 && (
-                                        <View style={styles.separator}/>
-                                    )}
+                                        <MaterialIcons name="chevron-right" size={22} color="#673AB7" />
+                                    </View>
                                 </TouchableOpacity>
                             );
                         })}
@@ -245,18 +249,21 @@ export default function CountryDetails({ parallax }) {
                     <View style={styles.card}>
                         <Text style={styles.label}>Geography</Text>
 
-                        <Text style={styles.valueLabel}>Capital</Text>
-                        <Text style={styles.value}>{pays.capital}</Text>
-
-                        {weatherLoading && (
-                            <ActivityIndicator size="small" style={{ marginTop: 6 }} />
-                        )}
-                        {!weatherLoading && weather && (
-                            <View style={{ flexDirection: "row", alignItems: "center"}}>
-                                <Text style={[styles.valueRate]}>Currently: {Math.round(weather.tempC)}°C · {weather.condition}</Text>
-                                <Image source={{ uri: weather.icon }} style={{ width: 30, height: 30}}/>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("CityDetails", {weather, city: pays.capital[0], cca3: pays.cca3, countryName: pays.name.common, flag: pays.flag })}>
+                            <Text style={styles.valueLabel}>Capital</Text>
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                                <Text style={styles.value}>{pays.capital}</Text>
+                                <MaterialIcons name="chevron-right" size={22} color="#673AB7" />
                             </View>
-                        )}
+
+                            {!weatherLoading && weather && (
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Text style={styles.valueRate}>Currently: {Math.round(weather.tempC)}°C · {weather.condition}</Text>
+                                    <Image source={{ uri: weather.icon }} style={{ width: 30, height: 30 }} />
+                                </View>
+                            )}
+                        </TouchableOpacity>
+                        
                         <View style={styles.separator}/>
 
                         <Text style={styles.valueLabel}>Continent</Text>
@@ -305,22 +312,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         padding: 20,
         backgroundColor: "#f6f4f8"
-    },
-    drapeau: {
-        width: 250,
-        height: 150,
-        resizeMode: "contain",
-        borderRadius: 12,
-        backgroundColor: "#eee",
-        alignSelf: "center",
-        marginTop: 20
-    },
-    nom: {
-        marginTop: 20,
-        fontSize: 22,
-        fontWeight: "600",
-        color: "#673AB7",
-        textAlign: "center"
     },
     card: {
         backgroundColor: "#fff",
@@ -374,5 +365,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 15,
         marginLeft: 8
-    }
+    },
+    clickRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 4
+    },
 });

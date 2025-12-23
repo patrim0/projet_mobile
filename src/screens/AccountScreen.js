@@ -112,11 +112,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#f6f4f8",
         padding: 12
     },
-    container: {
-        flex: 1,
-        backgroundColor: "#F5EEF9",
-        padding: 20
-    },
     screenTitle: {
         fontSize: 22,
         fontWeight: "600",

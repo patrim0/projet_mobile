@@ -49,11 +49,11 @@ export default function CurrencyDetails({ parallax }) {
             const end = new Date(toDate);
 
             for (
-                let d = new Date(start);
-                d <= end;
-                d.setDate(d.getDate() + 1)
+                let date = new Date(start);
+                date <= end;
+                date.setDate(date.getDate() + 1)
             ) {
-                const dateString = formatDate(d);
+                const dateString = formatDate(date);
 
                 const rep = await fetch(
                     `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateString}/v1/currencies/all.json`
@@ -132,24 +132,14 @@ export default function CurrencyDetails({ parallax }) {
                 )}
 
                 <View style={styles.controlsRow}>
-                    <TouchableOpacity
-                        style={styles.dateButton}
-                        onPress={() => setShowFromPicker(true)}
-                    >
+                    <TouchableOpacity style={styles.dateButton} onPress={() => setShowFromPicker(true)}>
                         <Ionicons name="calendar-outline" size={18} color="#fff" />
-                        <Text style={styles.dateButtonText}>
-                            From {formatDate(fromDate)}
-                        </Text>
+                        <Text style={styles.dateButtonText}>From {formatDate(fromDate)}</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={styles.dateButton}
-                        onPress={() => setShowToPicker(true)}
-                    >
+                    <TouchableOpacity style={styles.dateButton} onPress={() => setShowToPicker(true)}>
                         <Ionicons name="calendar-outline" size={18} color="#fff" />
-                        <Text style={styles.dateButtonText}>
-                            To {formatDate(toDate)}
-                        </Text>
+                        <Text style={styles.dateButtonText}>To {formatDate(toDate)}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -177,9 +167,7 @@ export default function CurrencyDetails({ parallax }) {
 
                 {currencyCountries[currencyCode]?.length > 0 && (
                     <>
-                        <Text style={styles.titre}>
-                            Countries using {currencyCode}
-                        </Text>
+                        <Text style={styles.titre}>Countries using {currencyCode}</Text>
                         <FlatList
                             data={currencyCountries[currencyCode]}
                             keyExtractor={(item, i) => item.name + i}

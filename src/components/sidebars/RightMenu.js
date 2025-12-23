@@ -18,12 +18,12 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
     const [loginUsername, setLoginUsername] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
-
+    
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerUsername, setRegisterUsername] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    
     const { isLoggedIn, setLoggedIn, setToken, username, setUsername } = useContext(AuthContext);
 
     const translateX = useRef(new Animated.Value(width)).current;
@@ -189,9 +189,6 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
         if (success) {
             signupSuccess();
-            /*             setTimeout(() => {
-                            switchView('login');
-                        }, 1200); */
         }
 
     }
@@ -300,14 +297,7 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
                         </TouchableOpacity>
 
                         {successMessage && (
-                            <Animated.Text
-                                style={{
-                                    color: "#4CAF50",
-                                    textAlign: "center",
-                                    marginTop: 12,
-                                    opacity: successMessage
-                                }}
-                            >
+                            <Animated.Text style={{ color: "#4CAF50", textAlign: "center", marginTop: 12, opacity: successMessage }}>
                                 Account created successfully!
                             </Animated.Text>
                         )}

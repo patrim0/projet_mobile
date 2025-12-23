@@ -7,7 +7,7 @@ export async function getCurrentUsdBase() {
         );
 
         return res.data.usd;
-    } catch (err) {
+    } catch {
         return null;
     }
 }

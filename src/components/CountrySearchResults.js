@@ -55,5 +55,4 @@ export default function CountrySearchResults({ query }) {
 
 const s = StyleSheet.create({
     wrap: { flex: 1, backgroundColor: "#f6f4f8" },
-    input: { margin: 12, borderRadius: 12, padding: 12, backgroundColor: "#fff" },
 });

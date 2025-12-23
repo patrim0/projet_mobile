@@ -35,7 +35,9 @@ export default function NavigationUI({ title, children, parallax }) {
                             <Feather name="menu" size={24} />
                         </TouchableOpacity>
 
-                        <Text style={styles.title}>{title}</Text>
+                        <View style={styles.titleContainer}>
+                            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>{title}</Text>
+                        </View>
 
                         <TouchableOpacity onPress={() => { 
                             setOpenRight(true); 
@@ -73,9 +75,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#f6f4f8" 
     },
     title: {
+        flexShrink: 1,
+        minWidth: 0,
         fontSize: 22,
         fontWeight: "600",
         color: "#673AB7",
         textAlign: "center"
+    },
+    titleContainer: {
+        flex: 1,
+        paddingHorizontal: 12,
+        maxWidth: 295
     },
 });

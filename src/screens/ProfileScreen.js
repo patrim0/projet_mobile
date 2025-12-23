@@ -65,18 +65,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#f6f4f8",
         padding: 12
     },
-    container: {
-        flex: 1,
-        backgroundColor: "#F5EEF9",
-        padding: 20
-    },
-    screenTitle: {
-        fontSize: 22,
-        fontWeight: "600",
-        marginBottom: 20,
-        textAlign: "center",
-        color: "#673AB7"
-    },
     card: {
         backgroundColor: "#fff",
         borderRadius: 8,

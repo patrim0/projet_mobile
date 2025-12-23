@@ -7,10 +7,6 @@ export async function findCountries(q) {
         return [];
     }
 
-    if (q.length < 1) {
-        return [];
-    }
-
     try {
         const url = base + "/name/" + encodeURIComponent(q) + "?fields=name,flags,region";
         const rep = await axios.get(url);
@@ -108,6 +104,7 @@ export async function getDetails(countryName) {
     }
 }
 
+// ?
 export async function getCountryDetails(countryName) {
 
     try {

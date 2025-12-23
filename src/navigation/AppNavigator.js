@@ -18,6 +18,7 @@ import { CompareProvider } from '../context/CompareContext';
 import { getUserInfo } from "../api/auth";
 import ExchangeRates from "../screens/ExchangeRates";
 import CurrencyDetails from '../screens/CurrencyDetails';
+import CityDetails from '../screens/CityDetails';
 
 import CapitalsWeather from '../screens/CapitalsWeather';
 
@@ -28,6 +29,7 @@ const parallax = new Animated.Value(0);
 export default function AppNavigator() {
 
     const { token } = useContext(AuthContext);
+    
     const [profile, setProfile] = useState(null);
 
     useEffect(() => {
@@ -72,6 +74,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="Favorites" children={() => <FavoritesScreen parallax={parallax}/>} />
                 <Stack.Screen name="CompareCountries" children={() => <CompareScreen parallax={parallax}/>} />
                 <Stack.Screen name="CurrencyDetails" children={() => <CurrencyDetails parallax={parallax}/>} />
+                <Stack.Screen name="CityDetails" children={() => <CityDetails parallax={parallax}/> } />
                 </Stack.Navigator>
             </NavigationContainer>
         </CompareProvider>

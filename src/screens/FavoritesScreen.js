@@ -96,13 +96,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#f6f4f8",
         paddingVertical: 25
     },
-    input: {
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        padding: 12,
-        marginBottom: 10,
-        fontSize: 16
-    },
     ligne: {
         flexDirection: "row",
         alignItems: "center",

@@ -5,10 +5,10 @@ export default function WeatherCard({ capital, country, flag, temperature, icon 
         <View style={styles.card}>
             <View style={styles.gauche}>
                 <View style={styles.drapeauVille}>
-                    {flag ? (
-                        <Image source={{ uri: flag }} style={styles.drapeau} />
-                    ) : null}
-
+                    {flag 
+                    ? ( <Image source={{ uri: flag }} style={styles.drapeau} /> ) 
+                    : null
+                    }
                     <Text style={styles.capitale}>{capital}</Text>
                 </View>
 
@@ -16,12 +16,10 @@ export default function WeatherCard({ capital, country, flag, temperature, icon 
             </View>
 
             <View style={styles.meteoBox}>
-                {icon ? (
-                    <Image source={{ uri: icon }} style={styles.iconeMeteo} />
-                ) : (
-                    <Text style={styles.placeholder}>☀️</Text>
-                )}
-
+                {icon 
+                ? ( <Image source={{ uri: icon }} style={styles.iconeMeteo} /> ) 
+                : ( <Text style={styles.placeholder}>☀️</Text>)
+                }
                 <Text style={styles.temperature}>{temperature}</Text>
             </View>
         </View>

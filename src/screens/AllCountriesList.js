@@ -103,10 +103,7 @@ export default function AllCountriesList({ parallax }) {
             <View style={styles.page}>
 
                 <View style={styles.buttonsRow}>
-                    <TouchableOpacity
-                        style={styles.toggleButtons}
-                        onPress={() => setfilterMode(v => !v)}
-                    >
+                    <TouchableOpacity style={styles.toggleButtons} onPress={() => setfilterMode(v => !v)}>
                         <Ionicons name="filter" size={18} color={filterMode ? "#fff" : "#673AB7"} />
                         <Text style={[styles.buttonsText, filterMode && { color: "#fff" }]}>Filter</Text>
                     </TouchableOpacity>
@@ -115,9 +112,9 @@ export default function AllCountriesList({ parallax }) {
                     <TouchableOpacity
                         style={styles.toggleButtons}
                         onPress={() => {
-                            setCompareMode(v => {
-                                if (v) clearSelection();
-                                return !v;
+                            setCompareMode(prev => {
+                                if (prev) clearSelection();
+                                return !prev;
                             });
                         }}
                     >
@@ -191,12 +188,6 @@ const styles = StyleSheet.create({
     filterContainer: {
         marginTop: 25,
         paddingHorizontal: 20
-    },
-    filterLabel: {
-        fontSize: 12,
-        marginBottom: 6,
-        paddingLeft: 10,
-        color: '#673AB7'
     },
     filterBox: {
         flexDirection: 'row',

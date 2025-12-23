@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import NavigationUI from "../components/NavigationUI";
@@ -7,8 +6,6 @@ import NavigationUI from "../components/NavigationUI";
 import CountrySearchResults from '../components/CountrySearchResults';
 
 export default function CountrySearchScreen({ parallax }) {
-
-    const { t } = useTranslation();
 
     const [search, setSearch] = useState("");
 
@@ -19,12 +16,7 @@ export default function CountrySearchScreen({ parallax }) {
                     <Text style={styles.searchLabel}>Search Country</Text>
 
                     <View style={styles.searchBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Search..."
-                            value={search}
-                            onChangeText={setSearch}
-                        />
+                        <TextInput style={styles.input} placeholder="Search..." value={search} onChangeText={setSearch}/>
 
                         {search.length > 0 && (
                             <TouchableOpacity onPress={() => setSearch("")} style={styles.clearButton}>
@@ -76,13 +68,5 @@ const styles = StyleSheet.create({
     },
     clearButton: {
         padding: 6
-    },
-    light: {
-        backgroundColor: '#ffffff',
-        color: '#111111'
-    },
-    dark: {
-        backgroundColor: '#111111',
-        color: '#ffffff'
     }
 });

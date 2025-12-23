@@ -6,13 +6,18 @@ import {
     FlatList,
     StyleSheet,
     Image,
+    TouchableOpacity,
 } from "react-native";
 import NavigationUI from "../components/NavigationUI";
 import WeatherCard from "../components/cards/WeatherCard";
+import { useNavigation } from "@react-navigation/native";
 
 const WEATHER_API_KEY = "24923ddba8b949cb902144825252012";
 
 export default function CapitalsWeather({ parallax }) {
+
+    const navigation = useNavigation();
+
     const [donnees, setDonnees] = useState([]);
     const [enChargement, setEnChargement] = useState(true);
     const [erreur, setErreur] = useState(null);
@@ -22,7 +27,7 @@ export default function CapitalsWeather({ parallax }) {
             try {
 
                 const repPays = await fetch(
-                    "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,flags"
+                    "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,flags,cca3,flag"
                 );
                 const paysJson = await repPays.json();
 
@@ -47,7 +52,6 @@ export default function CapitalsWeather({ parallax }) {
                     if (pays.flags && pays.flags.png) {
                         drapeau = pays.flags.png;
                     }
-
 
                     let latitudeCapitale = null;
                     let longitudeCapitale = null;
@@ -127,6 +131,8 @@ export default function CapitalsWeather({ parallax }) {
                         drapeau: drapeau,
                         temperature: temperatureTexte,
                         icone: icone,
+                        cca3: pays.cca3,
+                        flag: pays.flag
                     });
                 }
 
@@ -190,7 +196,9 @@ export default function CapitalsWeather({ parallax }) {
                     }}
                     contentContainerStyle={{ padding: 12 }}
                     renderItem={({ item }) => (
-                        <WeatherCard capital={item.capitale} country={item.pays} flag={item.drapeau} temperature={item.temperature} icon={item.icone}/>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("CityDetails", {city: item.capitale, cca3: item.cca3, countryName: item.pays, flag: item.flag})}>
+                            <WeatherCard capital={item.capitale} country={item.pays} flag={item.drapeau} temperature={item.temperature} icon={item.icone}/>
+                        </TouchableOpacity>
                     )}
                 />
             </View>
@@ -226,65 +234,5 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         fontSize: 14,
         color: "#673AB7"
-    },
-    gauche: {
-        flexDirection: "column"
-    },
-    meteoBox: {
-        width: 120,
-        backgroundColor: "#f7f4fcff",
-        paddingVertical: 4,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        alignItems: "center"
-    },
-    capitale: {
-        fontSize: 16,
-        fontWeight: "600",
-        color: "#222"
-    },
-    pays: {
-        fontSize: 12,
-        color: "#9e9e9eff",
-        marginTop: 2,
-        alignSelf: "flex-start"
-    },
-    drapeau: {
-        width: 28,
-        height: 18,
-        borderRadius: 2
-    },
-    drapeauVille: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8
-    },
-    iconeMeteo: {
-        width: 30,
-        height: 30
-    },
-    placeholder: {
-        fontSize: 16,
-        color: "#ffd700"
-    },
-    temperature: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#00acc1"
-    },
-    card: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        backgroundColor: "#fff",
-        paddingVertical: 12,
-        paddingHorizontal: 14,
-        borderRadius: 12,
-        marginBottom: 8,
-        elevation: 2,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2
     },
 });

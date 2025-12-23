@@ -21,7 +21,7 @@ export default function ExchangeRates({ parallax }) {
     const [selectedDate, setSelectedDate] = useState(currentDate);
     const [showPicker, setShowPicker] = useState(false);
 
-    const [searchText, setSearchText] = useState("");
+    const [search, setSearch] = useState("");
     const [searchMode, setSearchMode] = useState("code");
     const [currencyCountries, setCurrencyCountries] = useState({});
 
@@ -53,8 +53,8 @@ export default function ExchangeRates({ parallax }) {
                 const codesMinuscules = Object.keys(rates);
 
                 for (let i = 0; i < codesMinuscules.length; i++) {
+                    
                     const codeMin = codesMinuscules[i];
-
                     const codeMaj = codeMin.toUpperCase();
                     const tauxBrut = rates[codeMin];
                     const baseRate = rates[baseCurrency];
@@ -72,7 +72,6 @@ export default function ExchangeRates({ parallax }) {
                         taux: valeurAffichee,
                     });
                 }
-
 
                 liste.sort(function (a, b) {
                     return a.codeDevise.localeCompare(b.codeDevise);
@@ -98,7 +97,7 @@ export default function ExchangeRates({ parallax }) {
             : donnees;
     
     const searchResults = visibleResults.filter(item => {
-        const query = searchText.trim();
+        const query = search.trim();
         if (query.length === 0) return true;
 
         const regex = new RegExp(`^${query}`, "i");
@@ -123,8 +122,6 @@ export default function ExchangeRates({ parallax }) {
         <NavigationUI title="Exchange Rates" parallax={parallax}>
             <View style={styles.page}>
 
-
-
                 {showPicker && (
                     <DateTimePicker
                         value={selectedDate}
@@ -139,28 +136,16 @@ export default function ExchangeRates({ parallax }) {
                     />
                 )}
 
-                
                 <View style={{ paddingHorizontal: 12, marginBottom: 10 }}>
                     <View style={styles.buttonsRow}>
                         
                         <View style={{ flexDirection: "row", gap: 8 }}>
-                            <TouchableOpacity 
-                                style={[styles.buttons, searchMode === "code" && { backgroundColor: "#673AB7" }]}
-                                onPress={() => setSearchMode("code")}
-                            >
-                                <Text style={[styles.buttonsText, searchMode === "code" && { color: "#fff" }]}>
-                                    Code
-                                </Text>
+                            <TouchableOpacity style={[styles.buttons, searchMode === "code" && { backgroundColor: "#673AB7" }]} onPress={() => setSearchMode("code")}>
+                                <Text style={[styles.buttonsText, searchMode === "code" && { color: "#fff" }]}>Code</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={[styles.buttons, searchMode === "country" && { backgroundColor: "#673AB7" }]}
-                                onPress={() => setSearchMode("country")}
-                            >
-
-                                <Text style={[styles.buttonsText, searchMode === "country" && { color: "#fff" }]}>
-                                    Country
-                                </Text>
+                            <TouchableOpacity style={[styles.buttons, searchMode === "country" && { backgroundColor: "#673AB7" }]} onPress={() => setSearchMode("country")}>
+                                <Text style={[styles.buttonsText, searchMode === "country" && { color: "#fff" }]}>Country</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -171,44 +156,28 @@ export default function ExchangeRates({ parallax }) {
                     </View>
 
                     <View style={styles.searchBox}>
-                        <TextInput
+                        <TextInput 
                             style={styles.searchInput}
+                            value={search}
+                            onChangeText={setSearch}
+                            autoCapitalize="none"
                             placeholder={
                                 searchMode === "code"
                                     ? "Search by currency code..."
                                     : "Search by country name..."
                             }
-                            value={searchText}
-                            onChangeText={setSearchText}
-                            autoCapitalize="none"
                         />
 
-                        {searchText.length > 0 && (
-                            <TouchableOpacity
-                                onPress={() => setSearchText("")}
-                                style={{padding: 6}}
-                            >
-                                <MaterialIcons
-                                    name="cancel"
-                                    size={20}
-                                    color="#673AB7"
-                                />
+                        {search.length > 0 && (
+                            <TouchableOpacity onPress={() => setSearch("")} style={{padding: 6}}>
+                                <MaterialIcons name="cancel" size={20} color="#673AB7"/>
                             </TouchableOpacity>
                         )}
                     </View>
                 </View>                
 
                 {erreur && (
-                    <Text
-                        style={{
-                            color: "#ff3b30",
-                            textAlign: "center",
-                            paddingVertical: 12,
-                            fontSize: 13
-                        }}
-                    >
-                        {erreur}
-                    </Text>
+                    <Text style={{ color: "#ff3b30", textAlign: "center", paddingVertical: 12, fontSize: 13 }}>{erreur}</Text>
                 )}
 
                 {!erreur && (
@@ -222,14 +191,7 @@ export default function ExchangeRates({ parallax }) {
                         <View style={styles.baseRow}>
                             <Text style={styles.sousTitre}>Base currency:</Text>
 
-                            <TouchableOpacity
-                                onPress={() => setSelectBaseMode(v => !v)}
-                                style={[
-                                    styles.basePill,
-                                    selectBaseMode && styles.basePillActive
-                                ]}
-                                activeOpacity={0.7}
-                            >
+                            <TouchableOpacity onPress={() => setSelectBaseMode(prev => !prev)} style={[ styles.basePill, selectBaseMode && styles.basePillActive]} activeOpacity={0.7}>
                                 <Text style={[styles.basePillText, selectBaseMode && { color: "#fff" }]}>
                                     {selectBaseMode ? "SELECT" : baseCurrency.toUpperCase()}
                                 </Text>
@@ -248,7 +210,7 @@ export default function ExchangeRates({ parallax }) {
                                     onPress={() => {
                                         if (selectBaseMode) {
                                             setBaseCurrency(item.codeDevise.toLowerCase());
-                                            setSearchText("");
+                                            setSearch("");
                                             setSelectBaseMode(false);
                                             return;
                                         }
@@ -290,26 +252,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6,
         paddingVertical: 12,
         textAlign: "right"
-    },
-    code: {
-        fontSize: 16,
-        fontWeight: "600",
-        color: "#222",
-        letterSpacing: 0.5
-    },
-    deviseBox: {
-        width: 120,
-        backgroundColor: "#f0ebfa",
-        paddingVertical: 4,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        alignItems: "center"
-    },
-    valeur: {
-        fontSize: 14,
-        fontWeight: "700",
-        color: "#673AB7",
-        fontFamily: "Menlo"
     },
     buttonsRow: {
         flexDirection: "row",
