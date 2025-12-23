@@ -183,7 +183,7 @@ export async function getCountriesByCurrency() {
 
                 list[codeUpper].push({
                     name: country.name?.common || "",
-                    flagPng: country.flags?.png || "",
+                    flag: country.flags?.png || "",
                     region: country.region || "",
                 });
             }

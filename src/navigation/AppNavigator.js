@@ -17,6 +17,7 @@ import { AuthContext } from "../context/AuthContext";
 import { CompareProvider } from '../context/CompareContext';
 import { getUserInfo } from "../api/auth";
 import ExchangeRates from "../screens/ExchangeRates";
+import CurrencyDetails from '../screens/CurrencyDetails';
 
 import CapitalsWeather from '../screens/CapitalsWeather';
 
@@ -70,6 +71,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="CapitalsWeather" children={() => <CapitalsWeather parallax={parallax}/>}/>
                 <Stack.Screen name="Favorites" children={() => <FavoritesScreen parallax={parallax}/>} />
                 <Stack.Screen name="CompareCountries" children={() => <CompareScreen parallax={parallax}/>} />
+                <Stack.Screen name="CurrencyDetails" children={() => <CurrencyDetails parallax={parallax}/>} />
                 </Stack.Navigator>
             </NavigationContainer>
         </CompareProvider>

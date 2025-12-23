@@ -6,8 +6,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { getCountriesByCurrency } from "../api/countries";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ExchangeRates({ parallax }) {
+
+    const navigation = useNavigation();
+
     const [donnees, setDonnees] = useState([]);
     const [charge, setCharge] = useState(true);
     const [erreur, setErreur] = useState(null);
@@ -35,30 +39,31 @@ export default function ExchangeRates({ parallax }) {
                 const dateString = formatDate(selectedDate);
 
                 const repTaux = await fetch(
-                    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateString}/v1/currencies/${baseCurrency}.json`
+                    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateString}/v1/currencies/all.json`
                 );
                 const dataTaux = await repTaux.json();
 
                 let rates = {};
-                if (dataTaux && dataTaux.usd) {
-                    rates = dataTaux.usd;
+                if (dataTaux && dataTaux.all) {
+                    rates = dataTaux.all;
                 }
 
                 const liste = [];
 
                 const codesMinuscules = Object.keys(rates);
+
                 for (let i = 0; i < codesMinuscules.length; i++) {
                     const codeMin = codesMinuscules[i];
 
-
-                    if (codeMin === "usd") continue;
-
                     const codeMaj = codeMin.toUpperCase();
                     const tauxBrut = rates[codeMin];
+                    const baseRate = rates[baseCurrency];
 
                     let valeurAffichee = "- - -";
-                    if (typeof tauxBrut === "number") {
-                        valeurAffichee = tauxBrut.toFixed(3);
+
+                    if (typeof tauxBrut === "number" && typeof baseRate === "number") {
+                        const converted = tauxBrut / baseRate;
+                        valeurAffichee = converted.toFixed(3);
                     }
 
                     liste.push({
@@ -81,13 +86,18 @@ export default function ExchangeRates({ parallax }) {
         };
 
         charger();
-    }, [selectedDate]);
+    }, [selectedDate, baseCurrency]);
 
     useEffect(() => {
         getCountriesByCurrency().then(setCurrencyCountries);
     }, []);
+
+    const visibleResults =
+        searchMode === "country"
+            ? donnees.filter(item => currencyCountries[item.codeDevise]?.length > 0)
+            : donnees;
     
-    const searchResults = donnees.filter(item => {
+    const searchResults = visibleResults.filter(item => {
         const query = searchText.trim();
         if (query.length === 0) return true;
 
@@ -203,7 +213,6 @@ export default function ExchangeRates({ parallax }) {
 
                 {!erreur && (
                     <View>
-
                         <Text style={styles.titre}>
                             {formatDate(selectedDate) === formatDate(currentDate)
                             ? "Today's Rates"
@@ -222,7 +231,7 @@ export default function ExchangeRates({ parallax }) {
                                 activeOpacity={0.7}
                             >
                                 <Text style={[styles.basePillText, selectBaseMode && { color: "#fff" }]}>
-                                    {baseCurrency.toUpperCase()}
+                                    {selectBaseMode ? "SELECT" : baseCurrency.toUpperCase()}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -237,11 +246,14 @@ export default function ExchangeRates({ parallax }) {
                                 <TouchableOpacity
                                     activeOpacity={selectBaseMode ? 0.6 : 1}
                                     onPress={() => {
-                                        if (!selectBaseMode) return;
+                                        if (selectBaseMode) {
+                                            setBaseCurrency(item.codeDevise.toLowerCase());
+                                            setSearchText("");
+                                            setSelectBaseMode(false);
+                                            return;
+                                        }
 
-                                        setBaseCurrency(item.codeDevise.toLowerCase());
-                                        setSearchText("");
-                                        setSelectBaseMode(false);
+                                        navigation.navigate("CurrencyDetails", {currencyCode: item.codeDevise, baseCurrency});
                                     }}
                                 >
                                     <RateCard code={item.codeDevise} rate={item.taux}/>
@@ -334,12 +346,12 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         flex: 1,
-        fontSize: 16,
+        fontSize: 16
     },
     dateButtonText: {
         fontSize: 14,
         color: "#fff",
-        fontWeight: "600",
+        fontWeight: "600"
     },
     dateButton: {
         flexDirection: "row",
@@ -357,7 +369,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-end",
         paddingHorizontal: 14,
-        marginBottom: 8,
+        marginBottom: 8
     },
     basePill: {
         backgroundColor: "#ede7f6",
@@ -365,7 +377,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: "#673AB7",
+        borderColor: "#673AB7"
     },
     basePillActive: {
         backgroundColor: "#673AB7",
@@ -373,6 +385,6 @@ const styles = StyleSheet.create({
     basePillText: {
         fontSize: 12,
         fontWeight: "600",
-        color: "#673AB7",
+        color: "#673AB7"
     },
 });

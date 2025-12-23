@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, Image } from "react-native";
 import AnimationFlag from "../components/AnimationFlag";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -11,7 +11,10 @@ import { getTodayCapitalWeather } from "../api/weather";
 import NavigationUI from "../components/NavigationUI";
 
 export default function CountryDetails({ parallax }) {
+
     const route = useRoute();
+    const navigation = useNavigation();
+
     const nom = route.params?.name;
     const [pays, setPays] = useState(null);
     const [charge, setCharge] = useState(true);
@@ -224,7 +227,7 @@ export default function CountryDetails({ parallax }) {
                             const rate = usdBase?.[devise.code.toLowerCase()];
 
                             return (
-                                <View key={index} style={{ marginTop: 6 }}>
+                                <TouchableOpacity key={index} style={{ marginTop: 6 }} activeOpacity={0.6} onPress={() => navigation.navigate("CurrencyDetails", { currencyCode: devise.code, baseCurrency: "usd" })}>
                                     <Text style={styles.valueLabel}>{devise.name}</Text>
 
                                     <Text style={styles.value}>{devise.code} ({devise.symbol})</Text>
@@ -233,7 +236,7 @@ export default function CountryDetails({ parallax }) {
                                     {index < devises.length - 1 && (
                                         <View style={styles.separator}/>
                                     )}
-                                </View>
+                                </TouchableOpacity>
                             );
                         })}
                 
