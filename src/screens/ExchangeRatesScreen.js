@@ -215,7 +215,7 @@ export default function ExchangeRates({ parallax }) {
                                             return;
                                         }
 
-                                        navigation.navigate("CurrencyDetails", {currencyCode: item.codeDevise, baseCurrency});
+                                        navigation.navigate("CurrencyDetailsScreen", {currencyCode: item.codeDevise, baseCurrency});
                                     }}
                                 >
                                     <RateCard code={item.codeDevise} rate={item.taux}/>

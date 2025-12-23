@@ -51,7 +51,7 @@ export default function Favorites({ parallax }) {
     };
 
     const ouvrirPays = (nom) => {
-        navigation.navigate("CountryDetails", { name: nom });
+        navigation.navigate("CountryDetailsScreen", { name: nom });
     };
 
     async function handleRemoveFavorite(countryName) {
@@ -68,7 +68,7 @@ export default function Favorites({ parallax }) {
         <NavigationUI title={`${profile?.username}'s Favorites`} parallax={parallax}>
             <View style={styles.page}>
                 <FlatList
-                    data={liste.filter(item => profile?.favoriteCountries.includes(item.name))}
+                    data={liste.filter(item => profile?.favoriteCountries?.includes(item.name))}
                     keyExtractor={(item) => item.name}
                     contentContainerStyle={{ padding: 12 }}
                     renderItem={({ item }) => (

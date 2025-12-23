@@ -318,15 +318,15 @@ export default function RightMenu({ visible, onClose, width = 260 }) {
 
                         <View style={styles.separator} />
 
-                        <TouchableOpacity onPress={() => go("UserAccount")}>
+                        <TouchableOpacity onPress={() => go("UserAccountScreen")}>
                             <Text style={styles.loggedInItem}>Account</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => go("UserProfile")}>
+                        <TouchableOpacity onPress={() => go("UserProfileScreen")}>
                             <Text style={styles.loggedInItem}>Profile</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => go("Favorites")}>
+                        <TouchableOpacity onPress={() => go("FavoritesScreen")}>
                             <Text style={styles.loggedInItem}>Favorites</Text>
                         </TouchableOpacity>
 

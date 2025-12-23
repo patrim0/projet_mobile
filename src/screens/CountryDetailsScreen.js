@@ -230,7 +230,7 @@ export default function CountryDetails({ parallax }) {
                             const rate = usdBase?.[devise.code.toLowerCase()];
 
                             return (
-                                <TouchableOpacity key={index} style={{ marginTop: 6 }} activeOpacity={0.6} onPress={() => navigation.navigate("CurrencyDetails", { currencyCode: devise.code, baseCurrency: "usd" })}>
+                                <TouchableOpacity key={index} style={{ marginTop: 6 }} activeOpacity={0.6} onPress={() => navigation.navigate("CurrencyDetailsScreen", { currencyCode: devise.code, baseCurrency: "usd" })}>
                                     <View style={styles.clickRow}>
                                         <View style={{ flex: 1 }}>
                                             <Text style={styles.valueLabel}>{devise.name}</Text>
@@ -249,7 +249,7 @@ export default function CountryDetails({ parallax }) {
                     <View style={styles.card}>
                         <Text style={styles.label}>Geography</Text>
 
-                        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("CityDetails", {weather, city: pays.capital[0], cca3: pays.cca3, countryName: pays.name.common, flag: pays.flag })}>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("CityDetailsScreen", {weather, city: pays.capital[0], cca3: pays.cca3, countryName: pays.name.common, flag: pays.flag })}>
                             <Text style={styles.valueLabel}>Capital</Text>
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                                 <Text style={styles.value}>{pays.capital}</Text>

@@ -32,7 +32,7 @@ export default function CountrySearchResults({ query }) {
     }, [query]);
 
     const handleCardPress = (item) => {
-        navigation.navigate("CountryDetails", { name: item.name });
+        navigation.navigate("CountryDetailsScreen", { name: item.name });
     };
 
     return (

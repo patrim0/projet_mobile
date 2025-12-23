@@ -91,7 +91,7 @@ export default function AllCountriesList({ parallax }) {
     };
 
     const ouvrirPays = (nom) => {
-        navigation.navigate("CountryDetails", { name: nom });
+        navigation.navigate("CountryDetailsScreen", { name: nom });
     };
 
     const handleToggleSelect = (item) => {

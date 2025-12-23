@@ -196,7 +196,7 @@ export default function CapitalsWeather({ parallax }) {
                     }}
                     contentContainerStyle={{ padding: 12 }}
                     renderItem={({ item }) => (
-                        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("CityDetails", {city: item.capitale, cca3: item.cca3, countryName: item.pays, flag: item.flag})}>
+                        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate("CityDetailsScreen", {city: item.capitale, cca3: item.cca3, countryName: item.pays, flag: item.flag})}>
                             <WeatherCard capital={item.capitale} country={item.pays} flag={item.drapeau} temperature={item.temperature} icon={item.icone}/>
                         </TouchableOpacity>
                     )}

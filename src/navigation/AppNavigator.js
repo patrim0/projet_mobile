@@ -4,8 +4,8 @@ import { Animated } from 'react-native';
 import { useContext, useEffect, useState } from "react";
 
 import CountrySearchResults from "../components/CountrySearchResults";
-import AllCountriesList from '../screens/AllCountriesList';
-import CountryDetails from '../screens/CountryDetails';
+import CountriesScreen from '../screens/CountriesScreen';
+import CountryDetailsScreen from '../screens/CountryDetailsScreen';
 
 import CountrySearchScreen from '../screens/CountrySearchScreen';
 import AccountScreen from '../screens/AccountScreen';
@@ -16,11 +16,11 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import { AuthContext } from "../context/AuthContext";
 import { CompareProvider } from '../context/CompareContext';
 import { getUserInfo } from "../api/auth";
-import ExchangeRates from "../screens/ExchangeRates";
-import CurrencyDetails from '../screens/CurrencyDetails';
-import CityDetails from '../screens/CityDetails';
+import ExchangeRatesScreen from "../screens/ExchangeRatesScreen";
+import CurrencyDetailsScreen from '../screens/CurrencyDetailsScreen';
+import CityDetailsScreen from '../screens/CityDetailsScreen';
 
-import CapitalsWeather from '../screens/CapitalsWeather';
+import CapitalsWeatherScreen from '../screens/CapitalsWeatherScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,18 +63,18 @@ export default function AppNavigator() {
         <CompareProvider>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="CountrySearch" children={() => <CountrySearchScreen parallax={parallax} />} />
-                <Stack.Screen name="UserAccount" children={() => <AccountScreen parallax={parallax} />} />
-                <Stack.Screen name="UserProfile" children={() => <ProfileScreen parallax={parallax} />} />
+                <Stack.Screen name="CountrySearchScreen" children={() => <CountrySearchScreen parallax={parallax} />} />
+                <Stack.Screen name="UserAccountScreen" children={() => <AccountScreen parallax={parallax} />} />
+                <Stack.Screen name="UserProfileScreen" children={() => <ProfileScreen parallax={parallax} />} />
                 <Stack.Screen name="CountryResults" component={CountrySearchResults} />
-                <Stack.Screen name="AllCountries" children={() => <AllCountriesList parallax={parallax} />}/>
-                <Stack.Screen name="CountryDetails" children={() => <CountryDetails parallax={parallax} />} />
-                <Stack.Screen name="ExchangeRates" children={() => <ExchangeRates parallax={parallax} />}/>
-                <Stack.Screen name="CapitalsWeather" children={() => <CapitalsWeather parallax={parallax}/>}/>
-                <Stack.Screen name="Favorites" children={() => <FavoritesScreen parallax={parallax}/>} />
+                <Stack.Screen name="CountriesScreen" children={() => <CountriesScreen parallax={parallax} />}/>
+                <Stack.Screen name="CountryDetailsScreen" children={() => <CountryDetailsScreen parallax={parallax} />} />
+                <Stack.Screen name="ExchangeRatesScreen" children={() => <ExchangeRatesScreen parallax={parallax} />}/>
+                <Stack.Screen name="CapitalsWeatherScreen" children={() => <CapitalsWeatherScreen parallax={parallax}/>}/>
+                <Stack.Screen name="FavoritesScreen" children={() => <FavoritesScreen parallax={parallax}/>} />
                 <Stack.Screen name="CompareCountries" children={() => <CompareScreen parallax={parallax}/>} />
-                <Stack.Screen name="CurrencyDetails" children={() => <CurrencyDetails parallax={parallax}/>} />
-                <Stack.Screen name="CityDetails" children={() => <CityDetails parallax={parallax}/> } />
+                <Stack.Screen name="CurrencyDetailsScreen" children={() => <CurrencyDetailsScreen parallax={parallax}/>} />
+                <Stack.Screen name="CityDetailsScreen" children={() => <CityDetailsScreen parallax={parallax}/> } />
                 </Stack.Navigator>
             </NavigationContainer>
         </CompareProvider>
