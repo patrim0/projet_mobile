@@ -9,12 +9,12 @@ export default function CompareFloatingButton() {
     const navigation = useNavigation();
     const route = useRoute();
 
-    if (selectedCountries.length < 2 || route.name !== "AllCountries") {
+    if (selectedCountries.length < 2 || route.name !== "CountriesScreen") {
         return null;
     }
 
     const handlePress = () => {
-        navigation.navigate("CompareCountries");
+        navigation.navigate("CompareScreen");
     };
 
     return (

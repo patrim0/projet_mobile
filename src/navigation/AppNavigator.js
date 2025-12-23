@@ -72,7 +72,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="ExchangeRatesScreen" children={() => <ExchangeRatesScreen parallax={parallax} />}/>
                 <Stack.Screen name="CapitalsWeatherScreen" children={() => <CapitalsWeatherScreen parallax={parallax}/>}/>
                 <Stack.Screen name="FavoritesScreen" children={() => <FavoritesScreen parallax={parallax}/>} />
-                <Stack.Screen name="CompareCountries" children={() => <CompareScreen parallax={parallax}/>} />
+                <Stack.Screen name="CompareScreen" children={() => <CompareScreen parallax={parallax}/>} />
                 <Stack.Screen name="CurrencyDetailsScreen" children={() => <CurrencyDetailsScreen parallax={parallax}/>} />
                 <Stack.Screen name="CityDetailsScreen" children={() => <CityDetailsScreen parallax={parallax}/> } />
                 </Stack.Navigator>
